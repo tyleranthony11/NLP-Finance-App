@@ -1,0 +1,26 @@
+.home-section {
+    background-image: 
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), 
+    url("/images/atv.png");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    height: 60vh;
+    width: 100%;
+    align-items: center;
+    color: #fff;
+    text-align: center;
+    margin-top: 35px;
+}
+
+.home-content {
+    font-size: 2rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
