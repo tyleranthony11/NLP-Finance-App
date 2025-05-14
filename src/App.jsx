@@ -1,17 +1,26 @@
-import React from 'react';
+import React, {useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Footer from './components/footer';
+import Finance from './pages/Finance';
+import Footer from './components/Footer';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function App() {
+    useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
   return (
     <Router>
       <Navbar />
       <main style={{ paddingTop: '40px' }}> 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/finance" element={<h2 style={{ padding: '2rem' }}>Finance</h2>} />
+          <Route path="/finance" element={<Finance />} />
           <Route path="/marketplace" element={<h2 style={{ padding: '2rem' }}>Marketplace</h2>} />
           <Route path="/dealers" element={<h2 style={{ padding: '2rem' }}>Dealers</h2>} />
           <Route path="/about" element={<h2 style={{ padding: '2rem' }}>About Us</h2>} />
