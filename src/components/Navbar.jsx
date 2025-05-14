@@ -13,11 +13,12 @@ function Navbar() {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/vehicles">Browse Vehicles</Link>
-          </li>
-          <li>
             <Link to="/finance">Finance</Link>
           </li>
+          <li>
+            <Link to="/marketplace">Marketplace</Link>
+          </li>
+          
           <li>
             <Link to="/dealers">Dealers</Link>
           </li>
