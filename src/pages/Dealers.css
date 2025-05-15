@@ -1,0 +1,170 @@
+body {
+    color: #354350;
+    font-family: 'Segoe UI', 'sans-serif';
+}
+
+.dealers-header {
+  background-image: linear-gradient(to bottom, rgba(53, 67, 80, 0.7), rgba(53, 67, 80, 0.9)),
+    url("/images/boat.png");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 50vh;
+
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+
+.dealers-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.dealers-header p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.dealer-login-cta a {
+    display: inline-block;
+    background-color: #d71a20;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.dealer-login-cta a:hover {
+  background-color:  #b7161b;
+  text-decoration: underline;
+}
+
+.icon {
+    color: #d81a20;
+  margin-right: 1rem;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.dealer-benefits {
+    background-color: #f8f8f8;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #354350;
+}
+
+.dealer-benefits ul {
+    list-style: none;
+    padding: 0;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.dealer-benefits li {
+    font-size: 1.1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.dealer-testiomonials {
+    padding: 4rem 2rem;
+    background-color: white;
+    color: #354350;
+    text-align: center;
+}
+
+.dealer-testiomonials h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #354350;
+}
+
+.testiomonial-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+blockquote {
+    background-color: #f4f4f4;
+    padding: 1.5rem;
+    border-left: 4px solid #d71a20;
+    border-radius: 8px;
+    font-style: italic;
+    
+}
+
+blockquote footer {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #354350;
+}
+
+.dealer-logos {
+    padding: 4rem 2rem;
+    background-color: #f8f8f8;
+    text-align: center;
+}
+
+.dealer-logos h2 {
+    color: #354350;
+    margin-bottom: 2rem;
+}
+
+.logo-carousel {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.logo-carousel img {
+    height: 60px;
+    max-width: 150px;
+    object-fit: contain;
+    /*filter: grayscale(100%);*/
+    transition: filter 0.3s ease;
+}
+
+.logo-carousel img:hover {
+  filter: none;
+}
+
+.lenders {
+  padding: 4rem 2rem;
+  background-color: white;
+  text-align: center;
+}
+
+.lenders h2 {
+  color: #354350;
+  margin-bottom: 2rem;
+}
+
+.lender-list {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.lender-list img {
+  height: 60px;
+  max-width: 150px;
+  object-fit: contain;
+  /*filter: grayscale(100%);*/
+  transition: filter 0.3s ease;
+}
+
+.lender-list img:hover {
+  filter: none;
+}
