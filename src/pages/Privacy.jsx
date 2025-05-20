@@ -1,8 +1,8 @@
-import './Privacy.css';
+import './Legal.css';
 
 function Privacy() {
   return (
-    <div className="privacy-container">
+    <div className="legal-page">
       <h1>Privacy Policy</h1>
       <p className="last-updated">Last updated: May, 2025</p>
 
@@ -64,8 +64,8 @@ function Privacy() {
       <section>
         <h2>7. Contact Us</h2>
         <p>If you have any questions about this Privacy Policy or how your data is handled, please contact us:</p>
-        <p>Email: <a href="mailto:info@nlpfinance.ca">info@nlpfinance.ca</a><br />
-           Phone: (709) 489-0456</p>
+        <address>Email: <a href="mailto:info@nlpfinance.ca">info@nlpfinance.ca</a><br />
+           Phone: (709) 489-0456</address>
       </section>
     </div>
   );
