@@ -100,3 +100,71 @@
   font-size: 1.25rem;
   color: #333;
 }
+
+.vehicle-banner {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1000px;
+  margin: -4rem auto 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.vehicle-section {
+  flex: 1;
+  text-align: center;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vehicle-section.text-banner {
+  background-color: #d71a20;
+  color: #fff;
+  font-weight: bold;
+}
+
+.vehicle-section.text-banner p {
+  font-weight: bold;
+   font-size: 1.2rem;
+   
+}
+
+.vehicle-section.image-banner {
+  background-color: #fff;
+  border-left: 1px solid #eee;
+  color: #354350;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+.vehicle-section.image-banner:hover {
+  background-color: #f9f9f9;
+}
+
+.vehicle-section img {
+  height: 70px;
+  margin: 0 auto 0.75rem;
+  transition: transform 0.4s ease;
+}
+
+.vehicle-section.image-banner:hover img {
+  transform: scale(1.2);
+   filter: brightness(0) saturate(100%) invert(21%) sepia(89%) saturate(7471%) hue-rotate(356deg) brightness(88%) contrast(108%);
+}
+
+
+.vehicle-section.image-banner:hover p {
+  color: #d71a20;
+  transition: color 0.3s ease;
+}
+
+.vehicle-section p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
