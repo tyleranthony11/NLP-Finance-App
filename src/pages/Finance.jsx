@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 import "./Finance.css";
 
 function Finance() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const vehicleFormUrl = queryParams.get("vehicle") || "";
+  const [vehicle, setVehicle] = useState("");
+
+  useEffect(() => {
+    if (vehicleFormUrl) {
+      setVehicle(vehicleFormUrl);
+    }
+  }, [vehicleFormUrl]);
+
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         alert("Application submitted! We'll be in touch shortly.")
@@ -47,12 +61,13 @@ function Finance() {
           </div>
           <div className="form-group">
             <label>What type of vehicle are you interested in?</label>
-            <select required>
+            <select required value={vehicle}
+            onChange={(e) => setVehicle(e.target.value)}>
               <option value="">Select an option</option>
               <option value="powersports">Powersports</option>
               <option value="rv">RV / Travel Trailer</option>
               <option value="marine">Boat / Marine</option>
-              <option value="auto">Automotive</option>
+              <option value="automotive">Automotive</option>
               <option value="other">Other</option>
             </select>
           </div>

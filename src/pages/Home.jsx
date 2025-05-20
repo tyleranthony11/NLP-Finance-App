@@ -16,23 +16,27 @@ function Home() {
       </section>
       <section className="vehicle-banner">
         <div className="vehicle-section text-banner">
-          <p>Financing For Every Lifestyle</p>
+          <p>FINANCING FOR EVERY LIFESTYLE</p>
         </div>
         <div className="vehicle-section image-banner">
+          <Link to="/finance?vehicle=powersports">
           <img src="/images/atvicon.png" alt="Powersports" />
-          <p>Powersports</p>
+          <p>Powersports</p></Link>
         </div>
         <div className="vehicle-section image-banner">
+          <Link to="/finance?vehicle=marine">
           <img src="/images/boaticon.png" alt="Marine" />
-          <p>Marine</p>
+          <p>Marine</p></Link>
         </div>
         <div className="vehicle-section image-banner">
+            <Link to="/finance?vehicle=rv">
           <img src="/images/trailericon.png" alt="Travel Trailer" />
-          <p>Travel Trailer</p>
+          <p>Travel Trailer</p></Link>
         </div>
         <div className="vehicle-section image-banner">
+          <Link to="/finance?vehicle=automotive">
           <img src="/images/truckicon.png" alt="Automotive" />
-          <p>Automotive</p>
+          <p>Automotive</p></Link>
         </div>
       </section>
 
