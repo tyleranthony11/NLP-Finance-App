@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Finance from './pages/Finance';
 import Marketplace from './pages/Marketplace';
+import MarketplaceDetail from './components/MarketplaceDetail';
 import Dealers from './pages/Dealers';
 import About from './pages/About';
 import Privacy from './pages/Privacy';
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/marketplace" element={<Marketplace />} />
+          <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
           <Route path="/dealers" element={<Dealers />}/>
           <Route path="/about" element={<About />}/>
           <Route path="/privacy" element={<Privacy />} />

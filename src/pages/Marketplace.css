@@ -24,6 +24,8 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: transform 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .marketplace-card:hover {

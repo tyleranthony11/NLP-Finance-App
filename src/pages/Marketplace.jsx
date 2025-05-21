@@ -1,155 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { calculateBiWeekly } from '../utils';
+import dummyListings from "../data/dummyListings";
 import "./Marketplace.css";
-
-const dummyListings = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    address: "123 Main St",
-    phone: "709-123-4567",
-    dealership: false,
-    category: "rv",
-    make: "Grand Design",
-    model: "Imagine 3250BH",
-    year: 2022,
-    price: 68000,
-    description:
-      "Available to view in Pasadena. Bought new Sept 2023 and well taken care of on a seasonal lot. Made by the reputable Grand Design, a Winnebago company. Current models selling for $90K+. Selling because we’ve bought a cabin. $70,000 obo. Includes: Arctic package, built in solar panels keep your main lights and fridge functional off grid, full 4 person bunkhouse, outdoor kitchen with grill and bar fridge, sleeps 12, Bluetooth sound system, smart tv, covered during winter, fireplace heating and so much more. Please message for more information.",
-    photos: [
-      "/images/marketplace/traveltrailer1.jpg",
-      "/images/marketplace/traveltrailer2.jpg",
-      "/images/marketplace/traveltrailer3.jpg",
-      "/images/marketplace/traveltrailer4.jpg",
-    ],
-    rate: 5.99,
-    termMonths: 240,
-  },
-  {
-    id: 2,
-    name: "Brandon Clarke",
-    email: "bclarke@gmail.com",
-    address: "456 Main Ave",
-    phone: "709-321-4567",
-    dealership: false,
-    category: "automotive",
-    make: "Ford",
-    model: "F-150 Lariat Supercrew Cab",
-    year: 2017,
-    price: 32000,
-    description:
-      "Selling my 2017 F150 Lariat 5.0. Reason for selling is I have purchased a new vehicle. Truck has -6 inch Zone Lift Kit -35x12.50 R20 Hercules Terra Trac Tires 20x10 -18 Fuel coupler rims Muffler delete",
-    photos: [
-      "/images/marketplace/truck1.jpg",
-      "/images/marketplace/truck2.jpg",
-      "/images/marketplace/truck3.jpg",
-      "/images/marketplace/truck4.jpg",
-    ],
-    rate: 5.29,
-    termMonths: 84,
-  },
-  {
-    id: 3,
-    name: "Mark Moore",
-    email: "markmoore@hotmail.com",
-    address: "98 Main Rd",
-    phone: "709-123-7984",
-    dealership: false,
-    category: "marine",
-    make: "Bayliner",
-    model: "Cruiser 255",
-    year: 2002,
-    price: 37500,
-    description:
-      "For sale 2002 Celebrity Bayliner 255 cruiser and trailer. Has 6.2lt closed loop motor with Bravo 3 out drive w/dual props, 640 hours on the motor. Has full enclosure with Bimini . Sleeps up to 4 people has two fridges, stove hot/cold water and microwave oven. UMahogany table and all leather seating throughout along with a 6 speaker stereo system. Has a washroom/shower. 110v/12v converter, fish finder, depth sounder and extended swim deck. Very well maintained and kept boat. Trailer has all new suspension just replaced. $37,500.00 Ono Financing available at lower rate with shorter term",
-    photos: [
-      "/images/marketplace/boat1.jpg",
-      "/images/marketplace/boat2.jpg",
-      "/images/marketplace/boat3.jpg",
-      "/images/marketplace/boat4.jpg",
-    ],
-    rate: 11.99,
-    termMonths: 240,
-  },
-  {
-    id: 4,
-    name: "Blue Water Marine",
-    email: "sales@bluewatermarine.com",
-    address: "456 Dealership Ave",
-    phone: "709-123-4567",
-    dealership: true,
-    category: "marine",
-    make: "Lund",
-    model: "Predator",
-    year: 2025,
-    price: 35995,
-    description:
-      "Package includes a NEW 2025 LUND PREDATOR, Mercury 40ELHPT Sea Pro Outboard Engine and Easy Hauler Galvanized Trailer. This jon boat is ideal for hunting, fishing, or bowfishing. Features: ️Built-in Fuel Tank ️Garmin Striker 4 Fish Finder/GPS ️Rod & Tackle Storage ️18 GAL Livewell ️Navigation Lights Call us today at (709)782-3200 for more details! Visit our showroom at 16 Allston St, Mount Pearl to take a closer look at this impressive boat!",
-    photos: [
-      "/images/marketplace/dealerboat1.jpg",
-      "/images/marketplace/dealerboat2.jpg",
-      "/images/marketplace/dealerboat3.jpg",
-      "/images/marketplace/dealerboat4.jpg",
-    ],
-    rate: 5.29,
-    termMonths: 240,
-  },
-  {
-    id: 5,
-    name: "Edward James",
-    email: "edjames@gmail.com",
-    address: "1 Main Ave",
-    phone: "709-123-4567",
-    dealership: false,
-    category: "automotive",
-    make: "BMW",
-    model: "Z4 3.0i",
-    year: 2008,
-    price: 35000,
-    description:
-      "2008 BMW Z$ 3.0i inline 6 cylinder with 34,729 6 speed auto with sport mode and 6 speed paddle shift. British Racing Green with automatic tan convertible top and champagne leather interior. Michelin Pilot Sport run flat tires ( approx 4,000 miles) mounted on factory aluminum wheels, Car in showroom condition inside/outside and under hood. Car is stored in heated garage from late Sept to early June each year. I purchased this car in late 2009. Always service by trained BMW technician. Car will be sold with a completed inspection form. Lots of pictures upon request",
-    photos: [
-      "/images/marketplace/car1.jpg",
-      "/images/marketplace/car2.jpg",
-      "/images/marketplace/car3.jpg",
-      "/images/marketplace/car4.jpg",
-    ],
-    rate: 5.99,
-    termMonths: 60,
-  },
-  {
-    id: 6,
-    name: "MF Motorsports",
-    email: "sales@mfmotors.com",
-    address: "321 Dealership Lane",
-    phone: "709-123-5555",
-    dealership: true,
-    category: "powersports",
-    make: "Arctic Cat",
-    model: "M8000",
-    year: 2019,
-    price: 9500,
-    description:
-      "Looking to sell my 2019 Arctic Cat M8000. Sled is in mint shape with under 3000 kms. Reason for selling is little use for it.",
-    photos: [
-      "/images/marketplace/skidoo1.jpg",
-      "/images/marketplace/skidoo2.jpg",
-      "/images/marketplace/skidoo3.jpg",
-      "/images/marketplace/skidoo4.jpg",
-    ],
-    rate: 5.29,
-    termMonths: 60,
-  },
-];
-
-const calculateBiWeekly = (price, rate, termMonths) => {
-  const r = rate / 2600;
-  const n = (termMonths / 12) * 26;
-
-  const payment = (price * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-
-  return payment.toFixed(2);
-};
 
 function Marketplace() {
   const [sortKey, setSortKey] = useState("");
@@ -158,7 +11,6 @@ function Marketplace() {
   const [showPrivate, setShowPrivate] = useState(true);
   const [priceRange, setPriceRange] = useState("");
 
-  
 
   const filteredListings = dummyListings.filter((item) => {
     if (item.dealership && !showDealers) return false;
@@ -174,9 +26,9 @@ function Marketplace() {
     if (priceRange === "under10k" && item.price >= 10000) return false;
     if (priceRange === "10kto25k" && (item.price < 10000 || item.price > 25000))
       return false;
-    if (priceRange === "25kto50k" && (item.price < 25000 || item.price > 50000))
+    if (priceRange === "25kto50k" && (item.price <= 25000 || item.price >= 50000))
       return false;
-    if (priceRange === "over50k" && item.price <= 50000) return false;
+    if (priceRange === "over50k" && item.price < 50000) return false;
 
     return true;
   });
@@ -279,7 +131,7 @@ function Marketplace() {
                 checked={priceRange === "10kto25k"}
                 onChange={() => setPriceRange("10kto25k")}
               />
-              $10,000 - $25,000
+              $10,000 - $24,999
             </label>
             <label>
               <input
@@ -325,21 +177,16 @@ function Marketplace() {
 
       <div className="marketplace-grid">
         {sortedListings.map((item) => (
-          <div className="marketplace-card" key={item.id}>
-            <img src={item.photos[0]} alt={item.model} />
-            <div className="marketplace-info">
-              <h3>{item.year} {item.make} {item.model}</h3>
-              <p className="price">
-                <strong>Price:</strong> ${item.price.toLocaleString()}
-              </p>
-              <p className="payment">
-                <strong>Payment:</strong> ${calculateBiWeekly(item.price, item.rate, item.termMonths)} bi-weekly
-              </p>
-              <p className="terms">
-                Based on {item.termMonths} months at {item.rate}% APR
-              </p>
-            </div>
-          </div>
+                 <Link to={`/marketplace/${item.id}`} key={item.id} className="marketplace-card">
+              <img src={item.photos[0]} alt={item.model} />
+              <div className="marketplace-info">
+                <h3>{item.year} {item.make} {item.model}</h3>
+                <p><strong>Price:</strong> ${item.price.toLocaleString()}</p>
+                <p><strong>Payment:</strong> ${calculateBiWeekly(item.price, item.rate, item.termMonths)} bi-weekly</p>
+                <p>Based on {item.termMonths} months at {item.rate}% APR</p>
+              </div>
+            </Link>
+        
         ))}
       </div>
 
