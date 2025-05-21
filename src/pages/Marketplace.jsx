@@ -152,11 +152,13 @@ const calculateBiWeekly = (price, rate, termMonths) => {
 };
 
 function Marketplace() {
-  const [listings] = useState(dummyListings);
+  const [sortKey, setSortKey] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [showDealers, setShowDealers] = useState(true);
   const [showPrivate, setShowPrivate] = useState(true);
   const [priceRange, setPriceRange] = useState("");
+
+  
 
   const filteredListings = dummyListings.filter((item) => {
     if (item.dealership && !showDealers) return false;
@@ -179,6 +181,25 @@ function Marketplace() {
     return true;
   });
 
+
+  const sortedListings = [...filteredListings].sort((a, b) => {
+    switch (sortKey) {
+        case 'price-asc':
+            return a.price - b.price;
+        case 'price-desc':
+            return b.price - a.price;
+        case 'year-asc':
+            return a.year - b.year;
+        case 'year-desc':
+            return b.year - a.year;
+        case 'make-asc':
+            return a.make.localeCompare(b.make);
+        case 'make-desc':
+            return b.make.localeCompare(a.make);
+        default:
+            return b.id - a.id;
+    }
+  });
   return (
     <div className="marketplace-container">
       <h1>Marketplace</h1>
@@ -283,31 +304,49 @@ function Marketplace() {
           </div>
         </aside>
 
-        <div className="marketplace-grid">
-          {filteredListings.map((item) => (
-            <div className="marketplace-card" key={item.id}>
-              <img src={item.photos[0]} alt={item.model} />
-              <div className="marketplace-info">
-                <h3>
-                  {item.year} {item.make} {item.model}
-                </h3>
-                <p className="price">
-                  <strong>Price:</strong> ${item.price.toLocaleString()}
-                </p>
-                <p className="payment">
-                  <strong>Payment:</strong> $
-                  {calculateBiWeekly(item.price, item.rate, item.termMonths)}{" "}
-                  bi-weekly
-                </p>
-                <p className="terms">
-                  Based on {item.termMonths} months at {item.rate}% APR
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="marketplace-main">
+      
+      <div className="sort-controls">
+        <label htmlFor="sort">Sort by:</label>
+        <select
+          id="sort"
+          value={sortKey}
+          onChange={(e) => setSortKey(e.target.value)}
+        >
+          <option value="">None</option>
+          <option value="price-asc">Price (Low to High)</option>
+          <option value="price-desc">Price (High to Low)</option>
+          <option value="year-asc">Year (Low to High)</option>
+          <option value="year-desc">Year (High to Low)</option>
+          <option value="make-asc">Make (A to Z)</option>
+          <option value="make-desc">Make (Z to A)</option>
+        </select>
       </div>
+
+      <div className="marketplace-grid">
+        {sortedListings.map((item) => (
+          <div className="marketplace-card" key={item.id}>
+            <img src={item.photos[0]} alt={item.model} />
+            <div className="marketplace-info">
+              <h3>{item.year} {item.make} {item.model}</h3>
+              <p className="price">
+                <strong>Price:</strong> ${item.price.toLocaleString()}
+              </p>
+              <p className="payment">
+                <strong>Payment:</strong> ${calculateBiWeekly(item.price, item.rate, item.termMonths)} bi-weekly
+              </p>
+              <p className="terms">
+                Based on {item.termMonths} months at {item.rate}% APR
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
     </div>
+
+  </div>
+</div>
   );
 }
 
