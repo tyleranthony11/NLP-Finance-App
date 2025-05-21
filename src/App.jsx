@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Finance from './pages/Finance';
 import Marketplace from './pages/Marketplace';
-import MarketplaceDetail from './components/MarketplaceDetail';
+import MarketplaceDetail from './pages/MarketplaceDetail';
 import Dealers from './pages/Dealers';
 import About from './pages/About';
 import Privacy from './pages/Privacy';

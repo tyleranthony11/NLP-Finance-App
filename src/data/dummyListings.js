@@ -132,7 +132,6 @@ const dummyListings = [
       "/images/marketplace/skidoo1.jpg",
       "/images/marketplace/skidoo2.jpg",
       "/images/marketplace/skidoo3.jpg",
-      "/images/marketplace/skidoo4.jpg",
     ],
     rate: 5.29,
     termMonths: 60,

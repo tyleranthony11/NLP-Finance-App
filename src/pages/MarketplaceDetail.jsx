@@ -15,7 +15,7 @@ function MarketplaceDetail() {
 
   return (
     <div className="marketplace-detail">
-      <button className="back-button" onClick={() => navigate(-1)}>&larr; Back</button>
+      <button className="back-button" onClick={() => navigate(-1)}>&larr; Back to Listings</button>
 
       <h2>{listing.year} {listing.make} {listing.model}</h2>
       <div className="images">
