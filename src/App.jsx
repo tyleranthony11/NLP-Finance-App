@@ -21,22 +21,24 @@ function App() {
     });
   }, []);
   return (
-    <Router>
-      <Navbar />
-      <main style={{ paddingTop: '40px' }}> 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/finance" element={<Finance />} />
-          <Route path="/marketplace" element={<Marketplace />} />
-          <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
-          <Route path="/dealers" element={<Dealers />}/>
-          <Route path="/about" element={<About />}/>
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-        </Routes>
-      </main>
-      <Footer />
-    </Router>
+      <div className="app-container">
+      <Router>
+        <Navbar />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/finance" element={<Finance />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
+            <Route path="/dealers" element={<Dealers />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+          </Routes>
+        </main>
+        <Footer />
+      </Router>
+    </div>
   );
 }
 

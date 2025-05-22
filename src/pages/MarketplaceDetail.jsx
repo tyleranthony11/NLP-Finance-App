@@ -1,35 +1,48 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import dummyListings from "../data/dummyListings";
-import { calculateBiWeekly } from "../utils";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetail.css";
+import { calculateBiWeekly } from "../utils";
+import dummyListings from "../data/dummyListings"; // or wherever your data comes from
 
-function MarketplaceDetail() {
-  const { id } = useParams();
+export default function MarketplaceDetail() {
   const navigate = useNavigate();
-  const listing = dummyListings.find((item) => item.id === parseInt(id));
+  const { id } = useParams();
+  const listing = dummyListings.find((l) => l.id.toString() === id);
 
-  if (!listing) {
-    return <p>Listing not found.</p>;
-  }
+  const [mainImage, setMainImage] = useState(listing.photos[0]);
 
   return (
     <div className="marketplace-detail">
       <button className="back-button" onClick={() => navigate(-1)}>&larr; Back to Listings</button>
-
       <h2>{listing.year} {listing.make} {listing.model}</h2>
-      <div className="images">
-        {listing.photos.map((url, idx) => (
-          <img key={idx} src={url} alt={`${listing.make} ${listing.model} ${idx + 1}`} />
-        ))}
+
+      <div className="detail-layout">
+        <div className="image-gallery">
+          <img className="main-image" src={mainImage} alt="Main unit" />
+          <div className="thumbnail-row">
+            {listing.photos.map((url, idx) => (
+              <img 
+                key={idx}
+                src={url}
+                alt={`Thumbnail ${idx + 1}`}
+                onClick={() => setMainImage(url)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="detail-sidebar">
+          <p className="price">${listing.price.toLocaleString()}</p>
+          <p><strong>Bi-Weekly Payment:</strong> ${calculateBiWeekly(listing.price, listing.rate, listing.termMonths)}</p>
+          <p><strong>Terms:</strong> {listing.termMonths} months @ {listing.rate}%</p>
+          <p><strong>Seller:</strong> {listing.dealership ? "Dealership" : "Private Seller"}</p>
+        </div>
       </div>
-      <p><strong>Price:</strong> ${listing.price.toLocaleString()}</p>
-      <p><strong>Bi-Weekly Payment:</strong> ${calculateBiWeekly(listing.price, listing.rate, listing.termMonths)}</p>
-      <p><strong>Terms:</strong> {listing.termMonths} months at {listing.rate}% APR</p>
-      <p><strong>Seller:</strong> {listing.dealership ? "Dealership" : "Private Seller"}</p>
-      <p><strong>Description:</strong> {listing.description}</p>
+
+      <div className="description">
+        <h4>Description</h4>
+        <p>{listing.description}</p>
+      </div>
     </div>
   );
 }
-
-export default MarketplaceDetail;
