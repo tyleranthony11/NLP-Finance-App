@@ -58,11 +58,9 @@
     font-size: 1.1rem;
     margin: 0.25rem 0;
 }
-
-.marketplace-info .terms {
-    font-size: 0.85rem;
+#terms {
     color: #888;
-    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
 }
 
 .marketplace-info strong {

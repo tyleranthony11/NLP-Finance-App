@@ -183,7 +183,7 @@ function Marketplace() {
                 <h3>{item.year} {item.make} {item.model}</h3>
                 <p><strong>Price:</strong> ${item.price.toLocaleString()}</p>
                 <p><strong>Payment:</strong> ${calculateBiWeekly(item.price, item.rate, item.termMonths)} bi-weekly</p>
-                <p>Based on {item.termMonths} months at {item.rate}% APR</p>
+                <p id="terms">Based on {item.termMonths} months at {item.rate}% APR</p>
               </div>
             </Link>
         
