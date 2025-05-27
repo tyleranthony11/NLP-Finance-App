@@ -11,6 +11,8 @@ export default function MarketplaceDetail() {
   const [downPayment, setDownPayment] = useState("");
   const [customRate, setCustomRate] = useState(listing.rate);
   const [customTerm, setCustomTerm] = useState(listing.termMonths);
+  const minRate = 5.29;
+const maxRate = 24.99;
 
   
   const [mainImageIndex, setMainImageIndex] = useState(0);
@@ -74,16 +76,22 @@ export default function MarketplaceDetail() {
                   }}
                 />
               </label>
-              <label>
-                Interest Rate (%):
-                <input
-                  type="number"
-                  value={customRate}
-                  onChange={(e) => setCustomRate(Number(e.target.value))}
-                  step="0.01"
-                  min="0"
-                />
-              </label>
+             <label>
+  Interest Rate (%):
+  <input
+    type="number"
+    value={customRate}
+    onChange={(e) => setCustomRate(e.target.value)} 
+    onBlur={() => {
+      const value = parseFloat(customRate);
+      if (!isNaN(value)) {
+        const clamped = Math.min(Math.max(value, minRate), maxRate);
+        setCustomRate(clamped.toFixed(2));
+      }
+    }}
+    step="0.01"
+  />
+</label>
               <label>
                 Term (months):
                 <select
