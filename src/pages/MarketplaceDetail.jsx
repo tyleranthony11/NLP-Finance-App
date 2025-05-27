@@ -8,12 +8,19 @@ export default function MarketplaceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const listing = dummyListings.find((l) => l.id.toString() === id);
-  const [showCalculator, setShowCalculator] = useState(false);
   const [downPayment, setDownPayment] = useState("");
   const [customRate, setCustomRate] = useState(listing.rate);
   const [customTerm, setCustomTerm] = useState(listing.termMonths);
 
-  const [mainImage, setMainImage] = useState(listing.photos[0]);
+  
+  const [mainImageIndex, setMainImageIndex] = useState(0);
+  const mainImage = listing.photos[mainImageIndex];
+
+  const handleImageNav = (direction) => {
+    const total = listing.photos.length;
+    const newIndex = (mainImageIndex + direction + total) % total;
+    setMainImageIndex(newIndex);
+  };
 
   return (
     <div className="marketplace-detail">
@@ -26,14 +33,20 @@ export default function MarketplaceDetail() {
 
       <div className="detail-layout">
         <div className="image-gallery">
-          <img className="main-image" src={mainImage} alt="Main unit" />
+          <div className="main-image-wrapper">
+            <button className="image-arrow left" onClick={() => handleImageNav(-1)} aria-label="Previous Image">&#10094;</button>
+            <a href={mainImage} target="_blank" rel="noopener noreferrer"><img className="main-image" src={mainImage} alt="Main unit" /></a>
+            <button className="image-arrow right" onClick={() => handleImageNav(1)} aria-label="Next Image">&#10095;</button>
+          </div>
+          
           <div className="thumbnail-row">
             {listing.photos.map((url, idx) => (
               <img
                 key={idx}
                 src={url}
                 alt={`Thumbnail ${idx + 1}`}
-                onClick={() => setMainImage(url)}
+                onClick={() => setMainImageIndex(idx)}
+                className={idx === mainImageIndex ? "active-thumbnail" : ""}
               />
             ))}
           </div>

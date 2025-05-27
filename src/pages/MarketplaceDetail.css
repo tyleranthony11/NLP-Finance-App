@@ -33,9 +33,10 @@
 }
 
 .image-gallery {
-  flex: 1;
+  flex: 2;
   min-width: 300px;
 }
+
 
 .image-gallery .main-image {
   width: 100%;
@@ -44,6 +45,27 @@
   border-radius: 8px;
   margin-bottom: 1rem;
 }
+.image-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(53, 67, 80, 0.5);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  z-index: 2;
+}
+.image-arrow:hover {
+  background: rgba(53, 67, 80, 0.8);
+}
+
+.main-image-wrapper {
+  position: relative;
+  display: in;
+}
+
 
 .thumbnail-row {
   display: flex;
@@ -118,6 +140,13 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+}
+.main-image {
+  display: block;
+  width: 100%;
+}
+.image-arrow.right {
+  right: 0;
 }
 
 .toggle-calculator-btn:hover {
