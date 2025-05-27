@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetail.css";
-import { calculateBiWeekly } from "../utils";
+import { calculateBiWeekly, calculateWeekly, calculateMonthly } from "../utils";
 import dummyListings from "../data/dummyListings";
 
 export default function MarketplaceDetail() {
@@ -9,12 +9,13 @@ export default function MarketplaceDetail() {
   const { id } = useParams();
   const listing = dummyListings.find((l) => l.id.toString() === id);
   const [downPayment, setDownPayment] = useState("");
+  const [customPrice, setCustomPrice] = useState(listing.price);
   const [customRate, setCustomRate] = useState(listing.rate);
   const [customTerm, setCustomTerm] = useState(listing.termMonths);
+  const [frequency, setFrequency] = useState("bi-weekly");
   const minRate = 5.29;
-const maxRate = 24.99;
+  const maxRate = 24.99;
 
-  
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const mainImage = listing.photos[mainImageIndex];
 
@@ -36,11 +37,25 @@ const maxRate = 24.99;
       <div className="detail-layout">
         <div className="image-gallery">
           <div className="main-image-wrapper">
-            <button className="image-arrow left" onClick={() => handleImageNav(-1)} aria-label="Previous Image">&#10094;</button>
-            <a href={mainImage} target="_blank" rel="noopener noreferrer"><img className="main-image" src={mainImage} alt="Main unit" /></a>
-            <button className="image-arrow right" onClick={() => handleImageNav(1)} aria-label="Next Image">&#10095;</button>
+            <button
+              className="image-arrow left"
+              onClick={() => handleImageNav(-1)}
+              aria-label="Previous Image"
+            >
+              &#10094;
+            </button>
+            <a href={mainImage} target="_blank" rel="noopener noreferrer">
+              <img className="main-image" src={mainImage} alt="Main unit" />
+            </a>
+            <button
+              className="image-arrow right"
+              onClick={() => handleImageNav(1)}
+              aria-label="Next Image"
+            >
+              &#10095;
+            </button>
           </div>
-          
+
           <div className="thumbnail-row">
             {listing.photos.map((url, idx) => (
               <img
@@ -59,76 +74,104 @@ const maxRate = 24.99;
             ${listing.price.toLocaleString()}
             <span className="plus-hst">+ HST</span>
           </p>
-      
-            <div className="payment-calculator">
-              <label>
-                Down Payment ($):
-                <input
-                  type="number"
-                  min="0"
-                  max={listing.price}
-                  value={downPayment}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (Number(value) <= listing.price) {
-                      setDownPayment(value);
-                    }
-                  }}
-                />
-              </label>
-             <label>
-  Interest Rate (%):
-  <input
-    type="number"
-    value={customRate}
-    onChange={(e) => setCustomRate(e.target.value)} 
-    onBlur={() => {
-      const value = parseFloat(customRate);
-      if (!isNaN(value)) {
-        const clamped = Math.min(Math.max(value, minRate), maxRate);
-        setCustomRate(clamped.toFixed(2));
-      }
-    }}
-    step="0.01"
-  />
-</label>
-              <label>
-                Term (months):
-                <select
-                  value={customTerm}
-                  onChange={(e) => setCustomTerm(Number(e.target.value))}
-                >
-                  <option value={60}>60</option>
-                  <option value={72}>72</option>
-                  <option value={84}>84</option>
-                  <option value={96}>96</option>
-                  <option value={108}>108</option>
-                  <option value={120}>120</option>
-                  <option value={132}>132</option>
-                  <option value={144}>144</option>
-                  <option value={156}>156</option>
-                  <option value={168}>168</option>
-                  <option value={180}>180</option>
-                  <option value={192}>192</option>
-                  <option value={204}>204</option>
-                  <option value={216}>216</option>
-                  <option value={228}>228</option>
-                  <option value={240}>240</option>
-                </select>
-              </label>
 
-              <p className="estimated-payment">
-                <strong>Estimated Payment:</strong> $
-                {calculateBiWeekly(
-                  listing.price - Number(downPayment || 0),
-                  customRate,
-                  customTerm
-                )}
-                <span className="plus-hst">+ HST</span> bi-weekly
-              </p>
+          <div className="estimated-payment">
+            <div className="label">Estimated Payment:</div>
+            <div className="main-payment-amount">
+              $
+              {{
+                "bi-weekly": calculateBiWeekly,
+                weekly: calculateWeekly,
+                monthly: calculateMonthly,
+              }[frequency](
+                customPrice - Number(downPayment || 0),
+                customRate,
+                customTerm
+              )}{" "}
+              / {frequency.charAt(0).toUpperCase() + frequency.slice(1)}
             </div>
-  
-          <a href="/finance" className="apply-now-btn">Apply Now</a>
+          </div>
+          <div className="payment-calculator">
+            <label>
+              Product Price ($):
+              <input
+                type="number"
+                min="0"
+                value={customPrice}
+                onChange={(e) => setCustomPrice(Number(e.target.value))}
+              />
+            </label>
+
+            <label>
+              Down Payment ($):
+              <input
+                type="number"
+                min="0"
+                max={customPrice}
+                value={downPayment}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (Number(value) <= customPrice) {
+                    setDownPayment(value);
+                  }
+                }}
+              />
+            </label>
+
+            <label>
+              Interest Rate (%):
+              <input
+                type="number"
+                value={customRate}
+                onChange={(e) => setCustomRate(e.target.value)}
+                onBlur={() => {
+                  const value = parseFloat(customRate);
+                  if (!isNaN(value)) {
+                    const clamped = Math.min(Math.max(value, minRate), maxRate);
+                    setCustomRate(clamped.toFixed(2));
+                  }
+                }}
+                step="0.01"
+              />
+            </label>
+
+            <label>
+              Payment Frequency:
+              <select
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value)}
+              >
+                <option value="bi-weekly">Bi-Weekly</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </label>
+
+            <label>
+              Term (months):
+              <select
+                value={customTerm}
+                onChange={(e) => setCustomTerm(Number(e.target.value))}
+              >
+                {[...Array(16)].map((_, i) => {
+                  const months = 60 + i * 12;
+                  return (
+                    <option key={months} value={months}>
+                      {months}
+                    </option>
+                  );
+                })}
+              </select>
+            </label>
+          </div>
+          <p className="calculator-disclaimer">
+            *Payment amount is an estimate for illustrative purposes only. HST
+            and other fees not included. All clients are subject to credit approval.
+          </p>
+
+          <a href="/finance" className="apply-now-btn">
+            Apply Now
+          </a>
         </div>
       </div>
 
