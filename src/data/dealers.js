@@ -1,4 +1,10 @@
 const dealers = {
+     "NLP Finance Marketplace" : {
+        name: "NLP Finance Marketplace",
+        logo: "/images/dealers/nlp-finance-marketplace.png",
+        website: "https://nlpfinance.ca/",
+        location: "Grand Falls-Windsor, NL"
+    },
     "MF Motorsports" : {
         name: "MF Motorsports",
         logo: "/images/dealers/mf-motors.png",

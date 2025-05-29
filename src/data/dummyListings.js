@@ -1,6 +1,7 @@
 const dummyListings = [
   {
     id: 1,
+    dealership: "NLP Finance Marketplace",
     category: "rv",
     make: "Grand Design",
     model: "Imagine 3250BH",
@@ -19,6 +20,7 @@ const dummyListings = [
   },
   {
     id: 2,
+    dealership: "NLP Finance Marketplace",
     category: "automotive",
     make: "Ford",
     model: "F-150 Lariat Supercrew Cab",
@@ -37,6 +39,7 @@ const dummyListings = [
   },
   {
     id: 3,
+    dealership: "NLP Finance Marketplace",
     category: "marine",
     make: "Bayliner",
     model: "Cruiser 255",
@@ -74,6 +77,7 @@ const dummyListings = [
   },
   {
     id: 5,
+    dealership: "NLP Finance Marketplace",
     category: "automotive",
     make: "BMW",
     model: "Z4 3.0i",

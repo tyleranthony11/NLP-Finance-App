@@ -11,7 +11,7 @@ function Marketplace() {
   const [selectedDealers, setSelectedDealers] = useState([]);
 
   const allDealers = Array.from(
-    new Set(dummyListings.map((item) => item.dealership || "Private Seller"))
+    new Set(dummyListings.map((item) => item.dealership))
   );
 
   const filteredListings = dummyListings.filter((item) => {
