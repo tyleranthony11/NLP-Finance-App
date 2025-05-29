@@ -3,11 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetail.css";
 import { calculateBiWeekly, calculateWeekly, calculateMonthly } from "../utils";
 import dummyListings from "../data/dummyListings";
+import dealers from '../data/dealers';
 
 export default function MarketplaceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const listing = dummyListings.find((l) => l.id.toString() === id);
+  const dealerInfo = listing.dealership ? dealers[listing.dealership] : null;
   const [downPayment, setDownPayment] = useState("");
   const [customPrice, setCustomPrice] = useState(listing.price);
   const [customRate, setCustomRate] = useState(listing.rate);
@@ -174,8 +176,8 @@ export default function MarketplaceDetail() {
           </a>
         </div>
       </div>
-
-      <div className="specs">
+<div className="info-row">
+<div className="specs">
         <h3>Specifications</h3>
         <div>
           <strong>Year:</strong> {listing.year}
@@ -187,6 +189,26 @@ export default function MarketplaceDetail() {
           <strong>Model:</strong> {listing.model}
         </div>
       </div>
+
+      {dealerInfo && (
+        <div className="dealer-info">
+          <p className="dealer-label">Offered by:</p>
+          <div className="dealer-logo-wrapper">
+            <a href={dealerInfo.website} target="_blank" rel="noopener noreferrer">
+             <img src={dealerInfo.logo}
+            alt={`${dealerInfo.name} logo`}
+            className="dealer-logo" /> 
+            </a>
+          </div>
+          <p className="dealer-name">{dealerInfo.name}</p>
+          <p className="dealer-location">{dealerInfo.location}</p>
+          </div>
+          
+      )}
+</div>
+      
+
+      
 
       <div className="description">
         <h4>Description</h4>

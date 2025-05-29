@@ -116,11 +116,7 @@ const dummyListings = [
   },
   {
     id: 6,
-    name: "MF Motorsports",
-    email: "sales@mfmotors.com",
-    address: "321 Dealership Lane",
-    phone: "709-123-5555",
-    dealership: true,
+    dealership: "MF Motorsports",
     category: "powersports",
     make: "Arctic Cat",
     model: "M8000",
