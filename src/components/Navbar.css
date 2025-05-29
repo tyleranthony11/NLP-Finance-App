@@ -23,7 +23,7 @@ display: inline-block;
 }
 
 .navbar-links {
-  color:#354350;
+  color: #354350;
   list-style: none;
   display: flex;
   gap: 1.5rem;
