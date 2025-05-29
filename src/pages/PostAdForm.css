@@ -1,17 +1,32 @@
 .post-ad-form-container {
   max-width: 700px;
-  margin: 0 auto;
-  padding-top: 4rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  margin: 3rem auto 2rem auto;
+  padding: 2rem;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+.post-ad-form-container h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.post-ad-form-container p {
+    margin-bottom: 2rem;
+    color: #555;
+    text-align: center;
+}
+
+.marketplace-logo {
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  max-width: 200px;
+}
+
 .post-ad-form h2 {
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   color: #354350;
 }
 
@@ -25,6 +40,10 @@
   margin-bottom: 1.5rem;
 }
 
+.post-ad-form legend {
+    margin-bottom: 1rem;
+}
+
 .post-ad-form input {
   display: block;
   width: 100%;
@@ -33,6 +52,17 @@
   border: 1px solid #ccc;
   border-radius: 8px;
 }
+.post-ad-form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+}
+
 
 .submit-button {
   background-color: #d81a20;

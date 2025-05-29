@@ -10,6 +10,7 @@ function PostAdForm() {
     make: "",
     model: "",
     kms: "",
+    description: "",
     photos: [],
   });
 
@@ -30,6 +31,9 @@ function PostAdForm() {
 
   return (
     <div className="post-ad-form-container">
+        <img src="/images/dealers/nlp-finance-marketplace.png"
+        alt="Marketplace Logo"
+        className="marketplace-logo" />
       <h2>List Your Vehicle for Sale</h2>
       <p>Fill out the form below to submit your unit to our marketplace.</p>
       <form onSubmit={handleSubmit} className="post-ad-form">
@@ -92,6 +96,14 @@ function PostAdForm() {
             name="kms"
             placeholder="Kilometers (optional)"
             value={formData.kms}
+            onChange={handleChange}
+          />
+           <textarea
+            name="description"
+            placeholder="Describe the condition, features, or any extra details..."
+            rows="5"
+            required
+            value={formData.description}
             onChange={handleChange}
           />
         </fieldset>
