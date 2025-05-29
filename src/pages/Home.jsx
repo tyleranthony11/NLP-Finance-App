@@ -39,6 +39,27 @@ function Home() {
           <p>Automotive</p></Link>
         </div>
       </section>
+      <section className="marketplace-promo">
+        <div className="marketplace-text" data-aos="fade-up">
+          <h2>Introducing the NLP Finance Marketplace</h2>
+          
+          <p>
+            Looking to sell your vehicle? Whether it's a powersports unit, RV, boat or autombile - list it for free on our Marketplace and we can offer financing to your buyer at no cost to you.
+          </p>
+          <p>
+            Browse a growing selection of both dealership and private-seller listings and get pre-approved for financing directly through us.
+          </p>
+          <div className="marketplace-buttons">
+            <Link to="/marketplace" className="browse-button">
+            <img src="/images/marketplace-icon.png" alt="Post Ad" />Browse Marketplace</Link>
+            <Link to="/PostAdForm" className="list-button">
+            <img src="/images/post-ad-icon.png" />
+            Post an Ad</Link>
+          </div>
+        </div>
+      
+
+      </section>
 
       <section className="why-choose-us">
         <h2>Why Choose Us?</h2>

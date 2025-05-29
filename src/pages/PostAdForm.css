@@ -1,0 +1,50 @@
+.post-ad-form-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-top: 4rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-ad-form h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #354350;
+}
+
+.post-ad-form p {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.post-ad-form fieldset {
+  border: none;
+  margin-bottom: 1.5rem;
+}
+
+.post-ad-form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.submit-button {
+  background-color: #d81a20;
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #b5161b;
+}

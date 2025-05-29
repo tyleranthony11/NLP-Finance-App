@@ -12,6 +12,7 @@ import Terms from './pages/Terms';
 import Footer from './components/Footer';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import PostAdForm from './pages/PostAdForm';
 
 function App() {
     useEffect(() => {
@@ -30,6 +31,7 @@ function App() {
             <Route path="/finance" element={<Finance />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
+            <Route path="/PostAdForm" element={<PostAdForm />} />
             <Route path="/dealers" element={<Dealers />} />
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />

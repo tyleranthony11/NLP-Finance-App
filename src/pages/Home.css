@@ -42,10 +42,102 @@
     background-color: #b7161b;
 }
 
+.marketplace-promo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  text-align: center;
+ 
+  border-top: 1px solid #e5e5e5;
+  margin-top: -150px;
+}
+
+.marketplace-text {
+  flex: 1 1 50%;
+  padding: 1rem;
+}
+
+.marketplace-text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #354350;
+}
+
+.marketplace-text p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.marketplace-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.browse-button,
+.list-button {
+  background-color: #d81a20;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.browse-button:hover,
+.list-button:hover {
+  background-color: #b5161b;
+}
+
+.marketplace-images {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.marketplace-images img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.marketplace-images img:hover {
+  transform: scale(1.03);
+}
+
+.marketplace-buttons a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #d81a20;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.marketplace-buttons a:hover {
+  background-color: #b5161b;
+}
+
+.marketplace-buttons img {
+  height: 24px;
+  width: 24px;
+}
+
 
 .why-choose-us {
    color: #354350;
-  padding: 2rem 2rem;
+  padding: 5rem 2rem;
   text-align: center;
   max-width: 1500px;
   margin: 0 auto;
