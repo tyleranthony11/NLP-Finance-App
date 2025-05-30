@@ -17,6 +17,14 @@ const dealers = {
         website: "https://bluewatermarine.ca/",
         location: "Mount Pearl, NL"
     },
+    
+    "Mid Island Motorsports" : {
+        name: "Mid Island Motorsports",
+        logo: "/images/dealers/mid-island-motorsports.png",
+        website: "https://www.midislandmotorsports.com/",
+        location: "Springdale, NL"
+    }
+
 }
 
 export default dealers;
