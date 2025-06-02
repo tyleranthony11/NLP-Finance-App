@@ -25,7 +25,7 @@ function PostAdForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Send formData to backend
+    // TODO: Send form data to backend
     console.log("Submitted Ad:", formData);
   };
 

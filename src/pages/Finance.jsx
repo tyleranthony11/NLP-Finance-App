@@ -19,6 +19,7 @@ function Finance() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // TODO: Send form data to back end
         alert("Application submitted! We'll be in touch shortly.")
     };
 
