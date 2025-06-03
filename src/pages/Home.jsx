@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaPenAlt } from "react-icons/fa";
+import { FaPencilAlt, FaThLarge } from "react-icons/fa";
 import "./Home.css";
 
 function Home() {
@@ -52,9 +52,9 @@ function Home() {
           </p>
           <div className="marketplace-buttons">
             <Link to="/marketplace" className="browse-button">
-            <img src="/images/marketplace-icon.png" alt="Post Ad" />Browse Marketplace</Link>
+            <FaThLarge className="button-icon" />Browse Marketplace</Link>
             <Link to="/PostAdForm" className="list-button">
-            <img src="/images/post-ad-icon.png" />
+            <FaPencilAlt className="button-icon" />
             Post an Ad</Link>
           </div>
         </div>
