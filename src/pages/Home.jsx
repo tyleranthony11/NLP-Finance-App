@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaPenAlt } from "react-icons/fa";
 import "./Home.css";
 
 function Home() {

@@ -1,6 +1,7 @@
 import React, {useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import TopNav from './components/TopNav';
 import Home from './pages/Home';
 import Finance from './pages/Finance';
 import Marketplace from './pages/Marketplace';
@@ -24,6 +25,7 @@ function App() {
   return (
       <div className="app-container">
       <Router>
+        <TopNav />
         <Navbar />
         <main className="main-content">
           <Routes>
