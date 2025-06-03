@@ -10,6 +10,7 @@
     align-items: center;
     color: #fff;
     text-align: center;
+
     background-color: #f8f8f8;
 }
 
@@ -49,8 +50,6 @@
   padding-left: 2rem;
   padding-right: 2rem;
   text-align: center;
- 
-  border-top: 1px solid #e5e5e5;
   margin-top: -150px;
 }
 
