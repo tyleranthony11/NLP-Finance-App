@@ -1,0 +1,64 @@
+.login-dialog .MuiPaper-root {
+  border-radius: 12px;
+  padding: 24px;
+  width: 350px;
+}
+
+.login-title {
+  text-align: center;
+  font-weight: 600;
+  color: #354350;
+  margin-bottom: 8px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+
+.login-dialog .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #d81a20;
+}
+
+.login-dialog .MuiInputLabel-root.Mui-focused {
+  color: #d81a20;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 24px 16px;
+}
+
+.login-cancel {
+  color: #d81a20 !important;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.login-submit {
+  background-color: #d81a20 !important;
+  color: white !important;
+  font-weight: bold;
+  text-transform: none !important;
+  border-radius: 8px;
+}
+
+.login-submit:hover {
+  background-color: #b7161b !important;
+}
+
+.login-cancel {
+  color: #d81a20 !important;
+  font-weight: 500;
+  text-transform: none;
+  background-color: transparent !important;
+}
+
+.login-cancel:hover {
+  background-color: rgba(216, 26, 32, 0.1) !important; 
+  color: #b7161b !important; 
+}
