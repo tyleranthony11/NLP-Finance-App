@@ -16,14 +16,16 @@ function LoginModal({ open, onClose }) {
 
   const handleLogin = () => {
     onClose();
-    navigate("/dashboard");
+    window.open("/dashboard", "_blank");
   };
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      PaperProps={{ className: "login-dialog" }}
+      slotProps={{
+        paper:{ className: "login-dialog" }
+        }}
     >
       <DialogTitle className="login-title">Employee Login</DialogTitle>
       <DialogContent>

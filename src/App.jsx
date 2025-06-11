@@ -1,7 +1,10 @@
-import React, {useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import TopNav from './components/TopNav';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+import ClientLayout from './layouts/ClientLayout';
+
 import Home from './pages/Home';
 import Finance from './pages/Finance';
 import Marketplace from './pages/Marketplace';
@@ -10,10 +13,9 @@ import Dealers from './pages/Dealers';
 import About from './pages/About';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
-import Footer from './components/Footer';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 import PostAdForm from './pages/PostAdForm';
+import Dashboard from './pages/Dashboard';
+
 
 function App() {
     useEffect(() => {
@@ -23,24 +25,84 @@ function App() {
     });
   }, []);
   return (
-      <div className="app-container">
+    <div className="app-container">
       <Router>
-        <TopNav />
-        <Navbar />
-        <main className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/finance" element={<Finance />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/marketplace/:id" element={<MarketplaceDetail />} />
-            <Route path="/PostAdForm" element={<PostAdForm />} />
-            <Route path="/dealers" element={<Dealers />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-          </Routes>
-        </main>
-        <Footer />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ClientLayout>
+                <Home />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/finance"
+            element={
+              <ClientLayout>
+                <Finance />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/marketplace"
+            element={
+              <ClientLayout>
+                <Marketplace />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/marketplace/:id"
+            element={
+              <ClientLayout>
+                <MarketplaceDetail />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/PostAdForm"
+            element={
+              <ClientLayout>
+                <PostAdForm />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/dealers"
+            element={
+              <ClientLayout>
+                <Dealers />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <ClientLayout>
+                <About />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/privacy"
+            element={
+              <ClientLayout>
+                <Privacy />
+              </ClientLayout>
+            }
+          />
+          <Route
+            path="/terms"
+            element={
+              <ClientLayout>
+                <Terms />
+              </ClientLayout>
+            }
+          />
+
+          <Route path="/dashboard/*" element={<Dashboard />} />
+        </Routes>
       </Router>
     </div>
   );
