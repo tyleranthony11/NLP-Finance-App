@@ -39,7 +39,7 @@
 }
 
 .dashboard-nav-item {
-  color: #ccc;
+  color: #ccc !important;
 }
 
 .dashboard-nav-item:hover {
@@ -61,7 +61,7 @@
 }
 
 .dashboard-nav-icon {
-  color: inherit;
+  color: #ccc !important;
 }
 
 .dashboard-main {

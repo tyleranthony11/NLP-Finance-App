@@ -14,20 +14,78 @@ import {
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import StorefrontIcon from "@mui/icons-material/Storefront";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import BarChartIcon from '@mui/icons-material/BarChart';
+import SettingsIcon from "@mui/icons-material/Settings";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { Collapse } from "@mui/material";
+import DashboardHome from "../pages/dashboard/DashboardHome"
 import MarketplaceManager from "../pages/dashboard/MarketplaceManager";
 import "./DashboardLayout.css";
 
 const logoUrl = "/images/nlplogo1.png";
-const drawerWidth = 240;
 
 const navItems = [
-    { text: "Home", icon: <HomeIcon />, route: "/dashboard" },
-    { text: "Marketplace", icon: <StorefrontIcon />, route: "/dashboard/marketplace" },
+  {
+    text: "Dashboard",
+    icon: <HomeIcon />,
+    route: "/dashboard",
+  },
+  {
+    text: "Leads",
+    icon: <ContactPhoneIcon />,
+    route: "/dashboard/leads",
+  },
+  {
+    text: "Marketplace",
+    icon: <StorefrontIcon />,
+    children: [
+      {
+        text: "Active Listings",
+        icon: <CheckCircleOutlineIcon />,
+        route: "/dashboard/marketplace",
+      },
+      {
+        text: "Pending Listings",
+        icon: <HourglassEmptyIcon />,
+        route: "/dashboard/marketplace/pending",
+      },
+      {
+        text: "Post New Ad",
+        icon: <AddBoxIcon />,
+        route: "/dashboard/marketplace/new",
+      },
+    ],
+  },
+  {
+    text: "Funded Deals",
+    icon: <AttachMoneyIcon />,
+    route: "/dashboard/funded-deals",
+  },
+  {
+    text: "Income Reports",
+    icon: <BarChartIcon />,
+    route: "/dashboard/income-reports",
+  },
+  {
+    text: "Settings",
+    icon: <SettingsIcon />,
+    route: "/dashboard/settings",
+  },
 ];
-
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [openMenus, setOpenMenus] = React.useState({});
+  const handleToggle = (text) => {
+  setOpenMenus((prev) => ({ ...prev, [text]: !prev[text] }));
+};
+
+
 
   return (
     <Box className="dashboard-root">
@@ -45,26 +103,57 @@ const DashboardLayout = () => {
           <img src={logoUrl} alt="Company Logo" />
         </Toolbar>
         <Box className="dashboard-nav">
-          <List>
-            {navItems.map(({ text, icon, route }) => (
+  <List>
+  {navItems.map(({ text, icon, route, children }) => (
+    <React.Fragment key={text}>
+      <ListItemButton
+        onClick={() => {
+          if (children) {
+            handleToggle(text);
+          } else {
+            navigate(route);
+          }
+        }}
+        selected={location.pathname === route}
+        className={`dashboard-nav-item ${location.pathname === route ? "active" : ""}`}
+      >
+        <ListItemIcon className="dashboard-nav-icon">{icon}</ListItemIcon>
+        <ListItemText primary={text} />
+        {children ? (
+          openMenus[text] ? <ExpandLess /> : <ExpandMore />
+        ) : null}
+      </ListItemButton>
+
+      {children && (
+        <Collapse in={openMenus[text]} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {children.map((child) => (
               <ListItemButton
-                key={text}
-                selected={location.pathname === route}
-                onClick={() => navigate(route)}
+                key={child.text}
+                sx={{ pl: 4 }}
+                onClick={() => navigate(child.route)}
+                selected={location.pathname === child.route}
                 className={`dashboard-nav-item ${
-                  location.pathname === route ? "active" : ""
+                  location.pathname === child.route ? "active" : ""
                 }`}
               >
-                <ListItemIcon className="dashboard-nav-icon">{icon}</ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemIcon className="dashboard-nav-icon">{child.icon}</ListItemIcon>
+                <ListItemText primary={child.text} />
               </ListItemButton>
             ))}
           </List>
+        </Collapse>
+      )}
+    </React.Fragment>
+  ))}
+</List>
+
         </Box>
       </Drawer>
 
       <Box component="main" className="dashboard-main">
         <Routes>
+            <Route path="/" element={<DashboardHome />} />
           <Route path="marketplace" element={<MarketplaceManager />} />
         </Routes>
       </Box>
