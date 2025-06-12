@@ -45,7 +45,7 @@ const navItems = [
     icon: <StorefrontIcon />,
     children: [
       {
-        text: "Active Listings",
+        text: "Inventory",
         icon: <CheckCircleOutlineIcon />,
         route: "/dashboard/marketplace",
       },
