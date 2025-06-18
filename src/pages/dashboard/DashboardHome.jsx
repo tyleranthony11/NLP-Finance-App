@@ -5,8 +5,8 @@ import "./DashboardHome.css";
 const DashboardHome = () => {
   const cards = [
     { title: "Active Listings", count: 24, color: "blue" },
-    { title: "New Submissions", count: 5, color: "red" },
-    { title: "Total Leads", count: 18, color: "green" },
+    { title: "Pending Listings", count: 5, color: "red" },
+    { title: "New Leads", count: 18, color: "green" },
     { title: "Funded Deals", count: 9, color: "purple" },
   ];
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginModal from "./LoginModal";
-import { FaPencilAlt, FaUser } from "react-icons/fa"; 
+import { FaPencilAlt, FaUser } from "react-icons/fa";
 import "./TopNav.css";
 
 function TopNav() {
@@ -17,10 +17,10 @@ function TopNav() {
 
         <div className="top-nav-separator" />
 
-        <button 
-          className="login-link" 
-          onClick={() => setOpenLogin(true)} 
-          type="button"  
+        <button
+          className="login-link"
+          onClick={() => setOpenLogin(true)}
+          type="button"
         >
           <FaUser className="top-nav-icon" />
           Login
