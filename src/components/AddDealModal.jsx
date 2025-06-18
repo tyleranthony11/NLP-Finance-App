@@ -17,6 +17,9 @@ const AddDealModal = ({ open, onClose }) => {
           <Grid item xs={12}>
             <TextField label="Dealer Name" fullWidth />
           </Grid>
+          <Grid item xs={12}>
+            <TextField label="Lender Name" fullWidth />
+          </Grid>
           <Grid item xs={6}>
             <TextField label="Brokerage Fee" type="number" fullWidth />
           </Grid>
@@ -30,17 +33,31 @@ const AddDealModal = ({ open, onClose }) => {
             <TextField label="CI Insurance" type="number" fullWidth />
           </Grid>
           <Grid item xs={6}>
+            <TextField label="GAP Insurance" type="number" fullWidth />
+          </Grid>
+          <Grid item xs={6}>
+            <TextField label="Warranty" type="number" fullWidth />
+          </Grid>
+          <Grid item xs={6}>
             <TextField label="Bank Reserve" type="number" fullWidth />
           </Grid>
           <Grid item xs={6}>
             <TextField label="Dealer Reserve" type="number" fullWidth />
           </Grid>
+          <Grid item xs={6}>
+            <TextField label="NLP Finance Reserve" type="number" fullWidth />
+          </Grid>
           <Grid item xs={12}>
             <TextField
-              label="Date"
+              label="Deal Date"
               type="date"
               fullWidth
-              slotProps={{ shrink: true }}
+              required
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
             />
           </Grid>
           <Grid item xs={12} sx={{ textAlign: "right" }}>
