@@ -16,6 +16,7 @@ import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AddDealModal from "../../components/AddDealModal";
 import "./FundedDeals.css";
+import { formatLocalDate } from "../../utils";
 
 const FundedDeals = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -86,7 +87,7 @@ const FundedDeals = () => {
             {deals.map((deal, idx) => (
               <TableRow key={idx}>
                 <TableCell>{deal.customer}</TableCell>
-                <TableCell>{deal.date}</TableCell>
+                <TableCell>{formatLocalDate(deal.date)}</TableCell>
                 <TableCell>${deal.income.toLocaleString()}</TableCell>
               </TableRow>
             ))}

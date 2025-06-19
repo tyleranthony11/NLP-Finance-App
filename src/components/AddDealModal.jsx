@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Modal, Box, Typography, TextField, Button, Grid } from "@mui/material";
 import "./AddDealModal.css";
 
+const today = new Date().toISOString().split("T")[0];
+
 const AddDealModal = ({ open, onClose, onAddDeal }) => {
   const initialState = {
     customer: "",
@@ -17,7 +19,7 @@ const AddDealModal = ({ open, onClose, onAddDeal }) => {
     dealerReserve: "",
     nlpReserve: "",
     otherFI: "",
-    date: "",
+    date: today,
   };
 
   const [dealData, setDealData] = useState(initialState);
@@ -32,6 +34,11 @@ const AddDealModal = ({ open, onClose, onAddDeal }) => {
   };
 
   const handleSave = () => {
+    if (!dealData.customer.trim()) {
+      alert("Customer Name is required.");
+      return;
+    }
+
     const income =
       Number(dealData.brokerageFee) +
       Number(dealData.lifeInsurance) +
@@ -70,6 +77,7 @@ const AddDealModal = ({ open, onClose, onAddDeal }) => {
               value={dealData.customer}
               onChange={handleChange}
               fullWidth
+              required
             />
           </Grid>
           <Grid item xs={12}>
