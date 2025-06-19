@@ -22,12 +22,12 @@ const FundedDeals = () => {
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const handleAddDeal = (newDeal) => {
+    setDeals((prevDeals) => [...prevDeals, newDeal]);
+    setOpenModal(false);
+  };
 
-  const deals = [
-    { customer: "John Smith", date: "2025-06-05", income: 3200 },
-    { customer: "Emily Johnson", date: "2025-06-02", income: 2600 },
-    { customer: "Mark Davis", date: "2025-05-28", income: 4440 },
-  ];
+  const [deals, setDeals] = useState([]);
 
   return (
     <Box className="funded-deals-container">
@@ -93,7 +93,11 @@ const FundedDeals = () => {
           </TableBody>
         </Table>
       </Paper>
-      <AddDealModal open={openModal} onClose={handleCloseModal} />
+      <AddDealModal
+        open={openModal}
+        onClose={handleCloseModal}
+        onAddDeal={handleAddDeal}
+      />
     </Box>
   );
 };
