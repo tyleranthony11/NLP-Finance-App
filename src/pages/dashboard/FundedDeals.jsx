@@ -20,15 +20,34 @@ import { formatLocalDate } from "../../utils";
 
 const FundedDeals = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [deals, setDeals] = useState([]);
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+
   const handleAddDeal = (newDeal) => {
     setDeals((prevDeals) => [...prevDeals, newDeal]);
     setOpenModal(false);
   };
 
-  const [deals, setDeals] = useState([]);
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const parseLocalDate = (dateStr) => {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day); // month is 0-indexed
+  };
+
+  const mtdDeals = deals.filter((deal) => {
+    const dealDate = parseLocalDate(deal.date);
+    return (
+      dealDate.getFullYear() === currentYear &&
+      dealDate.getMonth() === currentMonth
+    );
+  });
+
+  const mtdIncome = mtdDeals.reduce((sum, d) => sum + d.income, 0);
 
   return (
     <Box className="funded-deals-container">
@@ -46,7 +65,7 @@ const FundedDeals = () => {
               <AssignmentTurnedInIcon className="deal-summary-icon" />
               <Box>
                 <Typography variant="subtitle2">MTD Deals</Typography>
-                <Typography variant="h6">{deals.length}</Typography>
+                <Typography variant="h6">{mtdDeals.length}</Typography>
               </Box>
             </Box>
           </CardContent>
@@ -59,8 +78,7 @@ const FundedDeals = () => {
               <Box>
                 <Typography variant="subtitle2">MTD Income</Typography>
                 <Typography variant="h6">
-                  $
-                  {deals.reduce((sum, d) => sum + d.income, 0).toLocaleString()}
+                  ${mtdIncome.toLocaleString()}
                 </Typography>
               </Box>
             </Box>
