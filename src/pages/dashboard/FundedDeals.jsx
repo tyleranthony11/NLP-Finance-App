@@ -11,6 +11,11 @@ import {
   TableHead,
   TableRow,
   Paper,
+  TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
@@ -30,24 +35,42 @@ const FundedDeals = () => {
     setOpenModal(false);
   };
 
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const now = new Date();
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
+
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   const parseLocalDate = (dateStr) => {
     const [year, month, day] = dateStr.split("-").map(Number);
     return new Date(year, month - 1, day);
   };
 
-  const mtdDeals = deals.filter((deal) => {
+  const filteredDeals = deals.filter((deal) => {
     const dealDate = parseLocalDate(deal.date);
     return (
-      dealDate.getFullYear() === currentYear &&
-      dealDate.getMonth() === currentMonth
+      dealDate.getFullYear() === selectedYear &&
+      dealDate.getMonth() === selectedMonth
     );
   });
 
-  const mtdIncome = mtdDeals.reduce((sum, d) => sum + d.income, 0);
+  const filteredIncome = filteredDeals.reduce((sum, d) => sum + d.income, 0);
 
   return (
     <Box className="funded-deals-container">
@@ -58,14 +81,54 @@ const FundedDeals = () => {
         </Button>
       </Box>
 
+      <Box className="deal-filters" sx={{ display: "flex", gap: 2, mb: 2 }}>
+        <FormControl>
+          <InputLabel id="month-label">Month</InputLabel>
+          <Select
+            labelId="month-label"
+            value={selectedMonth}
+            label="Month"
+            onChange={(e) => setSelectedMonth(Number(e.target.value))}
+            sx={{ minWidth: 120 }}
+          >
+            {months.map((month, index) => (
+              <MenuItem key={month} value={index}>
+                {month}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="year-label">Year</InputLabel>
+          <Select
+            labelId="year-label"
+            value={selectedYear}
+            label="Year"
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            sx={{ minWidth: 100 }}
+          >
+            {[...Array(5)].map((_, i) => {
+              const year = currentYear - i;
+              return (
+                <MenuItem key={year} value={year}>
+                  {year}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      </Box>
+
       <Box className="funded-deals-summary">
         <Card className="deal-summary-card">
           <CardContent>
             <Box className="deal-summary-content">
               <AssignmentTurnedInIcon className="deal-summary-icon" />
               <Box>
-                <Typography variant="subtitle2">MTD Deals</Typography>
-                <Typography variant="h6">{mtdDeals.length}</Typography>
+                <Typography variant="subtitle2">
+                  {months[selectedMonth]} {selectedYear} Deals
+                </Typography>
+                <Typography variant="h6">{filteredDeals.length}</Typography>
               </Box>
             </Box>
           </CardContent>
@@ -76,9 +139,11 @@ const FundedDeals = () => {
             <Box className="deal-summary-content">
               <TrendingUpIcon className="deal-summary-icon" />
               <Box>
-                <Typography variant="subtitle2">MTD Income</Typography>
+                <Typography variant="subtitle2">
+                  {months[selectedMonth]} {selectedYear} Income
+                </Typography>
                 <Typography variant="h6">
-                  ${mtdIncome.toLocaleString()}
+                  ${filteredIncome.toLocaleString()}
                 </Typography>
               </Box>
             </Box>
@@ -102,13 +167,18 @@ const FundedDeals = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {deals.map((deal, idx) => (
-              <TableRow key={idx}>
-                <TableCell>{deal.customer}</TableCell>
-                <TableCell>{formatLocalDate(deal.date)}</TableCell>
-                <TableCell>${deal.income.toLocaleString()}</TableCell>
-              </TableRow>
-            ))}
+            {deals
+              .filter((deal) => {
+                const [year, month] = deal.date.split("-").map(Number);
+                return year === selectedYear && month - 1 === selectedMonth;
+              })
+              .map((deal, idx) => (
+                <TableRow key={idx}>
+                  <TableCell>{deal.customer}</TableCell>
+                  <TableCell>{formatLocalDate(deal.date)}</TableCell>
+                  <TableCell>${deal.income.toLocaleString()}</TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </Paper>
