@@ -72,7 +72,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
         parseFloat(formData.ciInsurance || 0) +
         parseFloat(formData.bankReserve || 0) +
         parseFloat(formData.dealerReserve || 0) -
-        parseFloat(formData.nlpReserve || 0) + // Note: NLP Reserve is a negative in your logic
+        parseFloat(formData.nlpReserve || 0) +
         parseFloat(formData.warranty || 0) +
         parseFloat(formData.gapInsurance || 0) +
         parseFloat(formData.otherFI || 0),
