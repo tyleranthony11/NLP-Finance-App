@@ -12,23 +12,10 @@ const modalStyle = {
   borderRadius: 2,
 };
 
-const titleStyle = {
-  mb: 2,
-};
-
-const formGridStyle = {
-  spacing: 2,
-};
-
-const footerStyle = {
-  mt: 3,
-  display: "flex",
-  justifyContent: "flex-end",
-};
-
-const cancelButtonStyle = {
-  mr: 2,
-};
+const titleStyle = { mb: 2 };
+const formGridStyle = { spacing: 2 };
+const footerStyle = { mt: 3, display: "flex", justifyContent: "flex-end" };
+const cancelButtonStyle = { mr: 2 };
 
 export default function AddDealModal({ open, onClose, onAdd }) {
   const [formData, setFormData] = useState({
@@ -47,6 +34,19 @@ export default function AddDealModal({ open, onClose, onAdd }) {
     gapInsurance: "",
     otherFI: "",
   });
+
+  const financeFields = [
+    { label: "Brokerage Fee", key: "brokerageFee" },
+    { label: "Life Insurance", key: "lifeInsurance" },
+    { label: "A/H Insurance", key: "ahInsurance" },
+    { label: "CI Insurance", key: "ciInsurance" },
+    { label: "Bank Reserve", key: "bankReserve" },
+    { label: "Dealer Reserve", key: "dealerReserve" },
+    { label: "NLP Reserve", key: "nlpReserve" },
+    { label: "Warranty", key: "warranty" },
+    { label: "GAP Insurance", key: "gapInsurance" },
+    { label: "Other F&I", key: "otherFI" },
+  ];
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -71,8 +71,8 @@ export default function AddDealModal({ open, onClose, onAdd }) {
         parseFloat(formData.ahInsurance || 0) +
         parseFloat(formData.ciInsurance || 0) +
         parseFloat(formData.bankReserve || 0) +
-        parseFloat(formData.dealerReserve || 0) +
-        parseFloat(formData.nlpReserve || 0) +
+        parseFloat(formData.dealerReserve || 0) -
+        parseFloat(formData.nlpReserve || 0) + // Note: NLP Reserve is a negative in your logic
         parseFloat(formData.warranty || 0) +
         parseFloat(formData.gapInsurance || 0) +
         parseFloat(formData.otherFI || 0),
@@ -124,25 +124,15 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               onChange={handleChange("lender")}
             />
           </Grid>
-          {[
-            "Brokerage Fee",
-            "Life Insurance",
-            "A/H Insurance",
-            "CI Insurance",
-            "Bank Reserve",
-            "Dealer Reserve",
-            "NLP Reserve",
-            "Warranty",
-            "GAP Insurance",
-            "Other F&I",
-          ].map((field) => (
-            <Grid item xs={6} key={field}>
+
+          {financeFields.map(({ label, key }) => (
+            <Grid item xs={6} key={key}>
               <TextField
-                label={field}
+                label={label}
                 type="number"
                 fullWidth
-                value={formData[field]}
-                onChange={handleChange(field)}
+                value={formData[key]}
+                onChange={handleChange(key)}
               />
             </Grid>
           ))}

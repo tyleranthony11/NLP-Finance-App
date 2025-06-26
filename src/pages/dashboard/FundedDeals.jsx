@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
+import dayjs from "dayjs";
 
 const containerStyle = { p: 3 };
 const filterRowStyle = { display: "flex", gap: 2, mb: 2 };
@@ -17,9 +18,9 @@ const addButtonStyle = { ml: "auto" };
 const dataGridWrapperStyle = { display: "inline-block", minWidth: 1000 };
 
 const FundedDeals = () => {
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+  const now = new dayjs();
+  const currentMonth = now.month();
+  const currentYear = now.year();
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -43,16 +44,12 @@ const FundedDeals = () => {
   ]);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const parseLocalDate = (dateStr) => {
-    const [year, month, day] = dateStr.split("-").map(Number);
-    return new Date(year, month - 1, day);
-  };
+  const parseLocalDate = (dateStr) => dayjs(dateStr);
 
   const filteredDeals = deals.filter((deal) => {
     const dealDate = parseLocalDate(deal.date);
     return (
-      dealDate.getFullYear() === selectedYear &&
-      dealDate.getMonth() === selectedMonth
+      dealDate.year() === selectedYear && dealDate.month() === selectedMonth
     );
   });
 
