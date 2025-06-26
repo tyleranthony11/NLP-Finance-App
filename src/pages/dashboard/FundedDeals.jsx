@@ -2,38 +2,120 @@ import React, { useState } from "react";
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Paper,
-  TextField,
+  FormControl,
+  InputLabel,
   Select,
   MenuItem,
-  InputLabel,
-  FormControl,
 } from "@mui/material";
-import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
+import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
-import "./FundedDeals.css";
-import { formatLocalDate } from "../../utils";
+
+const containerStyle = { p: 3 };
+const filterRowStyle = { display: "flex", gap: 2, mb: 2 };
+const addButtonStyle = { ml: "auto" };
+const dataGridWrapperStyle = { display: "inline-block", minWidth: 1000 };
 
 const FundedDeals = () => {
-  const [openModal, setOpenModal] = useState(false);
-  const [deals, setDeals] = useState([]);
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [deals, setDeals] = useState([
+    {
+      customer: "John Doe",
+      date: "2025-06-15",
+      dealer: "Big Wheels Motors",
+      lender: "ABC Bank",
+      brokerageFee: 500,
+      lifeInsurance: 300,
+      ahInsurance: 200,
+      ciInsurance: 150,
+      gapInsurance: 250,
+      warranty: 400,
+      bankReserve: 100,
+      dealerReserve: 75,
+      nlpReserve: 50,
+      otherFI: 80,
+    },
+  ]);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const handleAddDeal = (newDeal) => {
-    setDeals((prevDeals) => [...prevDeals, newDeal]);
-    setOpenModal(false);
+  const parseLocalDate = (dateStr) => {
+    const [year, month, day] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, day);
   };
+
+  const filteredDeals = deals.filter((deal) => {
+    const dealDate = parseLocalDate(deal.date);
+    return (
+      dealDate.getFullYear() === selectedYear &&
+      dealDate.getMonth() === selectedMonth
+    );
+  });
+
+  const rows = filteredDeals.map((deal, index) => {
+    const income =
+      Number(deal.brokerageFee || 0) +
+      Number(deal.lifeInsurance || 0) +
+      Number(deal.ahInsurance || 0) +
+      Number(deal.ciInsurance || 0) +
+      Number(deal.gapInsurance || 0) +
+      Number(deal.warranty || 0) +
+      Number(deal.bankReserve || 0) +
+      Number(deal.dealerReserve || 0) -
+      Number(deal.nlpReserve || 0) +
+      Number(deal.otherFI || 0);
+
+    return {
+      id: index,
+      ...deal,
+      income,
+    };
+  });
+
+  const columns = [
+    {
+      field: "customer",
+      headerName: "Customer Name",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      maxWidth: 400,
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      maxWidth: 400,
+    },
+
+    { field: "dealer", headerName: "Dealer" },
+    { field: "lender", headerName: "Lender" },
+    { field: "brokerageFee", headerName: "Brokerage Fee" },
+    { field: "lifeInsurance", headerName: "Life Ins." },
+    { field: "ahInsurance", headerName: "A/H Ins." },
+    { field: "ciInsurance", headerName: "CI Ins." },
+    { field: "gapInsurance", headerName: "GAP" },
+    { field: "warranty", headerName: "Warranty" },
+    { field: "bankReserve", headerName: "Bank Reserve" },
+    { field: "dealerReserve", headerName: "Dealer Reserve" },
+    { field: "otherFI", headerName: "Other F&I" },
+    { field: "nlpReserve", headerName: "NLP Reserve" },
+
+    {
+      field: "income",
+      headerName: "Total Income",
+      flex: 1,
+      align: "center",
+      headerAlign: "center",
+      maxWidth: 400,
+    },
+  ];
 
   const months = [
     "January",
@@ -50,46 +132,24 @@ const FundedDeals = () => {
     "December",
   ];
 
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-
-  const parseLocalDate = (dateStr) => {
-    const [year, month, day] = dateStr.split("-").map(Number);
-    return new Date(year, month - 1, day);
+  const handleAddDeal = (newDeal) => {
+    setDeals((prev) => [...prev, newDeal]);
   };
 
-  const filteredDeals = deals.filter((deal) => {
-    const dealDate = parseLocalDate(deal.date);
-    return (
-      dealDate.getFullYear() === selectedYear &&
-      dealDate.getMonth() === selectedMonth
-    );
-  });
-
-  const filteredIncome = filteredDeals.reduce((sum, d) => sum + d.income, 0);
-
   return (
-    <Box className="funded-deals-container">
-      <Box className="funded-deals-header">
-        <Typography variant="h4">Funded Deals</Typography>
-        <Button variant="contained" onClick={handleOpenModal}>
-          Add New Deal
-        </Button>
-      </Box>
+    <Box sx={containerStyle}>
+      <Typography variant="h4" mb={2}>
+        Funded Deals
+      </Typography>
 
-      <Box className="deal-filters" sx={{ display: "flex", gap: 2, mb: 2 }}>
-        <FormControl>
+      <Box sx={filterRowStyle}>
+        <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="month-label">Month</InputLabel>
           <Select
             labelId="month-label"
             value={selectedMonth}
             label="Month"
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            sx={{ minWidth: 120 }}
           >
             {months.map((month, index) => (
               <MenuItem key={month} value={index}>
@@ -98,14 +158,14 @@ const FundedDeals = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControl>
+
+        <FormControl sx={{ minWidth: 100 }}>
           <InputLabel id="year-label">Year</InputLabel>
           <Select
             labelId="year-label"
             value={selectedYear}
             label="Year"
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            sx={{ minWidth: 100 }}
           >
             {[...Array(5)].map((_, i) => {
               const year = currentYear - i;
@@ -117,75 +177,48 @@ const FundedDeals = () => {
             })}
           </Select>
         </FormControl>
+
+        <Button
+          variant="contained"
+          onClick={() => setModalOpen(true)}
+          sx={addButtonStyle}
+        >
+          Add Deal
+        </Button>
       </Box>
 
-      <Box className="funded-deals-summary">
-        <Card className="deal-summary-card">
-          <CardContent>
-            <Box className="deal-summary-content">
-              <AssignmentTurnedInIcon className="deal-summary-icon" />
-              <Box>
-                <Typography variant="subtitle2">
-                  {months[selectedMonth]} {selectedYear} Deals
-                </Typography>
-                <Typography variant="h6">{filteredDeals.length}</Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
-
-        <Card className="deal-summary-card">
-          <CardContent>
-            <Box className="deal-summary-content">
-              <TrendingUpIcon className="deal-summary-icon" />
-              <Box>
-                <Typography variant="subtitle2">
-                  {months[selectedMonth]} {selectedYear} Income
-                </Typography>
-                <Typography variant="h6">
-                  ${filteredIncome.toLocaleString()}
-                </Typography>
-              </Box>
-            </Box>
-          </CardContent>
-        </Card>
+      <Box sx={dataGridWrapperStyle}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          disableRowSelectionOnClick
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                dealer: false,
+                lender: false,
+                brokerageFee: false,
+                lifeInsurance: false,
+                ahInsurance: false,
+                ciInsurance: false,
+                gapInsurance: false,
+                warranty: false,
+                bankReserve: false,
+                dealerReserve: false,
+                nlpReserve: false,
+                otherFI: false,
+              },
+            },
+          }}
+        />
       </Box>
 
-      <Paper className="funded-deals-table">
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>Customer Name</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Date</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Total Income</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {deals
-              .filter((deal) => {
-                const [year, month] = deal.date.split("-").map(Number);
-                return year === selectedYear && month - 1 === selectedMonth;
-              })
-              .map((deal, idx) => (
-                <TableRow key={idx}>
-                  <TableCell>{deal.customer}</TableCell>
-                  <TableCell>{formatLocalDate(deal.date)}</TableCell>
-                  <TableCell>${deal.income.toLocaleString()}</TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </Paper>
       <AddDealModal
-        open={openModal}
-        onClose={handleCloseModal}
-        onAddDeal={handleAddDeal}
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onAdd={handleAddDeal}
       />
     </Box>
   );

@@ -26,6 +26,7 @@ import { Collapse } from "@mui/material";
 import DashboardHome from "../pages/dashboard/DashboardHome";
 import MarketplaceManager from "../pages/dashboard/MarketplaceManager";
 import FundedDeals from "../pages/dashboard/FundedDeals";
+import IncomeReports from "../pages/dashboard/IncomeReports";
 import "./DashboardLayout.css";
 
 const logoUrl = "/images/nlplogo1.png";
@@ -164,6 +165,7 @@ const DashboardLayout = () => {
           <Route path="/" element={<DashboardHome />} />
           <Route path="marketplace" element={<MarketplaceManager />} />
           <Route path="funded-deals" element={<FundedDeals />} />
+          <Route path="income-reports" element={<IncomeReports />} />
         </Routes>
       </Box>
     </Box>

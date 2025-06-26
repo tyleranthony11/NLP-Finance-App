@@ -1,237 +1,162 @@
 import React, { useState } from "react";
-import { Modal, Box, Typography, TextField, Button, Grid } from "@mui/material";
-import "./AddDealModal.css";
+import { Modal, Box, TextField, Button, Grid, Typography } from "@mui/material";
 
-const today = new Date().toISOString().split("T")[0];
+const modalStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 600,
+  bgcolor: "background.paper",
+  p: 4,
+  borderRadius: 2,
+};
 
-const AddDealModal = ({ open, onClose, onAddDeal }) => {
-  const initialState = {
+const titleStyle = {
+  mb: 2,
+};
+
+const formGridStyle = {
+  spacing: 2,
+};
+
+const footerStyle = {
+  mt: 3,
+  display: "flex",
+  justifyContent: "flex-end",
+};
+
+const cancelButtonStyle = {
+  mr: 2,
+};
+
+export default function AddDealModal({ open, onClose, onAdd }) {
+  const [formData, setFormData] = useState({
     customer: "",
+    date: "",
     dealer: "",
     lender: "",
     brokerageFee: "",
     lifeInsurance: "",
     ahInsurance: "",
     ciInsurance: "",
-    gapInsurance: "",
-    warranty: "",
     bankReserve: "",
     dealerReserve: "",
     nlpReserve: "",
+    warranty: "",
+    gapInsurance: "",
     otherFI: "",
-    date: today,
+  });
+
+  const handleChange = (field) => (e) => {
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const [dealData, setDealData] = useState(initialState);
-
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
-
-    setDealData((prev) => ({
-      ...prev,
-      [name]: type === "number" ? Number(value) : value,
-    }));
-  };
-
-  const handleSave = () => {
-    if (!dealData.customer.trim()) {
-      alert("Customer Name is required.");
-      return;
-    }
-
-    const income =
-      Number(dealData.brokerageFee) +
-      Number(dealData.lifeInsurance) +
-      Number(dealData.ahInsurance) +
-      Number(dealData.ciInsurance) +
-      Number(dealData.gapInsurance) +
-      Number(dealData.warranty) +
-      Number(dealData.bankReserve) +
-      Number(dealData.dealerReserve) -
-      Number(dealData.nlpReserve) +
-      Number(dealData.otherFI || 0);
-
-    const newDeal = {
-      customer: dealData.customer,
-      date: dealData.date,
-      income,
+  const handleSubmit = () => {
+    const parsedData = {
+      ...formData,
+      brokerageFee: parseFloat(formData.brokerageFee || 0),
+      lifeInsurance: parseFloat(formData.lifeInsurance || 0),
+      ahInsurance: parseFloat(formData.ahInsurance || 0),
+      ciInsurance: parseFloat(formData.ciInsurance || 0),
+      bankReserve: parseFloat(formData.bankReserve || 0),
+      dealerReserve: parseFloat(formData.dealerReserve || 0),
+      nlpReserve: parseFloat(formData.nlpReserve || 0),
+      warranty: parseFloat(formData.warranty || 0),
+      gapInsurance: parseFloat(formData.gapInsurance || 0),
+      otherFI: parseFloat(formData.otherFI || 0),
+      income:
+        parseFloat(formData.brokerageFee || 0) +
+        parseFloat(formData.lifeInsurance || 0) +
+        parseFloat(formData.ahInsurance || 0) +
+        parseFloat(formData.ciInsurance || 0) +
+        parseFloat(formData.bankReserve || 0) +
+        parseFloat(formData.dealerReserve || 0) +
+        parseFloat(formData.nlpReserve || 0) +
+        parseFloat(formData.warranty || 0) +
+        parseFloat(formData.gapInsurance || 0) +
+        parseFloat(formData.otherFI || 0),
     };
 
-    onAddDeal(newDeal);
-    setDealData(initialState);
+    onAdd(parsedData);
     onClose();
   };
 
   return (
     <Modal open={open} onClose={onClose}>
-      <Box className="add-deal-modal">
-        <Typography variant="h6" gutterBottom>
-          Add New Funded Deal
+      <Box sx={modalStyle}>
+        <Typography variant="h6" sx={titleStyle}>
+          Add New Deal
         </Typography>
 
-        <Grid container spacing={2}>
+        <Grid container {...formGridStyle}>
           <Grid item xs={12}>
             <TextField
               label="Customer Name"
-              name="customer"
-              value={dealData.customer}
-              onChange={handleChange}
               fullWidth
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Dealer Name"
-              name="dealer"
-              value={dealData.dealer}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Lender Name"
-              name="lender"
-              fullWidth
-              value={dealData.lender}
-              onChange={handleChange}
-            />
-          </Grid>
-
-          <Grid item xs={6}>
-            <TextField
-              label="Brokerage Fee"
-              name="brokerageFee"
-              type="number"
-              value={dealData.brokerageFee}
-              onChange={handleChange}
-              fullWidth
+              value={formData.customer}
+              onChange={handleChange("customer")}
             />
           </Grid>
           <Grid item xs={6}>
             <TextField
-              label="Life Insurance"
-              name="lifeInsurance"
-              type="number"
-              value={dealData.lifeInsurance}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="A/H Insurance"
-              name="ahInsurance"
-              type="number"
-              value={dealData.ahInsurance}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="CI Insurance"
-              name="ciInsurance"
-              type="number"
-              value={dealData.ciInsurance}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="GAP Insurance"
-              name="gapInsurance"
-              type="number"
-              value={dealData.gapInsurance}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Warranty"
-              name="warranty"
-              type="number"
-              value={dealData.warranty}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Bank Reserve"
-              name="bankReserve"
-              type="number"
-              value={dealData.bankReserve}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Dealer Reserve"
-              name="dealerReserve"
-              type="number"
-              value={dealData.dealerReserve}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="NLP Finance Reserve"
-              name="nlpReserve"
-              type="number"
-              value={dealData.nlpReserve}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Other F&I"
-              name="otherFI"
-              type="number"
-              value={dealData.otherFI}
-              onChange={handleChange}
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Deal Date"
-              name="date"
+              label="Date"
               type="date"
               fullWidth
-              required
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-              value={dealData.date}
-              onChange={handleChange}
+              InputLabelProps={{ shrink: true }}
+              value={formData.date}
+              onChange={handleChange("date")}
             />
           </Grid>
-          <Grid item xs={12} sx={{ textAlign: "right" }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mr: 1 }}
-              onClick={onClose}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" color="success" onClick={handleSave}>
-              Save
-            </Button>
+          <Grid item xs={6}>
+            <TextField
+              label="Dealer"
+              fullWidth
+              value={formData.dealer}
+              onChange={handleChange("dealer")}
+            />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              label="Lender"
+              fullWidth
+              value={formData.lender}
+              onChange={handleChange("lender")}
+            />
+          </Grid>
+          {[
+            "Brokerage Fee",
+            "Life Insurance",
+            "A/H Insurance",
+            "CI Insurance",
+            "Bank Reserve",
+            "Dealer Reserve",
+            "NLP Reserve",
+            "Warranty",
+            "GAP Insurance",
+            "Other F&I",
+          ].map((field) => (
+            <Grid item xs={6} key={field}>
+              <TextField
+                label={field}
+                type="number"
+                fullWidth
+                value={formData[field]}
+                onChange={handleChange(field)}
+              />
+            </Grid>
+          ))}
         </Grid>
+
+        <Box sx={footerStyle}>
+          <Button onClick={onClose} sx={cancelButtonStyle}>
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Add Deal
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );
-};
-
-export default AddDealModal;
+}
