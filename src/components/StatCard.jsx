@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 
 const StatCard = ({ icon, label, value }) => (
-  <Card sx={{ borderRadius: 2, boxShadow: 3, minWidth: 200, maxWidth: 300 }}>
+  <Card sx={{ borderRadius: 2, boxShadow: 3, minWidth: 250, maxWidth: 350 }}>
     <CardContent>
       <Box display="flex" alignItems="center" mb={1}>
         <Box sx={{ fontSize: 32, mr: 1 }}>{icon}</Box>

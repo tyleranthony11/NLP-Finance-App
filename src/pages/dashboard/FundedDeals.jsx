@@ -2,14 +2,27 @@ import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
+import StatCard from "../../components/StatCard";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import MonthPicker from "../../components/MonthPicker";
 import dayjs from "dayjs";
 import { NumericFormat } from "react-number-format";
 
-const containerStyle = { p: 3 };
-const filterRowStyle = { display: "flex", gap: 2, mb: 2, alignItems: "center" };
-const addButtonStyle = { ml: "auto" };
-const dataGridWrapperStyle = { overflowX: "auto" };
+const styles = {
+  container: { p: 3 },
+  filterRow: { display: "flex", gap: 2, mb: 2, alignItems: "center" },
+  addButton: { ml: "auto" },
+  dataGridWrapper: { overflowX: "auto" },
+  statCards: {
+    display: "flex",
+    justifyContent: "center",
+    gap: 4,
+    mb: 4,
+    flexWrap: "wrap",
+  },
+  icon: { fontSize: 32 },
+};
 
 const FundedDeals = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -63,6 +76,8 @@ const FundedDeals = () => {
     };
   });
 
+  const totalMonthlyIncome = rows.reduce((sum, deal) => sum + deal.income, 0);
+
   const currencyRender = (params) => (
     <NumericFormat
       value={params.value}
@@ -106,21 +121,9 @@ const FundedDeals = () => {
       headerName: "A/H Ins.",
       renderCell: currencyRender,
     },
-    {
-      field: "ciInsurance",
-      headerName: "CI Ins.",
-      renderCell: currencyRender,
-    },
-    {
-      field: "gapInsurance",
-      headerName: "GAP",
-      renderCell: currencyRender,
-    },
-    {
-      field: "warranty",
-      headerName: "Warranty",
-      renderCell: currencyRender,
-    },
+    { field: "ciInsurance", headerName: "CI Ins.", renderCell: currencyRender },
+    { field: "gapInsurance", headerName: "GAP", renderCell: currencyRender },
+    { field: "warranty", headerName: "Warranty", renderCell: currencyRender },
     {
       field: "bankReserve",
       headerName: "Bank Reserve",
@@ -131,11 +134,7 @@ const FundedDeals = () => {
       headerName: "Dealer Reserve",
       renderCell: currencyRender,
     },
-    {
-      field: "otherFI",
-      headerName: "Other F&I",
-      renderCell: currencyRender,
-    },
+    { field: "otherFI", headerName: "Other F&I", renderCell: currencyRender },
     {
       field: "nlpReserve",
       headerName: "NLP Reserve",
@@ -156,30 +155,46 @@ const FundedDeals = () => {
   };
 
   return (
-    <Box sx={containerStyle}>
+    <Box sx={styles.container}>
       <Typography variant="h4" mb={2}>
         Funded Deals
       </Typography>
 
-      <Box sx={filterRowStyle}>
-        <MonthPicker value={selectedDate} onChange={setSelectedDate} />
+      <Box sx={styles.statCards}>
+        <StatCard
+          icon={<HandshakeIcon sx={styles.icon} />}
+          label="Number of Deals"
+          value={rows.length}
+        />
+        <StatCard
+          icon={<MonetizationOnIcon sx={styles.icon} />}
+          label="Total Income"
+          value={`$${totalMonthlyIncome.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`}
+        />
+      </Box>
 
+      <Box sx={styles.filterRow}>
+        <MonthPicker value={selectedDate} onChange={setSelectedDate} />
         <Button
           variant="contained"
           onClick={() => setModalOpen(true)}
-          sx={addButtonStyle}
+          sx={styles.addButton}
         >
           Add Deal
         </Button>
       </Box>
 
-      <Box sx={dataGridWrapperStyle}>
+      <Box sx={styles.dataGridWrapper}>
         <DataGrid
           rows={rows}
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[10]}
           disableRowSelectionOnClick
+          autoHeight
           initialState={{
             columns: {
               columnVisibilityModel: {
