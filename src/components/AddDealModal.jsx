@@ -70,6 +70,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
       alert("Please fill out all required fields");
       return;
     }
+
     const parsedData = {
       ...formData,
       brokerageFee: parseFloat(formData.brokerageFee || 0),
@@ -122,7 +123,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
           Add New Deal
         </Typography>
 
-        <Grid container {...formGridStyle}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
               label="Customer Name"
@@ -132,6 +133,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               onChange={handleChange("customer")}
             />
           </Grid>
+
           <Grid item xs={6}>
             <TextField
               label="Date"
@@ -143,7 +145,18 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               onChange={handleChange("date")}
             />
           </Grid>
+
           <Grid item xs={6}>
+            <TextField
+              label="Lender"
+              fullWidth
+              required
+              value={formData.lender}
+              onChange={handleChange("lender")}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
             <Autocomplete
               options={dealerOptions}
               value={formData.dealer}
@@ -153,15 +166,6 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               renderInput={(params) => (
                 <TextField {...params} label="Dealer" fullWidth required />
               )}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              label="Lender"
-              fullWidth
-              required
-              value={formData.lender}
-              onChange={handleChange("lender")}
             />
           </Grid>
 
