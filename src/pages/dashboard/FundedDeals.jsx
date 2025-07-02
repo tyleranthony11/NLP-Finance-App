@@ -74,6 +74,16 @@ const FundedDeals = () => {
     };
   });
 
+  const currencyRender = (params) => (
+    <NumericFormat
+      value={params.value}
+      displayType="text"
+      thousandSeparator
+      prefix="$"
+      decimalScale={2}
+      fixedDecimalScale
+    />
+  );
   const columns = [
     {
       field: "customer",
@@ -91,150 +101,42 @@ const FundedDeals = () => {
       headerAlign: "center",
       maxWidth: 400,
     },
-
     { field: "dealer", headerName: "Dealer" },
     { field: "lender", headerName: "Lender" },
     {
       field: "brokerageFee",
       headerName: "Brokerage Fee",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
     {
       field: "lifeInsurance",
       headerName: "Life Ins.",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
     {
       field: "ahInsurance",
       headerName: "A/H Ins.",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
-    {
-      field: "ciInsurance",
-      headerName: "CI Ins.",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
-    },
-    {
-      field: "gapInsurance",
-      headerName: "GAP",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
-    },
-    {
-      field: "warranty",
-      headerName: "Warranty",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
-    },
+    { field: "ciInsurance", headerName: "CI Ins.", renderCell: currencyRender },
+    { field: "gapInsurance", headerName: "GAP", renderCell: currencyRender },
+    { field: "warranty", headerName: "Warranty", renderCell: currencyRender },
     {
       field: "bankReserve",
       headerName: "Bank Reserve",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
     {
       field: "dealerReserve",
       headerName: "Dealer Reserve",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
-    {
-      field: "otherFI",
-      headerName: "Other F&I",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
-    },
+    { field: "otherFI", headerName: "Other F&I", renderCell: currencyRender },
     {
       field: "nlpReserve",
       headerName: "NLP Reserve",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
-
     {
       field: "income",
       headerName: "Total Income",
@@ -242,16 +144,7 @@ const FundedDeals = () => {
       align: "center",
       headerAlign: "center",
       maxWidth: 400,
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-          prefix="$"
-          decimalScale={2}
-          fixedDecimalScale
-        />
-      ),
+      renderCell: currencyRender,
     },
   ];
 
