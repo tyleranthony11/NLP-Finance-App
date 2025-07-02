@@ -80,6 +80,22 @@ export default function AddDealModal({ open, onClose, onAdd }) {
 
     onAdd(parsedData);
     onClose();
+    setFormData({
+      customer: "",
+      date: "",
+      dealer: "",
+      lender: "",
+      brokerageFee: "",
+      lifeInsurance: "",
+      ahInsurance: "",
+      ciInsurance: "",
+      bankReserve: "",
+      dealerReserve: "",
+      nlpReserve: "",
+      warranty: "",
+      gapInsurance: "",
+      otherFI: "",
+    });
   };
 
   return (

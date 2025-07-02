@@ -11,6 +11,7 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
 import dayjs from "dayjs";
+import { NumericFormat } from "react-number-format";
 
 const containerStyle = { p: 3 };
 const filterRowStyle = { display: "flex", gap: 2, mb: 2 };
@@ -111,6 +112,16 @@ const FundedDeals = () => {
       align: "center",
       headerAlign: "center",
       maxWidth: 400,
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
     },
   ];
 
