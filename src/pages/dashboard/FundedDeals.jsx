@@ -11,20 +11,21 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
 import dayjs from "dayjs";
+import updateLocale from "dayjs/plugin/updateLocale";
+import localeData from "dayjs/plugin/localeData";
 import { NumericFormat } from "react-number-format";
 
-const containerStyle = { p: 3 };
-const filterRowStyle = { display: "flex", gap: 2, mb: 2 };
-const addButtonStyle = { ml: "auto" };
-const dataGridWrapperStyle = { display: "inline-block", minWidth: 1000 };
+dayjs.extend(updateLocale);
+dayjs.extend(localeData);
 
 const FundedDeals = () => {
-  const now = new dayjs();
+  const now = dayjs();
   const currentMonth = now.month();
   const currentYear = now.year();
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [modalOpen, setModalOpen] = useState(false);
   const [deals, setDeals] = useState([
     {
       customer: "John Doe",
@@ -43,7 +44,6 @@ const FundedDeals = () => {
       otherFI: 80,
     },
   ]);
-  const [modalOpen, setModalOpen] = useState(false);
 
   const parseLocalDate = (dateStr) => dayjs(dateStr);
 
@@ -84,6 +84,7 @@ const FundedDeals = () => {
       fixedDecimalScale
     />
   );
+
   const columns = [
     {
       field: "customer",
@@ -148,32 +149,17 @@ const FundedDeals = () => {
     },
   ];
 
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
   const handleAddDeal = (newDeal) => {
     setDeals((prev) => [...prev, newDeal]);
   };
 
   return (
-    <Box sx={containerStyle}>
+    <Box sx={{ p: 3 }}>
       <Typography variant="h4" mb={2}>
         Funded Deals
       </Typography>
 
-      <Box sx={filterRowStyle}>
+      <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel id="month-label">Month</InputLabel>
           <Select
@@ -182,7 +168,7 @@ const FundedDeals = () => {
             label="Month"
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
           >
-            {months.map((month, index) => (
+            {dayjs.months().map((month, index) => (
               <MenuItem key={month} value={index}>
                 {month}
               </MenuItem>
@@ -212,13 +198,13 @@ const FundedDeals = () => {
         <Button
           variant="contained"
           onClick={() => setModalOpen(true)}
-          sx={addButtonStyle}
+          sx={{ ml: "auto" }}
         >
           Add Deal
         </Button>
       </Box>
 
-      <Box sx={dataGridWrapperStyle}>
+      <Box sx={{ display: "inline-block", minWidth: 1000 }}>
         <DataGrid
           rows={rows}
           columns={columns}
