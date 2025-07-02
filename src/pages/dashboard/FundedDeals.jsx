@@ -94,16 +94,146 @@ const FundedDeals = () => {
 
     { field: "dealer", headerName: "Dealer" },
     { field: "lender", headerName: "Lender" },
-    { field: "brokerageFee", headerName: "Brokerage Fee" },
-    { field: "lifeInsurance", headerName: "Life Ins." },
-    { field: "ahInsurance", headerName: "A/H Ins." },
-    { field: "ciInsurance", headerName: "CI Ins." },
-    { field: "gapInsurance", headerName: "GAP" },
-    { field: "warranty", headerName: "Warranty" },
-    { field: "bankReserve", headerName: "Bank Reserve" },
-    { field: "dealerReserve", headerName: "Dealer Reserve" },
-    { field: "otherFI", headerName: "Other F&I" },
-    { field: "nlpReserve", headerName: "NLP Reserve" },
+    {
+      field: "brokerageFee",
+      headerName: "Brokerage Fee",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "lifeInsurance",
+      headerName: "Life Ins.",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "ahInsurance",
+      headerName: "A/H Ins.",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "ciInsurance",
+      headerName: "CI Ins.",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "gapInsurance",
+      headerName: "GAP",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "warranty",
+      headerName: "Warranty",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "bankReserve",
+      headerName: "Bank Reserve",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "dealerReserve",
+      headerName: "Dealer Reserve",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "otherFI",
+      headerName: "Other F&I",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
+    {
+      field: "nlpReserve",
+      headerName: "NLP Reserve",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+          decimalScale={2}
+          fixedDecimalScale
+        />
+      ),
+    },
 
     {
       field: "income",
