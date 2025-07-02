@@ -156,7 +156,7 @@ const FundedDeals = () => {
 
   return (
     <Box sx={styles.container}>
-      <Typography variant="h4" mb={2}>
+      <Typography variant="h4" mb={2} fontWeight={550}>
         Funded Deals
       </Typography>
 
@@ -194,7 +194,6 @@ const FundedDeals = () => {
           pageSize={10}
           rowsPerPageOptions={[10]}
           disableRowSelectionOnClick
-          autoHeight
           initialState={{
             columns: {
               columnVisibilityModel: {

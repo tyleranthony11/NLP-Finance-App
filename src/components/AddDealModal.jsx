@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Modal, Box, TextField, Button, Grid, Typography } from "@mui/material";
+import {
+  Modal,
+  Box,
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  Autocomplete,
+} from "@mui/material";
+import dealers from "../data/dealers";
 
 const modalStyle = {
   position: "absolute",
@@ -48,11 +57,19 @@ export default function AddDealModal({ open, onClose, onAdd }) {
     { label: "Other F&I", key: "otherFI" },
   ];
 
+  const dealerOptions = Object.keys(dealers);
+
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleSubmit = () => {
+    const { customer, date, dealer, lender } = formData;
+
+    if (!customer.trim() || !date.trim() || !dealer.trim() || !lender.trim()) {
+      alert("Please fill out all required fields");
+      return;
+    }
     const parsedData = {
       ...formData,
       brokerageFee: parseFloat(formData.brokerageFee || 0),
@@ -110,6 +127,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
             <TextField
               label="Customer Name"
               fullWidth
+              required
               value={formData.customer}
               onChange={handleChange("customer")}
             />
@@ -119,23 +137,29 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               label="Date"
               type="date"
               fullWidth
+              required
               InputLabelProps={{ shrink: true }}
               value={formData.date}
               onChange={handleChange("date")}
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              label="Dealer"
-              fullWidth
+            <Autocomplete
+              options={dealerOptions}
               value={formData.dealer}
-              onChange={handleChange("dealer")}
+              onChange={(event, newValue) =>
+                setFormData((prev) => ({ ...prev, dealer: newValue || "" }))
+              }
+              renderInput={(params) => (
+                <TextField {...params} label="Dealer" fullWidth required />
+              )}
             />
           </Grid>
           <Grid item xs={6}>
             <TextField
               label="Lender"
               fullWidth
+              required
               value={formData.lender}
               onChange={handleChange("lender")}
             />
