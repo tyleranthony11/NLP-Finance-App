@@ -1,31 +1,20 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
+import MonthPicker from "../../components/MonthPicker";
 import dayjs from "dayjs";
-import updateLocale from "dayjs/plugin/updateLocale";
-import localeData from "dayjs/plugin/localeData";
 import { NumericFormat } from "react-number-format";
 
-dayjs.extend(updateLocale);
-dayjs.extend(localeData);
+const containerStyle = { p: 3 };
+const filterRowStyle = { display: "flex", gap: 2, mb: 2, alignItems: "center" };
+const addButtonStyle = { ml: "auto" };
+const dataGridWrapperStyle = { overflowX: "auto" };
 
 const FundedDeals = () => {
-  const now = dayjs();
-  const currentMonth = now.month();
-  const currentYear = now.year();
-
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalOpen, setModalOpen] = useState(false);
+
   const [deals, setDeals] = useState([
     {
       customer: "John Doe",
@@ -46,11 +35,11 @@ const FundedDeals = () => {
   ]);
 
   const parseLocalDate = (dateStr) => dayjs(dateStr);
-
   const filteredDeals = deals.filter((deal) => {
     const dealDate = parseLocalDate(deal.date);
     return (
-      dealDate.year() === selectedYear && dealDate.month() === selectedMonth
+      dealDate.year() === selectedDate.year() &&
+      dealDate.month() === selectedDate.month()
     );
   });
 
@@ -92,7 +81,6 @@ const FundedDeals = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      maxWidth: 400,
     },
     {
       field: "date",
@@ -100,7 +88,6 @@ const FundedDeals = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      maxWidth: 400,
     },
     { field: "dealer", headerName: "Dealer" },
     { field: "lender", headerName: "Lender" },
@@ -119,9 +106,21 @@ const FundedDeals = () => {
       headerName: "A/H Ins.",
       renderCell: currencyRender,
     },
-    { field: "ciInsurance", headerName: "CI Ins.", renderCell: currencyRender },
-    { field: "gapInsurance", headerName: "GAP", renderCell: currencyRender },
-    { field: "warranty", headerName: "Warranty", renderCell: currencyRender },
+    {
+      field: "ciInsurance",
+      headerName: "CI Ins.",
+      renderCell: currencyRender,
+    },
+    {
+      field: "gapInsurance",
+      headerName: "GAP",
+      renderCell: currencyRender,
+    },
+    {
+      field: "warranty",
+      headerName: "Warranty",
+      renderCell: currencyRender,
+    },
     {
       field: "bankReserve",
       headerName: "Bank Reserve",
@@ -132,7 +131,11 @@ const FundedDeals = () => {
       headerName: "Dealer Reserve",
       renderCell: currencyRender,
     },
-    { field: "otherFI", headerName: "Other F&I", renderCell: currencyRender },
+    {
+      field: "otherFI",
+      headerName: "Other F&I",
+      renderCell: currencyRender,
+    },
     {
       field: "nlpReserve",
       headerName: "NLP Reserve",
@@ -144,7 +147,6 @@ const FundedDeals = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
-      maxWidth: 400,
       renderCell: currencyRender,
     },
   ];
@@ -154,57 +156,24 @@ const FundedDeals = () => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={containerStyle}>
       <Typography variant="h4" mb={2}>
         Funded Deals
       </Typography>
 
-      <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-        <FormControl sx={{ minWidth: 120 }}>
-          <InputLabel id="month-label">Month</InputLabel>
-          <Select
-            labelId="month-label"
-            value={selectedMonth}
-            label="Month"
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-          >
-            {dayjs.months().map((month, index) => (
-              <MenuItem key={month} value={index}>
-                {month}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl sx={{ minWidth: 100 }}>
-          <InputLabel id="year-label">Year</InputLabel>
-          <Select
-            labelId="year-label"
-            value={selectedYear}
-            label="Year"
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-          >
-            {[...Array(5)].map((_, i) => {
-              const year = currentYear - i;
-              return (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+      <Box sx={filterRowStyle}>
+        <MonthPicker value={selectedDate} onChange={setSelectedDate} />
 
         <Button
           variant="contained"
           onClick={() => setModalOpen(true)}
-          sx={{ ml: "auto" }}
+          sx={addButtonStyle}
         >
           Add Deal
         </Button>
       </Box>
 
-      <Box sx={{ display: "inline-block", minWidth: 1000 }}>
+      <Box sx={dataGridWrapperStyle}>
         <DataGrid
           rows={rows}
           columns={columns}
