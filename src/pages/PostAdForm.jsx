@@ -23,17 +23,46 @@ function PostAdForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Send form data to backend
-    console.log("Submitted Ad:", formData);
+
+    const base64Photos = await Promise.all(
+      formData.photos.map((photoFile) => fileToBase64(photoFile))
+    );
+
+    const listingData = {
+      ...formData,
+      photos: base64Photos,
+      status: "pending",
+      id: Date.now(),
+    };
+
+    const active = JSON.parse(localStorage.getItem("activeListings")) || [];
+    active.push(listingData);
+    localStorage.setItem("activeListings", JSON.stringify(active));
+
+    alert("Your listing has been submitted for review.");
+
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      year: "",
+      make: "",
+      model: "",
+      kms: "",
+      description: "",
+      photos: [],
+    });
   };
 
   return (
     <div className="post-ad-form-container">
-        <img src="/images/dealers/nlp-finance-marketplace.png"
+      <img
+        src="/images/dealers/nlp-finance-marketplace.png"
         alt="Marketplace Logo"
-        className="marketplace-logo" />
+        className="marketplace-logo"
+      />
       <h2>List Your Vehicle for Sale</h2>
       <p>Fill out the form below to submit your unit to our marketplace.</p>
       <form onSubmit={handleSubmit} className="post-ad-form">
@@ -98,7 +127,7 @@ function PostAdForm() {
             value={formData.kms}
             onChange={handleChange}
           />
-           <textarea
+          <textarea
             name="description"
             placeholder="Describe the condition, features, or any extra details..."
             rows="5"
@@ -119,7 +148,9 @@ function PostAdForm() {
           />
         </fieldset>
 
-        <button type="submit" className="submit-button">Submit Ad</button>
+        <button type="submit" className="submit-button">
+          Submit Ad
+        </button>
       </form>
     </div>
   );

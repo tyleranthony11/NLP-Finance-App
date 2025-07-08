@@ -30,10 +30,10 @@ const FundedDeals = () => {
 
   const [deals, setDeals] = useState([
     {
-      customer: "John Doe",
-      date: "2025-06-15",
-      dealer: "Big Wheels Motors",
-      lender: "ABC Bank",
+      customer: "Tyler Anthony",
+      date: "2025-07-15",
+      dealer: "Fun N Fast",
+      lender: "FinanceIt",
       brokerageFee: 500,
       lifeInsurance: 300,
       ahInsurance: 200,

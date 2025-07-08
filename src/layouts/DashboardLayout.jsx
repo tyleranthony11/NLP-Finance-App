@@ -24,7 +24,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Collapse } from "@mui/material";
 import DashboardHome from "../pages/dashboard/DashboardHome";
-import MarketplaceManager from "../pages/dashboard/MarketplaceManager";
+import Inventory from "../pages/dashboard/Inventory";
+import PendingListings from "../pages/dashboard/PendingListings";
 import FundedDeals from "../pages/dashboard/FundedDeals";
 import IncomeReports from "../pages/dashboard/IncomeReports";
 import "./DashboardLayout.css";
@@ -49,12 +50,12 @@ const navItems = [
       {
         text: "Inventory",
         icon: <CheckCircleOutlineIcon />,
-        route: "/dashboard/marketplace",
+        route: "/dashboard/inventory",
       },
       {
         text: "Pending Listings",
         icon: <HourglassEmptyIcon />,
-        route: "/dashboard/marketplace/pending",
+        route: "/dashboard/pending-listings",
       },
       {
         text: "Post New Ad",
@@ -163,7 +164,8 @@ const DashboardLayout = () => {
       <Box component="main" className="dashboard-main">
         <Routes>
           <Route path="/" element={<DashboardHome />} />
-          <Route path="marketplace" element={<MarketplaceManager />} />
+          <Route path="inventory" element={<Inventory />} />
+          <Route path="pending-listings" element={<PendingListings />} />
           <Route path="funded-deals" element={<FundedDeals />} />
           <Route path="income-reports" element={<IncomeReports />} />
         </Routes>
