@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import "./PostAdForm.css";
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+};
 
 function PostAdForm() {
   const [formData, setFormData] = useState({

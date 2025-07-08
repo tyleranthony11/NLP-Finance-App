@@ -7,6 +7,7 @@ import {
   Stack,
   TextField,
   TextareaAutosize,
+  Modal,
 } from "@mui/material";
 
 const styles = {
@@ -32,6 +33,18 @@ const styles = {
     borderRadius: 4,
     borderColor: "#ccc",
     fontFamily: "Roboto, sans-serif",
+  },
+  modalBox: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "90%",
+    maxWidth: 600,
+    bgcolor: "background.paper",
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 4,
   },
 };
 
@@ -84,49 +97,44 @@ function PendingListings() {
         Pending Listings
       </Typography>
 
-      {pendingListings.length === 0 && (
+      {pendingListings.length === 0 ? (
         <Typography>No pending listings.</Typography>
+      ) : (
+        pendingListings.map((listing) => (
+          <Paper key={listing.id} sx={styles.card}>
+            <Typography variant="h6">
+              {listing.year} {listing.make} {listing.model}
+            </Typography>
+            <Typography sx={{ mb: 1 }}>{listing.description}</Typography>
+            <Typography sx={{ mb: 2, fontStyle: "italic" }}>
+              Seller: {listing.name} ({listing.email})
+            </Typography>
+
+            <Stack direction="row" sx={styles.photosContainer}>
+              {listing.photos.map((photo, index) => (
+                <Box
+                  key={index}
+                  component="img"
+                  src={photo}
+                  alt={`Listing Photo ${index + 1}`}
+                  sx={styles.photo}
+                />
+              ))}
+            </Stack>
+
+            <Stack direction="row" sx={styles.buttonGroup}>
+              <Button variant="contained" onClick={() => openReview(listing)}>
+                Review
+              </Button>
+            </Stack>
+          </Paper>
+        ))
       )}
 
-      {pendingListings.map((listing) => (
-        <Paper key={listing.id} sx={styles.card}>
-          <Typography variant="h6" gutterBottom>
-            {listing.year} {listing.make} {listing.model}
-          </Typography>
-          <Typography sx={{ mb: 1 }}>{listing.description}</Typography>
-          <Typography sx={{ mb: 2, fontStyle: "italic" }}>
-            Seller: {listing.name} ({listing.email})
-          </Typography>
-
-          <Stack direction="row" sx={styles.photosContainer}>
-            {listing.photos.map((photo, index) => (
-              <Box
-                key={index}
-                component="img"
-                src={photo}
-                alt={`Listing Photo ${index + 1}`}
-                sx={styles.photo}
-              />
-            ))}
-          </Stack>
-
-          <Stack direction="row" sx={styles.buttonGroup}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => openReview(listing)}
-            >
-              Review
-            </Button>
-          </Stack>
-        </Paper>
-      ))}
-
-      {reviewListing && (
-        <Paper sx={{ ...styles.card, mt: 4 }}>
+      <Modal open={!!reviewListing} onClose={cancelReview}>
+        <Box sx={styles.modalBox}>
           <Typography variant="h5" gutterBottom>
-            Review Listing: {reviewListing.year} {reviewListing.make}{" "}
-            {reviewListing.model}
+            Review Listing: {formData.year} {formData.make} {formData.model}
           </Typography>
 
           <TextField
@@ -163,6 +171,7 @@ function PendingListings() {
             onChange={handleChange("name")}
             sx={styles.formField}
             fullWidth
+            InputProps={{ readOnly: true }}
           />
           <TextField
             label="Seller Email"
@@ -170,7 +179,30 @@ function PendingListings() {
             onChange={handleChange("email")}
             sx={styles.formField}
             fullWidth
+            InputProps={{ readOnly: true }}
           />
+          <TextField
+            label="Seller Phone"
+            value={formData.phone}
+            sx={styles.formField}
+            fullWidth
+            InputProps={{ readOnly: true }}
+          />
+
+          <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
+            Photos:
+          </Typography>
+          <Stack direction="row" sx={styles.photosContainer}>
+            {formData.photos?.map((photo, index) => (
+              <Box
+                key={index}
+                component="img"
+                src={photo}
+                alt={`Photo ${index + 1}`}
+                sx={styles.photo}
+              />
+            ))}
+          </Stack>
 
           <Stack direction="row" sx={styles.buttonGroup}>
             <Button
@@ -187,8 +219,8 @@ function PendingListings() {
               Cancel
             </Button>
           </Stack>
-        </Paper>
-      )}
+        </Box>
+      </Modal>
     </Box>
   );
 }
