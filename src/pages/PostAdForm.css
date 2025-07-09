@@ -8,14 +8,14 @@
 }
 
 .post-ad-form-container h2 {
-    text-align: center;
-    margin-bottom: 0.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
 }
 
 .post-ad-form-container p {
-    margin-bottom: 2rem;
-    color: #555;
-    text-align: center;
+  margin-bottom: 2rem;
+  color: #555;
+  text-align: center;
 }
 
 .marketplace-logo {
@@ -41,10 +41,19 @@
 }
 
 .post-ad-form legend {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .post-ad-form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.post-ad-form select {
+  color: #354350;
   display: block;
   width: 100%;
   margin-bottom: 1rem;
@@ -62,7 +71,6 @@
   resize: vertical;
   font-family: inherit;
 }
-
 
 .submit-button {
   background-color: #d81a20;

@@ -1,228 +1,311 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Paper,
+  TableContainer,
+  Avatar,
+  Button,
+  Modal,
   Box,
   Typography,
-  Paper,
-  Button,
-  Stack,
   TextField,
-  TextareaAutosize,
-  Modal,
+  MenuItem,
 } from "@mui/material";
 
-const styles = {
-  container: { p: 3 },
-  card: { p: 2, mb: 3, borderRadius: 2, boxShadow: 3 },
-  photosContainer: { mb: 2, flexWrap: "wrap" },
-  photo: {
-    width: 150,
-    height: 100,
-    objectFit: "cover",
-    borderRadius: 1,
-    boxShadow: 1,
-    mr: 1.5,
-    mb: 1.5,
-  },
-  buttonGroup: { mt: 1, gap: 2 },
-  formField: { mb: 2 },
-  textarea: {
-    width: "100%",
-    minHeight: 80,
-    fontSize: "1rem",
-    padding: 8,
-    borderRadius: 4,
-    borderColor: "#ccc",
-    fontFamily: "Roboto, sans-serif",
-  },
-  modalBox: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "90%",
-    maxWidth: 600,
-    bgcolor: "background.paper",
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 4,
-  },
-};
+const PendingListings = () => {
+  const [open, setOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [postings, setPostings] = useState([]);
 
-function PendingListings() {
-  const [pendingListings, setPendingListings] = useState([]);
-  const [reviewListing, setReviewListing] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [category, setCategory] = useState("");
+  const [year, setYear] = useState("");
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [kms, setKms] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [term, setTerm] = useState("");
+  const [dealership, setDealership] = useState("");
 
   useEffect(() => {
-    const active = JSON.parse(localStorage.getItem("activeListings")) || [];
-    setPendingListings(
-      active.filter((listing) => listing.status === "pending")
-    );
+    const stored = JSON.parse(localStorage.getItem("listings")) || [];
+    const pending = stored.filter((post) => post.status === "pending");
+    setPostings(pending);
   }, []);
 
-  const openReview = (listing) => {
-    setReviewListing(listing);
-    setFormData({ ...listing });
+  const handleOpen = (post) => {
+    setSelectedPost(post);
+    setCategory(post.category || "");
+    setYear(post.year || "");
+    setMake(post.make || "");
+    setModel(post.model || "");
+    setKms(post.kms || "");
+    setPrice(post.price || "");
+    setDescription(post.description || "");
+    setInterestRate(post.interestRate || "");
+    setTerm(post.term || "");
+    setDealership(post.dealership || "");
+    setOpen(true);
   };
 
-  const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedPost(null);
+    setYear("");
+    setMake("");
+    setModel("");
+    setKms("");
+    setPrice("");
+    setDescription("");
+    setInterestRate("");
+    setTerm("");
+    setDealership("");
   };
 
-  const saveChanges = () => {
-    const active = JSON.parse(localStorage.getItem("activeListings")) || [];
-    const updated = active.map((listing) =>
-      listing.id === formData.id ? { ...formData, status: "pending" } : listing
+  const handleApprove = () => {
+    if (!selectedPost) return;
+
+    const allListings = JSON.parse(localStorage.getItem("listings")) || [];
+
+    const updatedListings = allListings.map((post) =>
+      post.id === selectedPost.id
+        ? {
+            ...post,
+            status: "active",
+            category,
+            year,
+            make,
+            model,
+            kms,
+            price,
+            description,
+            interestRate,
+            term,
+            dealership,
+          }
+        : post
     );
-    localStorage.setItem("activeListings", JSON.stringify(updated));
-    setPendingListings(updated.filter((l) => l.status === "pending"));
-    setReviewListing(null);
-  };
 
-  const approveListing = () => {
-    const active = JSON.parse(localStorage.getItem("activeListings")) || [];
-    const updated = active.map((listing) =>
-      listing.id === formData.id ? { ...formData, status: "active" } : listing
-    );
-    localStorage.setItem("activeListings", JSON.stringify(updated));
-    setPendingListings(updated.filter((l) => l.status === "pending"));
-    setReviewListing(null);
+    localStorage.setItem("listings", JSON.stringify(updatedListings));
+    setPostings((prev) => prev.filter((post) => post.id !== selectedPost.id));
+    handleClose();
   };
-
-  const cancelReview = () => setReviewListing(null);
 
   return (
-    <Box sx={styles.container}>
-      <Typography variant="h4" gutterBottom>
-        Pending Listings
-      </Typography>
-
-      {pendingListings.length === 0 ? (
-        <Typography>No pending listings.</Typography>
-      ) : (
-        pendingListings.map((listing) => (
-          <Paper key={listing.id} sx={styles.card}>
-            <Typography variant="h6">
-              {listing.year} {listing.make} {listing.model}
-            </Typography>
-            <Typography sx={{ mb: 1 }}>{listing.description}</Typography>
-            <Typography sx={{ mb: 2, fontStyle: "italic" }}>
-              Seller: {listing.name} ({listing.email})
-            </Typography>
-
-            <Stack direction="row" sx={styles.photosContainer}>
-              {listing.photos.map((photo, index) => (
-                <Box
-                  key={index}
-                  component="img"
-                  src={photo}
-                  alt={`Listing Photo ${index + 1}`}
-                  sx={styles.photo}
-                />
-              ))}
-            </Stack>
-
-            <Stack direction="row" sx={styles.buttonGroup}>
-              <Button variant="contained" onClick={() => openReview(listing)}>
-                Review
-              </Button>
-            </Stack>
-          </Paper>
-        ))
-      )}
-
-      <Modal open={!!reviewListing} onClose={cancelReview}>
-        <Box sx={styles.modalBox}>
-          <Typography variant="h5" gutterBottom>
-            Review Listing: {formData.year} {formData.make} {formData.model}
-          </Typography>
-
-          <TextField
-            label="Year"
-            value={formData.year}
-            onChange={handleChange("year")}
-            sx={styles.formField}
-            fullWidth
-          />
-          <TextField
-            label="Make"
-            value={formData.make}
-            onChange={handleChange("make")}
-            sx={styles.formField}
-            fullWidth
-          />
-          <TextField
-            label="Model"
-            value={formData.model}
-            onChange={handleChange("model")}
-            sx={styles.formField}
-            fullWidth
-          />
-          <TextareaAutosize
-            minRows={3}
-            placeholder="Description"
-            value={formData.description}
-            onChange={handleChange("description")}
-            style={styles.textarea}
-          />
-          <TextField
-            label="Seller Name"
-            value={formData.name}
-            onChange={handleChange("name")}
-            sx={styles.formField}
-            fullWidth
-            InputProps={{ readOnly: true }}
-          />
-          <TextField
-            label="Seller Email"
-            value={formData.email}
-            onChange={handleChange("email")}
-            sx={styles.formField}
-            fullWidth
-            InputProps={{ readOnly: true }}
-          />
-          <TextField
-            label="Seller Phone"
-            value={formData.phone}
-            sx={styles.formField}
-            fullWidth
-            InputProps={{ readOnly: true }}
-          />
-
-          <Typography variant="subtitle1" sx={{ mt: 2, mb: 1 }}>
-            Photos:
-          </Typography>
-          <Stack direction="row" sx={styles.photosContainer}>
-            {formData.photos?.map((photo, index) => (
-              <Box
-                key={index}
-                component="img"
-                src={photo}
-                alt={`Photo ${index + 1}`}
-                sx={styles.photo}
-              />
+    <>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Photo</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Phone</TableCell>
+              <TableCell>Category</TableCell>
+              <TableCell>Year</TableCell>
+              <TableCell>Make</TableCell>
+              <TableCell>Model</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Review</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {postings.map((post) => (
+              <TableRow key={post.id}>
+                <TableCell>
+                  <Avatar
+                    variant="rounded"
+                    src={post.photos[0]}
+                    alt={`${post.make} ${post.model}`}
+                    sx={{ width: 64, height: 40 }}
+                  />
+                </TableCell>
+                <TableCell>{post.name}</TableCell>
+                <TableCell>{post.email}</TableCell>
+                <TableCell>{post.phone}</TableCell>
+                <TableCell>{post.category}</TableCell>
+                <TableCell>{post.year}</TableCell>
+                <TableCell>{post.make}</TableCell>
+                <TableCell>{post.model}</TableCell>
+                <TableCell>{post.status}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => handleOpen(post)}
+                  >
+                    Review
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </Stack>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-          <Stack direction="row" sx={styles.buttonGroup}>
-            <Button
-              variant="contained"
-              color="success"
-              onClick={approveListing}
-            >
-              Approve
-            </Button>
-            <Button variant="outlined" onClick={saveChanges}>
-              Save Changes
-            </Button>
-            <Button variant="text" color="error" onClick={cancelReview}>
-              Cancel
-            </Button>
-          </Stack>
+      <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            bgcolor: "background.paper",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          {selectedPost && (
+            <>
+              <Typography variant="h6" gutterBottom>
+                Review Listing
+              </Typography>
+
+              <Typography>
+                <strong>Name:</strong> {selectedPost.name}
+              </Typography>
+              <Typography>
+                <strong>Email:</strong> {selectedPost.email}
+              </Typography>
+              <Typography mb={2}>
+                <strong>Phone:</strong> {selectedPost.phone}
+              </Typography>
+
+              <Box mt={2}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Photos
+                </Typography>
+                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                  {selectedPost.photos.map((src, idx) => (
+                    <Avatar
+                      key={idx}
+                      variant="rounded"
+                      src={src}
+                      alt={`Photo ${idx + 1}`}
+                      sx={{ width: 100, height: 75 }}
+                    />
+                  ))}
+                </Box>
+              </Box>
+
+              <TextField
+                select
+                label="Category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                fullWidth
+                margin="normal"
+              >
+                <MenuItem value="powersports">Powersports</MenuItem>
+                <MenuItem value="marine">Marine</MenuItem>
+                <MenuItem value="rv">RV / Travel Trailer</MenuItem>
+                <MenuItem value="auto">Automotive</MenuItem>
+              </TextField>
+              <TextField
+                label="Year"
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Make"
+                value={make}
+                onChange={(e) => setMake(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Model"
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Kilometers"
+                value={kms}
+                onChange={(e) => setKms(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Price"
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={4}
+              />
+
+              <TextField
+                label="Interest Rate (%)"
+                type="number"
+                value={interestRate}
+                onChange={(e) => setInterestRate(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Term (Months)"
+                select
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+                fullWidth
+                margin="normal"
+              >
+                {[24, 36, 48, 60, 72, 84, 96, 120, 180, 240].map((t) => (
+                  <MenuItem key={t} value={t}>
+                    {t}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                label="Dealership"
+                value={dealership}
+                onChange={(e) => setDealership(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+
+              <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
+                <Button variant="outlined" onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  onClick={handleApprove}
+                >
+                  Approve & Save
+                </Button>
+              </Box>
+            </>
+          )}
         </Box>
       </Modal>
-    </Box>
+    </>
   );
-}
+};
 
 export default PendingListings;

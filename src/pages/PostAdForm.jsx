@@ -14,10 +14,12 @@ function PostAdForm() {
     name: "",
     email: "",
     phone: "",
+    category: "",
     year: "",
     make: "",
     model: "",
     kms: "",
+    price: "",
     description: "",
     photos: [],
   });
@@ -45,9 +47,9 @@ function PostAdForm() {
       id: Date.now(),
     };
 
-    const active = JSON.parse(localStorage.getItem("activeListings")) || [];
-    active.push(listingData);
-    localStorage.setItem("activeListings", JSON.stringify(active));
+    const listings = JSON.parse(localStorage.getItem("listings")) || [];
+    listings.push(listingData);
+    localStorage.setItem("listings", JSON.stringify(listings));
 
     alert("Your listing has been submitted for review.");
 
@@ -55,10 +57,12 @@ function PostAdForm() {
       name: "",
       email: "",
       phone: "",
+      category: "",
       year: "",
       make: "",
       model: "",
       kms: "",
+      price: "",
       description: "",
       photos: [],
     });
@@ -104,6 +108,18 @@ function PostAdForm() {
 
         <fieldset>
           <legend>Vehicle Information</legend>
+          <select
+            name="category"
+            required
+            value={formData.category}
+            onChange={handleChange}
+          >
+            <option value="">Select a Category</option>
+            <option value="powersports">Powersports</option>
+            <option value="marine">Marine</option>
+            <option value="rv">RV / Travel Trailer</option>
+            <option value="auto">Automotive</option>
+          </select>
           <input
             type="number"
             name="year"
@@ -133,6 +149,13 @@ function PostAdForm() {
             name="kms"
             placeholder="Kilometers (optional)"
             value={formData.kms}
+            onChange={handleChange}
+          />
+          <input
+            type="number"
+            name="price"
+            placeholder="Selling Price"
+            value={formData.price}
             onChange={handleChange}
           />
           <textarea
