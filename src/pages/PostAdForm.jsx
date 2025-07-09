@@ -118,7 +118,7 @@ function PostAdForm() {
             <option value="powersports">Powersports</option>
             <option value="marine">Marine</option>
             <option value="rv">RV / Travel Trailer</option>
-            <option value="auto">Automotive</option>
+            <option value="automotive">Automotive</option>
           </select>
           <input
             type="number"

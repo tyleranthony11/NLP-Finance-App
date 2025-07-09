@@ -2,18 +2,20 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetail.css";
 import { calculateBiWeekly, calculateWeekly, calculateMonthly } from "../utils";
-import dummyListings from "../data/dummyListings";
-import dealers from '../data/dealers';
+import dealers from "../data/dealers";
 
 export default function MarketplaceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const listing = dummyListings.find((l) => l.id.toString() === id);
+  const listings = JSON.parse(localStorage.getItem("listings") || "[]");
+  const listing = listings.find(
+    (l) => l.id.toString() === id && l.status === "active"
+  );
   const dealerInfo = listing.dealership ? dealers[listing.dealership] : null;
   const [downPayment, setDownPayment] = useState("");
   const [customPrice, setCustomPrice] = useState(listing.price);
-  const [customRate, setCustomRate] = useState(listing.rate);
-  const [customTerm, setCustomTerm] = useState(listing.termMonths);
+  const [customRate, setCustomRate] = useState(listing.interestRate);
+  const [customTerm, setCustomTerm] = useState(listing.term);
   const [frequency, setFrequency] = useState("bi-weekly");
   const minRate = 5.29;
   const maxRate = 24.99;
@@ -168,7 +170,8 @@ export default function MarketplaceDetail() {
           </div>
           <p className="calculator-disclaimer">
             *Payment amount is an estimate for illustrative purposes only. HST
-            and other fees not included. All clients are subject to credit approval.
+            and other fees not included. All clients are subject to credit
+            approval.
           </p>
 
           <a href="/finance" className="apply-now-btn">
@@ -176,39 +179,44 @@ export default function MarketplaceDetail() {
           </a>
         </div>
       </div>
-<div className="info-row">
-<div className="specs">
-        <h3>Specifications</h3>
-        <div>
-          <strong>Year:</strong> {listing.year}
+      <div className="info-row">
+        <div className="specs">
+          <h3>Specifications</h3>
+          <div>
+            <strong>Year:</strong> {listing.year}
+          </div>
+          <div>
+            <strong>Make:</strong> {listing.make}
+          </div>
+          <div>
+            <strong>Model:</strong> {listing.model}
+          </div>
+          <div>
+            <strong>Odometer:</strong> {listing.kms} km
+          </div>
         </div>
-        <div>
-          <strong>Make:</strong> {listing.make}
-        </div>
-        <div>
-          <strong>Model:</strong> {listing.model}
-        </div>
+
+        {dealerInfo && (
+          <div className="dealer-info">
+            <p className="dealer-label">Offered by:</p>
+            <div className="dealer-logo-wrapper">
+              <a
+                href={dealerInfo.website}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src={dealerInfo.logo}
+                  alt={`${dealerInfo.name} logo`}
+                  className="dealer-logo"
+                />
+              </a>
+            </div>
+            <p className="dealer-name">{dealerInfo.name}</p>
+            <p className="dealer-location">{dealerInfo.location}</p>
+          </div>
+        )}
       </div>
-
-      {dealerInfo && (
-        <div className="dealer-info">
-          <p className="dealer-label">Offered by:</p>
-          <div className="dealer-logo-wrapper">
-            <a href={dealerInfo.website} target="_blank" rel="noopener noreferrer">
-             <img src={dealerInfo.logo}
-            alt={`${dealerInfo.name} logo`}
-            className="dealer-logo" /> 
-            </a>
-          </div>
-          <p className="dealer-name">{dealerInfo.name}</p>
-          <p className="dealer-location">{dealerInfo.location}</p>
-          </div>
-          
-      )}
-</div>
-      
-
-      
 
       <div className="description">
         <h4>Description</h4>

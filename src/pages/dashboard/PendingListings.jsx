@@ -82,10 +82,10 @@ const PendingListings = () => {
             make,
             model,
             kms,
-            price,
+            price: Number(price),
             description,
-            interestRate,
-            term,
+            interestRate: Number(interestRate),
+            term: Number(term),
             dealership,
           }
         : post
@@ -98,56 +98,61 @@ const PendingListings = () => {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Photo</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Year</TableCell>
-              <TableCell>Make</TableCell>
-              <TableCell>Model</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Review</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {postings.map((post) => (
-              <TableRow key={post.id}>
-                <TableCell>
-                  <Avatar
-                    variant="rounded"
-                    src={post.photos[0]}
-                    alt={`${post.make} ${post.model}`}
-                    sx={{ width: 64, height: 40 }}
-                  />
-                </TableCell>
-                <TableCell>{post.name}</TableCell>
-                <TableCell>{post.email}</TableCell>
-                <TableCell>{post.phone}</TableCell>
-                <TableCell>{post.category}</TableCell>
-                <TableCell>{post.year}</TableCell>
-                <TableCell>{post.make}</TableCell>
-                <TableCell>{post.model}</TableCell>
-                <TableCell>{post.status}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => handleOpen(post)}
-                  >
-                    Review
-                  </Button>
-                </TableCell>
+      {postings.length === 0 ? (
+        <Typography variant="h6" align="center" sx={{ mt: 4 }}>
+          There are no pending listings to review.
+        </Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Photo</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Year</TableCell>
+                <TableCell>Make</TableCell>
+                <TableCell>Model</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Review</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
+            </TableHead>
+            <TableBody>
+              {postings.map((post) => (
+                <TableRow key={post.id}>
+                  <TableCell>
+                    <Avatar
+                      variant="rounded"
+                      src={post.photos[0]}
+                      alt={`${post.make} ${post.model}`}
+                      sx={{ width: 64, height: 40 }}
+                    />
+                  </TableCell>
+                  <TableCell>{post.name}</TableCell>
+                  <TableCell>{post.email}</TableCell>
+                  <TableCell>{post.phone}</TableCell>
+                  <TableCell>{post.category}</TableCell>
+                  <TableCell>{post.year}</TableCell>
+                  <TableCell>{post.make}</TableCell>
+                  <TableCell>{post.model}</TableCell>
+                  <TableCell>{post.status}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      size="small"
+                      onClick={() => handleOpen(post)}
+                    >
+                      Review
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
@@ -208,7 +213,7 @@ const PendingListings = () => {
                 <MenuItem value="powersports">Powersports</MenuItem>
                 <MenuItem value="marine">Marine</MenuItem>
                 <MenuItem value="rv">RV / Travel Trailer</MenuItem>
-                <MenuItem value="auto">Automotive</MenuItem>
+                <MenuItem value="automotive">Automotive</MenuItem>
               </TextField>
               <TextField
                 label="Year"

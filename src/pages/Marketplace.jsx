@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { calculateBiWeekly } from '../utils';
-import dummyListings from "../data/dummyListings";
+import { calculateBiWeekly } from "../utils";
 import "./Marketplace.css";
 
 function Marketplace() {
@@ -10,17 +9,21 @@ function Marketplace() {
   const [priceRange, setPriceRange] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
 
+  const [inventoryListings, setInventoryListings] = useState(() => {
+    const saved = localStorage.getItem("listings");
+    const activeListings = saved ? JSON.parse(saved) : [];
+    console.log("Loaded inventory listings:", activeListings);
+    return activeListings.filter((item) => item.status === "active");
+  });
+
   const allDealers = Array.from(
-    new Set(dummyListings.map((item) => item.dealership))
+    new Set(inventoryListings.map((item) => item.dealership))
   );
 
-  const filteredListings = dummyListings.filter((item) => {
+  const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
 
-    if (
-      selectedDealers.length > 0 &&
-      !selectedDealers.includes(dealerName)
-    ) {
+    if (selectedDealers.length > 0 && !selectedDealers.includes(dealerName)) {
       return false;
     }
 
@@ -34,7 +37,10 @@ function Marketplace() {
     if (priceRange === "under10k" && item.price >= 10000) return false;
     if (priceRange === "10kto25k" && (item.price < 10000 || item.price > 25000))
       return false;
-    if (priceRange === "25kto50k" && (item.price <= 25000 || item.price >= 50000))
+    if (
+      priceRange === "25kto50k" &&
+      (item.price <= 25000 || item.price >= 50000)
+    )
       return false;
     if (priceRange === "over50k" && item.price < 50000) return false;
 
@@ -43,17 +49,17 @@ function Marketplace() {
 
   const sortedListings = [...filteredListings].sort((a, b) => {
     switch (sortKey) {
-      case 'price-asc':
+      case "price-asc":
         return a.price - b.price;
-      case 'price-desc':
+      case "price-desc":
         return b.price - a.price;
-      case 'year-asc':
+      case "year-asc":
         return a.year - b.year;
-      case 'year-desc':
+      case "year-desc":
         return b.year - a.year;
-      case 'make-asc':
+      case "make-asc":
         return a.make.localeCompare(b.make);
-      case 'make-desc':
+      case "make-desc":
         return b.make.localeCompare(a.make);
       default:
         return b.id - a.id;
@@ -158,13 +164,31 @@ function Marketplace() {
 
           <div className="marketplace-grid">
             {sortedListings.map((item) => (
-              <Link to={`/marketplace/${item.id}`} key={item.id} className="marketplace-card">
+              <Link
+                to={`/marketplace/${item.id}`}
+                key={item.id}
+                className="marketplace-card"
+              >
                 <img src={item.photos[0]} alt={item.model} />
                 <div className="marketplace-info">
-                  <h3>{item.year} {item.make} {item.model}</h3>
-                  <p><strong>Price:</strong> ${item.price.toLocaleString()}</p>
-                  <p><strong>Payment:</strong> ${calculateBiWeekly(item.price, item.rate, item.termMonths)} bi-weekly</p>
-                  <p id="terms">Based on {item.termMonths} months at {item.rate}% APR</p>
+                  <h3>
+                    {item.year} {item.make} {item.model}
+                  </h3>
+                  <p>
+                    <strong>Price:</strong> ${item.price.toLocaleString()}
+                  </p>
+                  <p>
+                    <strong>Payment:</strong> $
+                    {calculateBiWeekly(
+                      item.price,
+                      item.interestRate,
+                      item.term
+                    )}{" "}
+                    bi-weekly
+                  </p>
+                  <p id="terms">
+                    Based on {item.term} months at {item.interestRate}% APR
+                  </p>
                 </div>
               </Link>
             ))}
