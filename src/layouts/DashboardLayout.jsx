@@ -26,6 +26,7 @@ import { Collapse } from "@mui/material";
 import DashboardHome from "../pages/dashboard/DashboardHome";
 import Inventory from "../pages/dashboard/Inventory";
 import PendingListings from "../pages/dashboard/PendingListings";
+import PostAd from "../pages/dashboard/PostAd";
 import FundedDeals from "../pages/dashboard/FundedDeals";
 import IncomeReports from "../pages/dashboard/IncomeReports";
 import "./DashboardLayout.css";
@@ -60,7 +61,7 @@ const navItems = [
       {
         text: "Post New Ad",
         icon: <AddBoxIcon />,
-        route: "/dashboard/marketplace/new",
+        route: "/dashboard/post-ad",
       },
     ],
   },
@@ -166,6 +167,7 @@ const DashboardLayout = () => {
           <Route path="/" element={<DashboardHome />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="pending-listings" element={<PendingListings />} />
+          <Route path="post-ad" element={<PostAd />} />
           <Route path="funded-deals" element={<FundedDeals />} />
           <Route path="income-reports" element={<IncomeReports />} />
         </Routes>
