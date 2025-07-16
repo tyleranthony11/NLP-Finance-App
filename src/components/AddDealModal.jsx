@@ -22,7 +22,6 @@ const modalStyle = {
 };
 
 const titleStyle = { mb: 2 };
-const formGridStyle = { spacing: 2 };
 const footerStyle = { mt: 3, display: "flex", justifyContent: "flex-end" };
 const cancelButtonStyle = { mr: 2 };
 
