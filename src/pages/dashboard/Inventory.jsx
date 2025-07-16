@@ -92,7 +92,6 @@ const Inventory = () => {
         rowsPerPageOptions={[10, 25, 50]}
         disableSelectionOnClick
         onRowClick={handleRowClick}
-        autoHeight={false}
       />
 
       <Modal open={open} onClose={handleClose}>

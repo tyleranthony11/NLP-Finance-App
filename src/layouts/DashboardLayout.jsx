@@ -24,11 +24,13 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import { Collapse } from "@mui/material";
 import DashboardHome from "../pages/dashboard/DashboardHome";
+import Leads from "../pages/dashboard/Leads";
 import Inventory from "../pages/dashboard/Inventory";
 import PendingListings from "../pages/dashboard/PendingListings";
 import PostAd from "../pages/dashboard/PostAd";
 import FundedDeals from "../pages/dashboard/FundedDeals";
 import IncomeReports from "../pages/dashboard/IncomeReports";
+import Settings from "../pages/dashboard/Settings";
 import "./DashboardLayout.css";
 
 const logoUrl = "/images/nlplogo1.png";
@@ -165,11 +167,13 @@ const DashboardLayout = () => {
       <Box component="main" className="dashboard-main">
         <Routes>
           <Route path="/" element={<DashboardHome />} />
+          <Route path="leads" element={<Leads />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="pending-listings" element={<PendingListings />} />
           <Route path="post-ad" element={<PostAd />} />
           <Route path="funded-deals" element={<FundedDeals />} />
           <Route path="income-reports" element={<IncomeReports />} />
+          <Route path="settings" element={<Settings />} />
         </Routes>
       </Box>
     </Box>
