@@ -30,10 +30,6 @@ const styles = {
     textDecoration: "none",
     color: "#d71a20",
   },
-  financeContentLinkHover: {
-    textDecoration: "underline",
-    color: "#a10303",
-  },
   financeFormSection: {
     backgroundColor: "#f9f9f9",
     padding: "4rem 2rem",
@@ -81,13 +77,24 @@ function Finance() {
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (data) => {
-    localStorage.setItem("financeFormData", JSON.stringify(data));
+    const existingLeads =
+      JSON.parse(localStorage.getItem("financeFormDataList")) || [];
+
+    const newLead = {
+      ...data,
+      submittedAt: new Date().toISOString(),
+      confirmed: false,
+    };
+
+    const updatedLeads = [...existingLeads, newLead];
+    localStorage.setItem("financeFormDataList", JSON.stringify(updatedLeads));
+
     alert("Application submitted! We'll be in touch shortly.");
     reset();
   };
 
   return (
-    <div style={styles.financeContainer}>
+    <div>
       <section style={styles.financeSection}>
         <div style={styles.financeContent}>
           <h1 style={styles.financeContentH1}>Apply for Financing</h1>
@@ -113,9 +120,10 @@ function Finance() {
           <div style={styles.formGroup}>
             <label style={styles.label}>Full Name</label>
             <input
-              style={styles.input}
+              name="fullName"
               type="text"
               {...register("fullName")}
+              style={styles.input}
               required
             />
           </div>
@@ -123,9 +131,10 @@ function Finance() {
           <div style={styles.formGroup}>
             <label style={styles.label}>Email</label>
             <input
-              style={styles.input}
+              name="email"
               type="email"
               {...register("email")}
+              style={styles.input}
               required
             />
           </div>
@@ -133,9 +142,10 @@ function Finance() {
           <div style={styles.formGroup}>
             <label style={styles.label}>Phone Number</label>
             <input
-              style={styles.input}
+              name="phone"
               type="tel"
               {...register("phone")}
+              style={styles.input}
               required
             />
           </div>
@@ -143,9 +153,10 @@ function Finance() {
           <div style={styles.formGroup}>
             <label style={styles.label}>Location (Town/City)</label>
             <input
-              style={styles.input}
+              name="location"
               type="text"
               {...register("location")}
+              style={styles.input}
               required
             />
           </div>
@@ -154,7 +165,12 @@ function Finance() {
             <label style={styles.label}>
               What type of vehicle are you interested in?
             </label>
-            <select style={styles.input} {...register("vehicle")} required>
+            <select
+              name="vehicle"
+              {...register("vehicle")}
+              style={styles.input}
+              required
+            >
               <option value="">Select an option</option>
               <option value="powersports">Powersports</option>
               <option value="rv">RV / Travel Trailer</option>
@@ -167,9 +183,10 @@ function Finance() {
           <div style={styles.formGroup}>
             <label style={styles.label}>Dealership or Private Seller</label>
             <input
-              style={styles.input}
+              name="seller"
               type="text"
               {...register("seller")}
+              style={styles.input}
               required
             />
           </div>
@@ -177,10 +194,11 @@ function Finance() {
           <div style={styles.formGroup}>
             <label style={styles.label}>Additional Info (Optional)</label>
             <textarea
+              name="additionalInfo"
               rows="4"
-              style={styles.input}
               placeholder="Tell us more about what you're looking for..."
               {...register("additionalInfo")}
+              style={styles.input}
             ></textarea>
           </div>
 
