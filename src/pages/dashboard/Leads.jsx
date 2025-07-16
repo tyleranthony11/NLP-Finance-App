@@ -70,13 +70,13 @@ function Leads() {
       {leads.map((lead, index) => (
         <div key={index} style={styles.leadCard}>
           <div style={styles.leadTitle}>{lead.fullName}</div>
-          <div style={styles.leadInfo}>📧 {lead.email}</div>
-          <div style={styles.leadInfo}>📞 {lead.phone}</div>
-          <div style={styles.leadInfo}>📍 {lead.location}</div>
-          <div style={styles.leadInfo}>🚗 Interested in: {lead.vehicle}</div>
-          <div style={styles.leadInfo}>🏪 Seller: {lead.seller}</div>
+          <div style={styles.leadInfo}>{lead.email}</div>
+          <div style={styles.leadInfo}>{lead.phone}</div>
+          <div style={styles.leadInfo}>{lead.location}</div>
+          <div style={styles.leadInfo}> Interested in: {lead.vehicle}</div>
+          <div style={styles.leadInfo}>Seller: {lead.seller}</div>
           {lead.additionalInfo && (
-            <div style={styles.leadInfo}>📝 {lead.additionalInfo}</div>
+            <div style={styles.leadInfo}>{lead.additionalInfo}</div>
           )}
           {!lead.confirmed ? (
             <button style={styles.button} onClick={() => handleConfirm(index)}>
