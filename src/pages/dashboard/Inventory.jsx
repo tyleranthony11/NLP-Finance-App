@@ -8,6 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+import { NumericFormat } from "react-number-format";
 
 const Inventory = () => {
   const [approvedListings, setApprovedListings] = useState([]);
@@ -49,9 +50,12 @@ const Inventory = () => {
     {
       field: "photo",
       headerName: "Photo",
-      width: 100,
+      flex: 0.25,
+      minWidth: 80,
       sortable: false,
       filterable: false,
+      headerAlign: "center",
+      align: "center",
       renderCell: (params) => (
         <Avatar
           variant="rounded"
@@ -61,18 +65,117 @@ const Inventory = () => {
         />
       ),
     },
-    { field: "category", headerName: "Category", width: 130 },
-    { field: "year", headerName: "Year", width: 100 },
-    { field: "make", headerName: "Make", width: 130 },
-    { field: "model", headerName: "Model", width: 130 },
-    { field: "price", headerName: "Price", width: 110 },
-    { field: "kms", headerName: "KMs", width: 100 },
-    { field: "name", headerName: "Seller", width: 140 },
-    { field: "email", headerName: "Email", width: 200, hide: true },
-    { field: "phone", headerName: "Phone", width: 140 },
-    { field: "dealership", headerName: "Dealership", width: 150 },
-    { field: "interestRate", headerName: "Interest Rate (%)", width: 150 },
-    { field: "term", headerName: "Term (Months)", width: 140 },
+    {
+      field: "category",
+      headerName: "Category",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "year",
+      headerName: "Year",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "make",
+      headerName: "Make",
+      flex: 1,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "model",
+      headerName: "Model",
+      flex: 1,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "price",
+      headerName: "Price",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+          prefix="$"
+        />
+      ),
+    },
+    {
+      field: "kms",
+      headerName: "KMs",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <NumericFormat
+          value={params.value}
+          displayType="text"
+          thousandSeparator
+        />
+      ),
+    },
+    {
+      field: "name",
+      headerName: "Seller",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "email",
+      headerName: "Email",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "phone",
+      headerName: "Phone",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "dealership",
+      headerName: "Dealership",
+      flex: 1,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "interestRate",
+      headerName: "Interest Rate (%)",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "term",
+      headerName: "Term (Months)",
+      flex: 0.5,
+      minWidth: 80,
+      headerAlign: "center",
+      align: "center",
+    },
   ];
 
   const rows = approvedListings.map((listing) => ({
@@ -107,14 +210,24 @@ const Inventory = () => {
         rowsPerPageOptions={[10, 25, 50]}
         disableSelectionOnClick
         onRowClick={handleRowClick}
-        columnVisibilityModel={{
-          category: false,
-          kms: false,
-          name: false,
-          email: false,
-          phone: false,
-          interestRate: false,
-          term: false,
+        initialState={{
+          columns: {
+            columnVisibilityModel: {
+              photo: true,
+              year: true,
+              make: true,
+              model: true,
+              price: true,
+              dealership: true,
+              category: false,
+              kms: false,
+              name: false,
+              email: false,
+              phone: false,
+              interestRate: false,
+              term: false,
+            },
+          },
         }}
       />
 
