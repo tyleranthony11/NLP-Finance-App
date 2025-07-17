@@ -30,6 +30,21 @@ const Inventory = () => {
     setSelectedListing(null);
   };
 
+  const handleMarkAsSold = () => {
+    const listings = JSON.parse(localStorage.getItem("listings")) || [];
+
+    const updatedListings = listings.map((post) =>
+      post.id === selectedListing.id ? { ...post, status: "sold" } : post
+    );
+
+    localStorage.setItem("listings", JSON.stringify(updatedListings));
+    setOpen(false);
+    setSelectedListing(null);
+
+    const active = updatedListings.filter((post) => post.status === "active");
+    setApprovedListings(active);
+  };
+
   const columns = [
     {
       field: "photo",
@@ -53,7 +68,7 @@ const Inventory = () => {
     { field: "price", headerName: "Price", width: 110 },
     { field: "kms", headerName: "KMs", width: 100 },
     { field: "name", headerName: "Seller", width: 140 },
-    { field: "email", headerName: "Email", width: 200 },
+    { field: "email", headerName: "Email", width: 200, hide: true },
     { field: "phone", headerName: "Phone", width: 140 },
     { field: "dealership", headerName: "Dealership", width: 150 },
     { field: "interestRate", headerName: "Interest Rate (%)", width: 150 },
@@ -92,6 +107,15 @@ const Inventory = () => {
         rowsPerPageOptions={[10, 25, 50]}
         disableSelectionOnClick
         onRowClick={handleRowClick}
+        columnVisibilityModel={{
+          category: false,
+          kms: false,
+          name: false,
+          email: false,
+          phone: false,
+          interestRate: false,
+          term: false,
+        }}
       />
 
       <Modal open={open} onClose={handleClose}>
@@ -209,9 +233,16 @@ const Inventory = () => {
                 InputProps={{ readOnly: true }}
               />
 
-              <Box mt={3} display="flex" justifyContent="flex-end">
-                <Button variant="contained" onClick={handleClose}>
+              <Box mt={3} display="flex" justifyContent="space-between">
+                <Button variant="outlined" onClick={handleClose}>
                   Close
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={handleMarkAsSold}
+                >
+                  Mark as Sold
                 </Button>
               </Box>
             </>
