@@ -31,6 +31,30 @@ const Inventory = () => {
     setSelectedListing(null);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSelectedListing((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSaveChanges = () => {
+    const listings = JSON.parse(localStorage.getItem("listings")) || [];
+
+    const updated = listings.map((item) =>
+      item.id === selectedListing.id
+        ? { ...item, ...selectedListing, status: item.status }
+        : item
+    );
+
+    localStorage.setItem("listings", JSON.stringify(updated));
+
+    const active = updated.filter((post) => post.status === "active");
+    setApprovedListings(active);
+    handleClose();
+  };
+
   const handleMarkAsSold = () => {
     const listings = JSON.parse(localStorage.getItem("listings")) || [];
 
@@ -39,11 +63,10 @@ const Inventory = () => {
     );
 
     localStorage.setItem("listings", JSON.stringify(updatedListings));
-    setOpen(false);
-    setSelectedListing(null);
 
     const active = updatedListings.filter((post) => post.status === "active");
     setApprovedListings(active);
+    handleClose();
   };
 
   const columns = [
@@ -195,6 +218,7 @@ const Inventory = () => {
     interestRate: listing.interestRate || "",
     term: listing.term || "",
     dealership: listing.dealership || "",
+    status: listing.status || "active",
   }));
 
   return (
@@ -250,113 +274,73 @@ const Inventory = () => {
           {selectedListing && (
             <>
               <Typography variant="h6" gutterBottom>
-                Review Listing
+                Edit Listing
               </Typography>
-
-              <Typography>
-                <strong>Name:</strong> {selectedListing.name}
-              </Typography>
-              <Typography>
+              <Typography variant="subtitle1" gutterBottom>
+                <strong>Seller:</strong> {selectedListing.name}
+                <br />
                 <strong>Email:</strong> {selectedListing.email}
-              </Typography>
-              <Typography mb={2}>
+                <br />
                 <strong>Phone:</strong> {selectedListing.phone}
               </Typography>
 
-              <Box mt={2}>
-                <Typography variant="subtitle1" gutterBottom>
-                  Photos
-                </Typography>
-                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                  {selectedListing.photos.map((src, idx) => (
-                    <Avatar
-                      key={idx}
-                      variant="rounded"
-                      src={src}
-                      alt={`Photo ${idx + 1}`}
-                      sx={{ width: 100, height: 75 }}
-                    />
-                  ))}
-                </Box>
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
+                {selectedListing.photos.map((src, idx) => (
+                  <Avatar
+                    key={idx}
+                    variant="rounded"
+                    src={src}
+                    alt={`Photo ${idx + 1}`}
+                    sx={{ width: 100, height: 75 }}
+                  />
+                ))}
               </Box>
 
-              <TextField
-                label="Year"
-                value={selectedListing.year}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Make"
-                value={selectedListing.make}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Model"
-                value={selectedListing.model}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Kilometers"
-                value={selectedListing.kms}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Price"
-                value={selectedListing.price}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Description"
-                value={selectedListing.description}
-                fullWidth
-                margin="normal"
-                multiline
-                rows={4}
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Interest Rate (%)"
-                value={selectedListing.interestRate}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Term (Months)"
-                value={selectedListing.term}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
-              <TextField
-                label="Dealership"
-                value={selectedListing.dealership}
-                fullWidth
-                margin="normal"
-                InputProps={{ readOnly: true }}
-              />
+              {[
+                "year",
+                "make",
+                "model",
+                "kms",
+                "price",
+                "description",
+                "interestRate",
+                "term",
+                "dealership",
+              ].map((field) => (
+                <TextField
+                  key={field}
+                  label={field.charAt(0).toUpperCase() + field.slice(1)}
+                  name={field}
+                  value={selectedListing[field]}
+                  onChange={handleInputChange}
+                  fullWidth
+                  margin="normal"
+                  multiline={field === "description"}
+                  rows={field === "description" ? 4 : 1}
+                />
+              ))}
 
               <Box mt={3} display="flex" justifyContent="space-between">
                 <Button variant="outlined" onClick={handleClose}>
-                  Close
+                  Cancel
                 </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleMarkAsSold}
-                >
-                  Mark as Sold
-                </Button>
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleMarkAsSold}
+                    sx={{ mr: 2 }}
+                  >
+                    Mark as Sold
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSaveChanges}
+                  >
+                    Save Changes
+                  </Button>
+                </Box>
               </Box>
             </>
           )}
