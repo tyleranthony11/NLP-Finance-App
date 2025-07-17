@@ -1,40 +1,25 @@
 import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
-const styles = {
-  container: {
-    padding: "2rem",
-    fontFamily: "sans-serif",
-    backgroundColor: "#f9f9f9",
-    minHeight: "100vh",
-  },
-  leadCard: {
-    backgroundColor: "#fff",
-    padding: "1.5rem",
-    marginBottom: "1rem",
-    borderRadius: "10px",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-  },
-  leadTitle: {
-    fontSize: "1.25rem",
-    fontWeight: "bold",
-    marginBottom: "0.5rem",
-  },
-  leadInfo: {
-    marginBottom: "0.25rem",
-  },
-  button: {
-    marginTop: "1rem",
-    padding: "0.5rem 1rem",
-    border: "none",
-    borderRadius: "5px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    cursor: "pointer",
-  },
-  confirmed: {
-    backgroundColor: "#28a745",
-  },
-};
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import StoreIcon from "@mui/icons-material/Store";
+import NotesIcon from "@mui/icons-material/Notes";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 function Leads() {
   const [leads, setLeads] = useState([]);
@@ -47,7 +32,11 @@ function Leads() {
 
   const handleConfirm = (index) => {
     const updatedLeads = [...leads];
-    updatedLeads[index].confirmed = true;
+    updatedLeads[index] = {
+      ...updatedLeads[index],
+      confirmed: true,
+      confirmedAt: new Date().toISOString(),
+    };
 
     localStorage.setItem(
       "financeFormDataList",
@@ -56,40 +45,113 @@ function Leads() {
     setLeads(updatedLeads);
   };
 
-  if (leads.length === 0) {
-    return (
-      <div style={styles.container}>
-        <p>No leads submitted yet.</p>
-      </div>
-    );
-  }
+  const formatDate = (iso) => (iso ? new Date(iso).toLocaleString() : "N/A");
+
+  const newLeads = leads.filter((lead) => !lead.confirmed);
+  const followedUpLeads = leads.filter((lead) => lead.confirmed);
 
   return (
-    <div style={styles.container}>
-      <h1>Leads</h1>
-      {leads.map((lead, index) => (
-        <div key={index} style={styles.leadCard}>
-          <div style={styles.leadTitle}>{lead.fullName}</div>
-          <div style={styles.leadInfo}>{lead.email}</div>
-          <div style={styles.leadInfo}>{lead.phone}</div>
-          <div style={styles.leadInfo}>{lead.location}</div>
-          <div style={styles.leadInfo}> Interested in: {lead.vehicle}</div>
-          <div style={styles.leadInfo}>Seller: {lead.seller}</div>
-          {lead.additionalInfo && (
-            <div style={styles.leadInfo}>{lead.additionalInfo}</div>
-          )}
-          {!lead.confirmed ? (
-            <button style={styles.button} onClick={() => handleConfirm(index)}>
-              Mark as Followed Up
-            </button>
-          ) : (
-            <button style={{ ...styles.button, ...styles.confirmed }} disabled>
-              ✅ Followed Up
-            </button>
-          )}
-        </div>
-      ))}
-    </div>
+    <Box sx={{ p: 4, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
+      <Typography variant="h4" gutterBottom>
+        Leads
+      </Typography>
+
+      {newLeads.length > 0 ? (
+        <>
+          <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
+            🆕 New Leads
+          </Typography>
+          {newLeads.map((lead, index) => (
+            <Paper
+              key={index}
+              sx={{ p: 3, mb: 2, borderRadius: 2, boxShadow: 2 }}
+            >
+              <Typography variant="h6" gutterBottom>
+                {lead.fullName}
+              </Typography>
+              <Typography>
+                <EmailIcon /> {lead.email}
+              </Typography>
+              <Typography>
+                <PhoneIcon /> {lead.phone}
+              </Typography>
+              <Typography>
+                <LocationOnIcon /> {lead.location}
+              </Typography>
+              <Typography>
+                <DirectionsCarIcon /> {lead.vehicle}
+              </Typography>
+              <Typography>
+                <StoreIcon /> {lead.seller}
+              </Typography>
+              {lead.additionalInfo && (
+                <Typography>
+                  <NotesIcon /> {lead.additionalInfo}
+                </Typography>
+              )}
+              <Typography>
+                <CalendarTodayIcon fontSize="small" sx={{ mr: 1 }} />
+                Submitted: {formatDate(lead.submittedAt)}
+              </Typography>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleConfirm(index)}
+                sx={{ mt: 2 }}
+              >
+                Mark as Followed Up
+              </Button>
+            </Paper>
+          ))}
+        </>
+      ) : (
+        <Typography>No new leads at the moment.</Typography>
+      )}
+
+      {followedUpLeads.length > 0 && (
+        <>
+          <Typography variant="h6" sx={{ mt: 5, mb: 2 }}>
+            ✅ Followed-Up Leads
+          </Typography>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead sx={{ backgroundColor: "#eee" }}>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Phone</TableCell>
+                  <TableCell>Location</TableCell>
+                  <TableCell>Vehicle</TableCell>
+                  <TableCell>Seller</TableCell>
+                  <TableCell>Submitted</TableCell>
+                  <TableCell>Followed Up</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {followedUpLeads.map((lead, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{lead.fullName}</TableCell>
+                    <TableCell>{lead.email}</TableCell>
+                    <TableCell>{lead.phone}</TableCell>
+                    <TableCell>{lead.location}</TableCell>
+                    <TableCell>{lead.vehicle}</TableCell>
+                    <TableCell>{lead.seller}</TableCell>
+                    <TableCell>{formatDate(lead.submittedAt)}</TableCell>
+                    <TableCell>
+                      <CheckCircleIcon
+                        sx={{ verticalAlign: "middle", mr: 1, color: "green" }}
+                      />
+                      {formatDate(lead.confirmedAt)}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      )}
+    </Box>
   );
 }
 
