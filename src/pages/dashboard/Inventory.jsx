@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
+import { capitalizeFirstLetter } from "../../utils.js";
 
 const Inventory = () => {
   const [approvedListings, setApprovedListings] = useState([]);
@@ -95,6 +96,7 @@ const Inventory = () => {
       minWidth: 80,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => capitalizeFirstLetter(params.value),
     },
     {
       field: "year",
