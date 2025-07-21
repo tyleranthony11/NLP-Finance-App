@@ -82,6 +82,7 @@ const FundedDeals = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      editable: true,
     },
     {
       field: "date",
@@ -89,6 +90,7 @@ const FundedDeals = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      editable: true,
       renderCell: (params) => dayjs(params.value).format("MMMM D, YYYY"),
     },
     { field: "dealer", headerName: "Dealer" },
@@ -97,35 +99,61 @@ const FundedDeals = () => {
       field: "brokerageFee",
       headerName: "Brokerage Fee",
       renderCell: currencyRender,
+      editable: true,
     },
     {
       field: "lifeInsurance",
       headerName: "Life Ins.",
       renderCell: currencyRender,
+      editable: true,
     },
     {
       field: "ahInsurance",
       headerName: "A/H Ins.",
       renderCell: currencyRender,
+      editable: true,
     },
-    { field: "ciInsurance", headerName: "CI Ins.", renderCell: currencyRender },
-    { field: "gapInsurance", headerName: "GAP", renderCell: currencyRender },
-    { field: "warranty", headerName: "Warranty", renderCell: currencyRender },
+    {
+      field: "ciInsurance",
+      headerName: "CI Ins.",
+      renderCell: currencyRender,
+      editable: true,
+    },
+    {
+      field: "gapInsurance",
+      headerName: "GAP",
+      renderCell: currencyRender,
+      editable: true,
+    },
+    {
+      field: "warranty",
+      headerName: "Warranty",
+      renderCell: currencyRender,
+      editable: true,
+    },
     {
       field: "bankReserve",
       headerName: "Bank Reserve",
       renderCell: currencyRender,
+      editable: true,
     },
     {
       field: "dealerReserve",
       headerName: "Dealer Reserve",
       renderCell: currencyRender,
+      editable: true,
     },
-    { field: "otherFI", headerName: "Other F&I", renderCell: currencyRender },
+    {
+      field: "otherFI",
+      headerName: "Other F&I",
+      renderCell: currencyRender,
+      editable: true,
+    },
     {
       field: "nlpReserve",
       headerName: "NLP Reserve",
       renderCell: currencyRender,
+      editable: true,
     },
     {
       field: "income",
@@ -134,6 +162,7 @@ const FundedDeals = () => {
       align: "center",
       headerAlign: "center",
       renderCell: currencyRender,
+      editable: false,
     },
   ];
 
@@ -141,6 +170,37 @@ const FundedDeals = () => {
     const updatedDeals = [...deals, newDeal];
     setDeals(updatedDeals);
     localStorage.setItem("fundedDeals", JSON.stringify(updatedDeals));
+  };
+
+  const handleRowUpdate = (newRow, oldRow) => {
+    const calculateIncome = (row) => {
+      return (
+        Number(row.brokerageFee || 0) +
+        Number(row.lifeInsurance || 0) +
+        Number(row.ahInsurance || 0) +
+        Number(row.ciInsurance || 0) +
+        Number(row.gapInsurance || 0) +
+        Number(row.warranty || 0) +
+        Number(row.bankReserve || 0) +
+        Number(row.dealerReserve || 0) -
+        Number(row.nlpReserve || 0) +
+        Number(row.otherFI || 0)
+      );
+    };
+
+    const updatedRow = {
+      ...newRow,
+      income: calculateIncome(newRow),
+    };
+
+    const updatedRows = deals.map((row, index) =>
+      index === oldRow.id ? updatedRow : row
+    );
+
+    setDeals(updatedRows);
+    localStorage.setItem("fundedDeals", JSON.stringify(updatedRows));
+
+    return updatedRow;
   };
 
   return (
@@ -183,6 +243,7 @@ const FundedDeals = () => {
           pageSize={10}
           rowsPerPageOptions={[10]}
           disableRowSelectionOnClick
+          processRowUpdate={handleRowUpdate}
           initialState={{
             columns: {
               columnVisibilityModel: {
