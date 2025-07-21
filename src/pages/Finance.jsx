@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
 
 const styles = {
   financeSection: {
@@ -89,7 +90,7 @@ function Finance() {
     const updatedLeads = [...existingLeads, newLead];
     localStorage.setItem("financeFormDataList", JSON.stringify(updatedLeads));
 
-    alert("Application submitted! We'll be in touch shortly.");
+    toast.success("Application submitted! We'll be in touch shortly.");
     reset();
   };
 
@@ -207,6 +208,7 @@ function Finance() {
           </button>
         </form>
       </section>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }
