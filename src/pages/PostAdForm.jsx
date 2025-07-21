@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import "./PostAdForm.css";
 const fileToBase64 = (file) => {
   return new Promise((resolve, reject) => {
@@ -51,7 +52,7 @@ function PostAdForm() {
     listings.push(listingData);
     localStorage.setItem("listings", JSON.stringify(listings));
 
-    alert("Your listing has been submitted for review.");
+    toast.success("Your listing has been submitted for review!");
 
     setFormData({
       name: "",
@@ -183,6 +184,7 @@ function PostAdForm() {
           Submit Ad
         </button>
       </form>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 }
