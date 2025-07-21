@@ -28,24 +28,10 @@ const FundedDeals = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [deals, setDeals] = useState([
-    {
-      customer: "Tyler Anthony",
-      date: "2025-07-15",
-      dealer: "Fun N Fast",
-      lender: "FinanceIt",
-      brokerageFee: 500,
-      lifeInsurance: 300,
-      ahInsurance: 200,
-      ciInsurance: 150,
-      gapInsurance: 250,
-      warranty: 400,
-      bankReserve: 100,
-      dealerReserve: 75,
-      nlpReserve: 50,
-      otherFI: 80,
-    },
-  ]);
+  const [deals, setDeals] = useState(() => {
+    const saved = localStorage.getItem("fundedDeals");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const parseLocalDate = (dateStr) => dayjs(dateStr);
   const filteredDeals = deals.filter((deal) => {
@@ -151,7 +137,9 @@ const FundedDeals = () => {
   ];
 
   const handleAddDeal = (newDeal) => {
-    setDeals((prev) => [...prev, newDeal]);
+    const updatedDeals = [...deals, newDeal];
+    setDeals(updatedDeals);
+    localStorage.setItem("fundedDeals", JSON.stringify(updatedDeals));
   };
 
   return (
