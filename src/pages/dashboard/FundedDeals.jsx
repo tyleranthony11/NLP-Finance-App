@@ -89,6 +89,7 @@ const FundedDeals = () => {
       flex: 1,
       align: "center",
       headerAlign: "center",
+      renderCell: (params) => dayjs(params.value).format("MMMM D, YYYY"),
     },
     { field: "dealer", headerName: "Dealer" },
     { field: "lender", headerName: "Lender" },
