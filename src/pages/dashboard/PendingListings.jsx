@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { IconButton } from "@mui/material";
+
 import {
   Table,
   TableBody,
@@ -21,6 +26,7 @@ const PendingListings = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [postings, setPostings] = useState([]);
 
+  const [photos, setPhotos] = useState([]);
   const [category, setCategory] = useState("");
   const [year, setYear] = useState("");
   const [make, setMake] = useState("");
@@ -40,6 +46,7 @@ const PendingListings = () => {
 
   const handleOpen = (post) => {
     setSelectedPost(post);
+    setPhotos(post.photos || []);
     setCategory(post.category || "");
     setYear(post.year || "");
     setMake(post.make || "");
@@ -77,6 +84,7 @@ const PendingListings = () => {
         ? {
             ...post,
             status: "active",
+            photos,
             category,
             year,
             make,
@@ -189,17 +197,91 @@ const PendingListings = () => {
                 <Typography variant="subtitle1" gutterBottom>
                   Photos
                 </Typography>
-                <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-                  {selectedPost.photos.map((src, idx) => (
-                    <Avatar
-                      key={idx}
-                      variant="rounded"
-                      src={src}
-                      alt={`Photo ${idx + 1}`}
-                      sx={{ width: 100, height: 75 }}
-                    />
+
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {photos.map((src, index) => (
+                    <Box key={index} sx={{ position: "relative" }}>
+                      <Avatar
+                        variant="rounded"
+                        src={src}
+                        alt={`Photo ${index + 1}`}
+                        sx={{ width: 100, height: 75 }}
+                      />
+
+                      <IconButton
+                        size="small"
+                        color="error"
+                        sx={{ position: "absolute", top: -10, right: -10 }}
+                        onClick={() => {
+                          const updated = [...photos];
+                          updated.splice(index, 1);
+                          setPhotos(updated);
+                        }}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+
+                      {index > 0 && (
+                        <IconButton
+                          size="small"
+                          sx={{ position: "absolute", bottom: -24, left: 0 }}
+                          onClick={() => {
+                            const updated = [...photos];
+                            [updated[index - 1], updated[index]] = [
+                              updated[index],
+                              updated[index - 1],
+                            ];
+                            setPhotos(updated);
+                          }}
+                        >
+                          <ArrowUpwardIcon fontSize="small" />
+                        </IconButton>
+                      )}
+
+                      {index < photos.length - 1 && (
+                        <IconButton
+                          size="small"
+                          sx={{ position: "absolute", bottom: -24, right: 0 }}
+                          onClick={() => {
+                            const updated = [...photos];
+                            [updated[index], updated[index + 1]] = [
+                              updated[index + 1],
+                              updated[index],
+                            ];
+                            setPhotos(updated);
+                          }}
+                        >
+                          <ArrowDownwardIcon fontSize="small" />
+                        </IconButton>
+                      )}
+                    </Box>
                   ))}
                 </Box>
+
+                <Button variant="outlined" component="label" sx={{ mt: 3 }}>
+                  Add Photo
+                  <input
+                    hidden
+                    accept="image/*"
+                    multiple
+                    type="file"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      const readers = files.map((file) => {
+                        return new Promise((resolve) => {
+                          const reader = new FileReader();
+                          reader.onload = (event) =>
+                            resolve(event.target.result);
+                          reader.readAsDataURL(file);
+                        });
+                      });
+
+                      Promise.all(readers).then((newPhotos) => {
+                        setPhotos((prev) => [...prev, ...newPhotos]);
+                      });
+                    }}
+                  />
+                </Button>
               </Box>
 
               <TextField

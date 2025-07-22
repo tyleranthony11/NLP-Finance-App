@@ -20,6 +20,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import NotesIcon from "@mui/icons-material/Notes";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import FiberNewIcon from "@mui/icons-material/FiberNew";
 
 function Leads() {
   const [leads, setLeads] = useState([]);
@@ -58,9 +59,13 @@ function Leads() {
 
       {newLeads.length > 0 ? (
         <>
-          <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>
-            🆕 New Leads
+          <Typography
+            variant="h6"
+            sx={{ mt: 3, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+          >
+            <FiberNewIcon color="primary" /> New Leads
           </Typography>
+
           {newLeads.map((lead, index) => (
             <Paper
               key={index}
@@ -111,9 +116,13 @@ function Leads() {
 
       {followedUpLeads.length > 0 && (
         <>
-          <Typography variant="h6" sx={{ mt: 5, mb: 2 }}>
-            ✅ Followed-Up Leads
+          <Typography
+            variant="h6"
+            sx={{ mt: 5, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+          >
+            <CheckCircleIcon color="success" /> Followed-Up Leads
           </Typography>
+
           <TableContainer component={Paper}>
             <Table>
               <TableHead sx={{ backgroundColor: "#eee" }}>
