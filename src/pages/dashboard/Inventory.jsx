@@ -6,6 +6,7 @@ import {
   Modal,
   Button,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
@@ -44,9 +45,7 @@ const Inventory = () => {
     const listings = JSON.parse(localStorage.getItem("listings")) || [];
 
     const updated = listings.map((item) =>
-      item.id === selectedListing.id
-        ? { ...item, ...selectedListing, status: item.status }
-        : item
+      item.id === selectedListing.id ? { ...item, ...selectedListing } : item
     );
 
     localStorage.setItem("listings", JSON.stringify(updated));
