@@ -4,6 +4,8 @@ import dayjs from "dayjs";
 import {
   Chart as ChartJS,
   BarElement,
+  LineElement,
+  PointElement,
   CategoryScale,
   LinearScale,
   Tooltip,
@@ -15,7 +17,15 @@ import StatCard from "../../components/StatCard";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(
+  BarElement,
+  LineElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+);
 
 const styles = {
   statCards: {
@@ -71,6 +81,37 @@ const IncomeReports = () => {
     "Dec",
   ];
 
+  const previousYears = deals.filter((deal) => {
+    const date = dayjs(deal.date);
+    return date.year() < selectedYear.year();
+  });
+
+  const incomeSums = {};
+  const incomeCounts = {};
+
+  previousYears.forEach((deal) => {
+    const date = dayjs(deal.date);
+    const month = date.format("MMM");
+    incomeSums[month] = (incomeSums[month] || 0) + Number(deal.income || 0);
+    incomeCounts[month] = (incomeCounts[month] || 0) + 1;
+  });
+
+  const averageIncomeByMonth = allMonths.map((month) => {
+    const total = incomeSums[month] || 0;
+    const count = incomeCounts[month] || 0;
+    return count > 0 ? total / count : 0;
+  });
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   const chartData = {
     labels: allMonths,
     datasets: [
@@ -78,6 +119,18 @@ const IncomeReports = () => {
         label: `Monthly Income - ${selectedYear.year()}`,
         data: allMonths.map((month) => incomeByMonth[month] || 0),
         backgroundColor: "#1976d2",
+        order: 2,
+      },
+      {
+        label: "Monthly Average",
+        data: averageIncomeByMonth,
+        type: "line",
+        borderColor: "#f57c00",
+        borderWidth: 2,
+        fill: false,
+        pointRadius: 3,
+        tension: 0.3,
+        order: 1,
       },
     ],
   };
@@ -103,7 +156,7 @@ const IncomeReports = () => {
         />
       </Box>
 
-      <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, p: 2 }}>
+      <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, p: 2, height: 400 }}>
         <Box
           display="flex"
           justifyContent="space-between"
@@ -112,7 +165,11 @@ const IncomeReports = () => {
         >
           <YearPicker value={selectedYear} onChange={setSelectedYear} />
         </Box>
-        <Bar data={chartData} />
+        <Bar
+          data={chartData}
+          options={chartOptions}
+          key={selectedYear.year()}
+        />
       </Box>
     </>
   );
