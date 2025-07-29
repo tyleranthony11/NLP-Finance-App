@@ -11,8 +11,22 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import YearPicker from "../../components/YearPicker";
+import StatCard from "../../components/StatCard";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+
+const styles = {
+  statCards: {
+    display: "flex",
+    justifyContent: "center",
+    gap: 4,
+    mb: 4,
+    flexWrap: "wrap",
+  },
+  icon: { fontSize: 32 },
+};
 
 const IncomeReports = () => {
   const [deals, setDeals] = useState([]);
@@ -28,6 +42,12 @@ const IncomeReports = () => {
     const date = dayjs(deal.date);
     return date.year() === selectedYear.year();
   });
+
+  const totalDeals = filteredDeals.length;
+  const totalIncome = filteredDeals.reduce(
+    (sum, deal) => sum + Number(deal.income || 0),
+    0
+  );
 
   const incomeByMonth = filteredDeals.reduce((acc, deal) => {
     const date = dayjs(deal.date);
@@ -63,18 +83,38 @@ const IncomeReports = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, p: 2 }}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={3}
-      >
-        <Typography variant="h4">Income Reports</Typography>
-        <YearPicker value={selectedYear} onChange={setSelectedYear} />
+    <>
+      <Typography variant="h4" fontWeight="bold">
+        Income Reports
+      </Typography>
+      <Box sx={styles.statCards}>
+        <StatCard
+          icon={<HandshakeIcon sx={styles.icon} />}
+          label="Number of Deals"
+          value={totalDeals}
+        />
+        <StatCard
+          icon={<MonetizationOnIcon sx={styles.icon} />}
+          label="Total Income"
+          value={`$${totalIncome.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`}
+        />
       </Box>
-      <Bar data={chartData} />
-    </Box>
+
+      <Box sx={{ maxWidth: 800, mx: "auto", mt: 4, p: 2 }}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
+        >
+          <YearPicker value={selectedYear} onChange={setSelectedYear} />
+        </Box>
+        <Bar data={chartData} />
+      </Box>
+    </>
   );
 };
 
