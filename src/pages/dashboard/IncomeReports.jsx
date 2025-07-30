@@ -207,12 +207,15 @@ const IncomeReports = () => {
           })}`}
         />
         <StatCard
-          icon={<MonetizationOnIcon sx={styles.icon} />}
-          label="Total Income"
-          value={`$${totalIncome.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
+          icon={<PriceCheckIcon sx={styles.icon} />}
+          label="Average Income/Deal"
+          value={`$${(totalIncome / (totalDeals || 1)).toLocaleString(
+            undefined,
+            {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }
+          )}`}
         />
       </Box>
 
