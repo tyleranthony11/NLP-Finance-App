@@ -5,6 +5,7 @@ import AddDealModal from "../../components/AddDealModal";
 import StatCard from "../../components/StatCard";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import MonthPicker from "../../components/MonthPicker";
 import dayjs from "dayjs";
 import { NumericFormat } from "react-number-format";
@@ -222,6 +223,17 @@ const FundedDeals = () => {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}`}
+        />
+        <StatCard
+          icon={<PriceCheckIcon sx={styles.icon} />}
+          label="Average Income/Deal"
+          value={`$${(totalMonthlyIncome / (rows.length || 1)).toLocaleString(
+            undefined,
+            {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }
+          )}`}
         />
       </Box>
 
