@@ -9,6 +9,7 @@ import {
   Autocomplete,
 } from "@mui/material";
 import dealers from "../data/dealers";
+import lenders from "../data/lenders";
 
 const modalStyle = {
   position: "absolute",
@@ -57,6 +58,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
   ];
 
   const dealerOptions = Object.keys(dealers);
+  const lenderOptions = Object.keys(lenders);
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
@@ -146,12 +148,15 @@ export default function AddDealModal({ open, onClose, onAdd }) {
           </Grid>
 
           <Grid item xs={6}>
-            <TextField
-              label="Lender"
-              fullWidth
-              required
+            <Autocomplete
+              options={lenderOptions}
               value={formData.lender}
-              onChange={handleChange("lender")}
+              onChange={(event, newValue) =>
+                setFormData((prev) => ({ ...prev, lender: newValue || "" }))
+              }
+              renderInput={(params) => (
+                <TextField {...params} label="Lender" fullWidth required />
+              )}
             />
           </Grid>
 
