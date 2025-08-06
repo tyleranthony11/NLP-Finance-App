@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import dayjs from "dayjs";
 import {
   Chart as ChartJS,
@@ -17,7 +24,7 @@ import YearPicker from "../../components/YearPicker";
 import StatCard from "../../components/StatCard";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import EqualizerIcon from "@mui/icons-material/Equalizer";
 
 ChartJS.register(
   BarElement,
@@ -45,6 +52,10 @@ const IncomeReports = () => {
   const [deals, setDeals] = useState([]);
   const [selectedYear, setSelectedYear] = useState(dayjs());
 
+  const [viewMode, setViewMode] = useState("all");
+  const [selectedDealer, setSelectedDealer] = useState("");
+  const [selectedLender, setSelectedLender] = useState("");
+
   useEffect(() => {
     const saved = localStorage.getItem("fundedDeals");
     const parsed = saved ? JSON.parse(saved) : [];
@@ -54,6 +65,21 @@ const IncomeReports = () => {
   const filteredDeals = deals.filter((deal) => {
     const date = dayjs(deal.date);
     return date.year() === selectedYear.year();
+  });
+
+  const uniqueDealers = [
+    ...new Set(filteredDeals.map((d) => d.dealer).filter(Boolean)),
+  ];
+  const uniqueLenders = [
+    ...new Set(filteredDeals.map((d) => d.lender).filter(Boolean)),
+  ];
+
+  const dealsInView = filteredDeals.filter((deal) => {
+    if (viewMode === "dealer" && selectedDealer)
+      return deal.dealer === selectedDealer;
+    if (viewMode === "lender" && selectedLender)
+      return deal.lender === selectedLender;
+    return true;
   });
 
   const incomeTypeSums = {
@@ -69,7 +95,7 @@ const IncomeReports = () => {
     NLPReserve: 0,
   };
 
-  filteredDeals.forEach((deal) => {
+  dealsInView.forEach((deal) => {
     incomeTypeSums.Brokerage += Number(deal.brokerageFee || 0);
     incomeTypeSums.Life += Number(deal.lifeInsurance || 0);
     incomeTypeSums.AH += Number(deal.ahInsurance || 0);
@@ -82,13 +108,14 @@ const IncomeReports = () => {
     incomeTypeSums.NLPReserve -= Number(deal.nlpReserve || 0);
   });
 
-  const totalDeals = filteredDeals.length;
-  const totalIncome = filteredDeals.reduce(
+  const totalDeals = dealsInView.length;
+  const totalIncome = dealsInView.reduce(
     (sum, deal) => sum + Number(deal.income || 0),
     0
   );
+  const avgIncome = totalDeals > 0 ? totalIncome / totalDeals : 0;
 
-  const incomeByMonth = filteredDeals.reduce((acc, deal) => {
+  const incomeByMonth = dealsInView.reduce((acc, deal) => {
     const date = dayjs(deal.date);
     const month = date.format("MMM");
     acc[month] = (acc[month] || 0) + Number(deal.income || 0);
@@ -137,6 +164,19 @@ const IncomeReports = () => {
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          callback: (value) => `$${value.toLocaleString()}`,
+        },
+      },
+    },
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (ctx) => {
+            const val = ctx.raw || 0;
+            return `$${val.toLocaleString()}`;
+          },
+        },
       },
     },
   };
@@ -151,7 +191,7 @@ const IncomeReports = () => {
         order: 2,
       },
       {
-        label: `Monthly Average - ${selectedYear.year()}`,
+        label: `Monthly Average`,
         data: averageIncomeByMonth,
         type: "line",
         borderColor: "#f57c00",
@@ -175,7 +215,7 @@ const IncomeReports = () => {
           "#f57c00",
           "#4caf50",
           "#ab47bc",
-          "#000000ff",
+          "#ff7043",
           "#26c6da",
           "#9ccc65",
           "#7e57c2",
@@ -192,6 +232,74 @@ const IncomeReports = () => {
       <Typography variant="h4" fontWeight="bold">
         Income Reports
       </Typography>
+
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          mt: 2,
+          mb: 2,
+          flexWrap: "wrap",
+          justifyContent: "flex-start",
+        }}
+      >
+        <FormControl sx={{ minWidth: 200 }}>
+          <InputLabel id="view-select-label">View Mode</InputLabel>
+          <Select
+            labelId="view-select-label"
+            value={viewMode}
+            label="View Mode"
+            onChange={(e) => {
+              setViewMode(e.target.value);
+              setSelectedDealer("");
+              setSelectedLender("");
+            }}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="dealer">By Dealer</MenuItem>
+            <MenuItem value="lender">By Lender</MenuItem>
+          </Select>
+        </FormControl>
+
+        {viewMode === "dealer" && (
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="dealer-select-label">Select Dealer</InputLabel>
+            <Select
+              labelId="dealer-select-label"
+              value={selectedDealer}
+              label="Select Dealer"
+              onChange={(e) => setSelectedDealer(e.target.value)}
+            >
+              <MenuItem value="">All Dealers</MenuItem>
+              {uniqueDealers.map((dealer) => (
+                <MenuItem key={dealer} value={dealer}>
+                  {dealer}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+
+        {viewMode === "lender" && (
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="lender-select-label">Select Lender</InputLabel>
+            <Select
+              labelId="lender-select-label"
+              value={selectedLender}
+              label="Select Lender"
+              onChange={(e) => setSelectedLender(e.target.value)}
+            >
+              <MenuItem value="">All Lenders</MenuItem>
+              {uniqueLenders.map((lender) => (
+                <MenuItem key={lender} value={lender}>
+                  {lender}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+      </Box>
+
       <Box sx={styles.statCards}>
         <StatCard
           icon={<HandshakeIcon sx={styles.icon} />}
@@ -207,15 +315,12 @@ const IncomeReports = () => {
           })}`}
         />
         <StatCard
-          icon={<PriceCheckIcon sx={styles.icon} />}
-          label="Average Income/Deal"
-          value={`$${(totalIncome / (totalDeals || 1)).toLocaleString(
-            undefined,
-            {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            }
-          )}`}
+          icon={<EqualizerIcon sx={styles.icon} />}
+          label="Avg Income per Deal"
+          value={`$${avgIncome.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`}
         />
       </Box>
 
@@ -250,14 +355,16 @@ const IncomeReports = () => {
             sx={{
               flex: 1,
               minWidth: 300,
-              maxWidth: 400,
               height: 400,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <Box sx={{ width: "100%" }}>
+            <Typography variant="h6" mb={2}>
+              Income Breakdown by Type - {selectedYear.year()}
+            </Typography>
+            <Box sx={{ width: "100%", height: "100%" }}>
               <Pie data={pieChartData} key={`pie-${selectedYear.year()}`} />
             </Box>
           </Box>
