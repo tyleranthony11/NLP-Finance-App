@@ -96,6 +96,7 @@ const FundedDeals = () => {
     },
     { field: "dealer", headerName: "Dealer" },
     { field: "lender", headerName: "Lender" },
+    { field: "employee", headerName: "Employee" },
     {
       field: "brokerageFee",
       headerName: "Brokerage Fee",
@@ -261,6 +262,7 @@ const FundedDeals = () => {
               columnVisibilityModel: {
                 dealer: false,
                 lender: false,
+                employee: false,
                 brokerageFee: false,
                 lifeInsurance: false,
                 ahInsurance: false,

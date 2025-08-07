@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import dealers from "../data/dealers";
 import lenders from "../data/lenders";
+import employees from "../data/employees";
 
 const modalStyle = {
   position: "absolute",
@@ -32,6 +33,7 @@ export default function AddDealModal({ open, onClose, onAdd }) {
     date: "",
     dealer: "",
     lender: "",
+    employee: "",
     brokerageFee: "",
     lifeInsurance: "",
     ahInsurance: "",
@@ -59,15 +61,22 @@ export default function AddDealModal({ open, onClose, onAdd }) {
 
   const dealerOptions = Object.keys(dealers);
   const lenderOptions = Object.keys(lenders);
+  const employeeOptions = Object.keys(employees);
 
   const handleChange = (field) => (e) => {
     setFormData((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handleSubmit = () => {
-    const { customer, date, dealer, lender } = formData;
+    const { customer, date, dealer, lender, employee } = formData;
 
-    if (!customer.trim() || !date.trim() || !dealer.trim() || !lender.trim()) {
+    if (
+      !customer.trim() ||
+      !date.trim() ||
+      !dealer.trim() ||
+      !lender.trim() ||
+      !employee.trim()
+    ) {
       alert("Please fill out all required fields");
       return;
     }
@@ -156,6 +165,18 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               }
               renderInput={(params) => (
                 <TextField {...params} label="Lender" fullWidth required />
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Autocomplete
+              options={employeeOptions}
+              value={formData.employee}
+              onChange={(event, newValue) =>
+                setFormData((prev) => ({ ...prev, employee: newValue || "" }))
+              }
+              renderInput={(params) => (
+                <TextField {...params} label="Employee" fullWidth required />
               )}
             />
           </Grid>
