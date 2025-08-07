@@ -55,6 +55,7 @@ const IncomeReports = () => {
   const [viewMode, setViewMode] = useState("all");
   const [selectedDealer, setSelectedDealer] = useState("");
   const [selectedLender, setSelectedLender] = useState("");
+  const [selectedEmployee, setSelectedEmployee] = useState("");
 
   useEffect(() => {
     const saved = localStorage.getItem("fundedDeals");
@@ -73,12 +74,17 @@ const IncomeReports = () => {
   const uniqueLenders = [
     ...new Set(filteredDeals.map((d) => d.lender).filter(Boolean)),
   ];
+  const uniqueEmployees = [
+    ...new Set(filteredDeals.map((d) => d.employee).filter(Boolean)),
+  ];
 
   const dealsInView = filteredDeals.filter((deal) => {
     if (viewMode === "dealer" && selectedDealer)
       return deal.dealer === selectedDealer;
     if (viewMode === "lender" && selectedLender)
       return deal.lender === selectedLender;
+    if (viewMode === "employee" && selectedEmployee)
+      return deal.employee === selectedEmployee;
     return true;
   });
 
@@ -253,11 +259,13 @@ const IncomeReports = () => {
               setViewMode(e.target.value);
               setSelectedDealer("");
               setSelectedLender("");
+              setSelectedEmployee("");
             }}
           >
             <MenuItem value="all">All</MenuItem>
             <MenuItem value="dealer">By Dealer</MenuItem>
             <MenuItem value="lender">By Lender</MenuItem>
+            <MenuItem value="employee">By Employee</MenuItem>
           </Select>
         </FormControl>
 
@@ -293,6 +301,24 @@ const IncomeReports = () => {
               {uniqueLenders.map((lender) => (
                 <MenuItem key={lender} value={lender}>
                   {lender}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        )}
+        {viewMode === "employee" && (
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="employee-select-label">Select Employee</InputLabel>
+            <Select
+              labelId="employee-select-label"
+              value={selectedEmployee}
+              label="Select Employee"
+              onChange={(e) => setSelectedEmployee(e.target.value)}
+            >
+              <MenuItem value="">All Employees</MenuItem>
+              {uniqueEmployees.map((employee) => (
+                <MenuItem key={employee} value={employee}>
+                  {employee}
                 </MenuItem>
               ))}
             </Select>
