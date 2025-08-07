@@ -9,6 +9,8 @@ import {
   Avatar,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import dealers from "../../data/dealers";
+import { Autocomplete } from "@mui/material";
 
 const PostAd = () => {
   const navigate = useNavigate();
@@ -198,12 +200,19 @@ const PostAd = () => {
           </MenuItem>
         ))}
       </TextField>
-      <TextField
-        label="Dealership"
+      <Autocomplete
+        options={Object.keys(dealers)}
         value={form.dealership}
-        onChange={handleChange("dealership")}
-        fullWidth
-        margin="normal"
+        onChange={(event, newValue) => {
+          setForm((prev) => ({
+            ...prev,
+            dealership: newValue || "",
+          }));
+        }}
+        renderInput={(params) => (
+          <TextField {...params} label="Dealership" margin="normal" fullWidth />
+        )}
+        isOptionEqualToValue={(option, value) => option === value}
       />
 
       <Box mt={2}>
