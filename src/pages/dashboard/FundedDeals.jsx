@@ -251,6 +251,7 @@ const FundedDeals = () => {
 
       <Box sx={styles.dataGridWrapper}>
         <DataGrid
+          showToolbar
           rows={rows}
           columns={columns}
           pageSize={10}

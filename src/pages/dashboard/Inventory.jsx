@@ -229,6 +229,7 @@ const Inventory = () => {
       </Typography>
 
       <DataGrid
+        showToolbar
         rows={rows}
         columns={columns}
         pageSize={10}
