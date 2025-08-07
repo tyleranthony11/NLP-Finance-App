@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import dealers from "../../data/dealers";
 import { Autocomplete } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
 
 const PostAd = () => {
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const PostAd = () => {
     const existing = JSON.parse(localStorage.getItem("listings")) || [];
     localStorage.setItem("listings", JSON.stringify([...existing, newListing]));
 
-    alert("Listing created successfully!");
+    toast.success("Listing created successfully!");
     setForm({
       name: "",
       email: "",
@@ -247,6 +248,7 @@ const PostAd = () => {
           Post Ad
         </Button>
       </Box>
+      <ToastContainer position="top-center" autoClose={3000} />
     </Paper>
   );
 };
