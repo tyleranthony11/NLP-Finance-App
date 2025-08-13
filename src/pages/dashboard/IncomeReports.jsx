@@ -50,6 +50,7 @@ const styles = {
 
 const IncomeReports = () => {
   const [deals, setDeals] = useState([]);
+  const [listings, setListings] = useState([]);
   const [selectedYear, setSelectedYear] = useState(dayjs());
 
   const [viewMode, setViewMode] = useState("all");
@@ -61,10 +62,19 @@ const IncomeReports = () => {
     const saved = localStorage.getItem("fundedDeals");
     const parsed = saved ? JSON.parse(saved) : [];
     setDeals(parsed);
+
+    const savedListings = localStorage.getItem("listings");
+    const parsedListings = savedListings ? JSON.parse(savedListings) : [];
+    setListings(parsedListings);
   }, []);
 
   const filteredDeals = deals.filter((deal) => {
     const date = dayjs(deal.date);
+    return date.year() === selectedYear.year();
+  });
+
+  const filteredListings = listings.filter((listing) => {
+    const date = dayjs(listing.date);
     return date.year() === selectedYear.year();
   });
 
@@ -125,6 +135,12 @@ const IncomeReports = () => {
     const date = dayjs(deal.date);
     const month = date.format("MMM");
     acc[month] = (acc[month] || 0) + Number(deal.income || 0);
+    return acc;
+  }, {});
+
+  const adsByMonth = filteredListings.reduce((acc, listing) => {
+    const month = dayjs(listing.date).format("MMM");
+    acc[month] = (acc[month] || 0) + 1;
     return acc;
   }, {});
 
@@ -233,6 +249,17 @@ const IncomeReports = () => {
     ],
   };
 
+  const marketplaceChartData = {
+    labels: allMonths,
+    datasets: [
+      {
+        label: `New Ads Posted - ${selectedYear.year()}`,
+        data: allMonths.map((month) => adsByMonth[month] || 0),
+        backgroundColor: "#1976d2",
+      },
+    ],
+  };
+
   return (
     <>
       <Typography variant="h4" fontWeight="bold">
@@ -266,6 +293,7 @@ const IncomeReports = () => {
             <MenuItem value="dealer">By Dealer</MenuItem>
             <MenuItem value="lender">By Lender</MenuItem>
             <MenuItem value="employee">By Employee</MenuItem>
+            <MenuItem value="marketplace">Marketplace</MenuItem>
           </Select>
         </FormControl>
 
@@ -306,6 +334,7 @@ const IncomeReports = () => {
             </Select>
           </FormControl>
         )}
+
         {viewMode === "employee" && (
           <FormControl sx={{ minWidth: 200 }}>
             <InputLabel id="employee-select-label">Select Employee</InputLabel>
@@ -326,76 +355,92 @@ const IncomeReports = () => {
         )}
       </Box>
 
-      <Box sx={styles.statCards}>
-        <StatCard
-          icon={<HandshakeIcon sx={styles.icon} />}
-          label="Number of Deals"
-          value={totalDeals}
-        />
-        <StatCard
-          icon={<MonetizationOnIcon sx={styles.icon} />}
-          label="Total Income"
-          value={`$${totalIncome.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
-        />
-        <StatCard
-          icon={<EqualizerIcon sx={styles.icon} />}
-          label="Avg Income per Deal"
-          value={`$${avgIncome.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
-        />
-      </Box>
-
-      <Box sx={{ maxWidth: 1500, mx: "auto", mt: 4, p: 2 }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
-        >
-          <YearPicker value={selectedYear} onChange={setSelectedYear} />
+      {viewMode === "marketplace" ? (
+        <Box sx={{ flex: 1, minWidth: 300, height: 400 }}>
+          <Bar
+            data={marketplaceChartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: { y: { beginAtZero: true } },
+            }}
+            key={`marketplace-${selectedYear.year()}`}
+          />
         </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: 4,
-            flexWrap: "wrap",
-            justifyContent: "center",
-            alignItems: "flex-start",
-          }}
-        >
-          <Box sx={{ flex: 1, minWidth: 300, height: 400 }}>
-            <Bar
-              data={chartData}
-              options={chartOptions}
-              key={selectedYear.year()}
+      ) : (
+        <>
+          <Box sx={styles.statCards}>
+            <StatCard
+              icon={<HandshakeIcon sx={styles.icon} />}
+              label="Number of Deals"
+              value={totalDeals}
+            />
+            <StatCard
+              icon={<MonetizationOnIcon sx={styles.icon} />}
+              label="Total Income"
+              value={`$${totalIncome.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`}
+            />
+            <StatCard
+              icon={<EqualizerIcon sx={styles.icon} />}
+              label="Avg Income per Deal"
+              value={`$${avgIncome.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}`}
             />
           </Box>
 
-          <Box
-            sx={{
-              flex: 1,
-              minWidth: 300,
-              height: 400,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6" mb={2}>
-              Income Breakdown by Type - {selectedYear.year()}
-            </Typography>
-            <Box sx={{ width: "100%", height: "100%" }}>
-              <Pie data={pieChartData} key={`pie-${selectedYear.year()}`} />
+          <Box sx={{ maxWidth: 1500, mx: "auto", mt: 4, p: 2 }}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+              mb={3}
+            >
+              <YearPicker value={selectedYear} onChange={setSelectedYear} />
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                gap: 4,
+                flexWrap: "wrap",
+                justifyContent: "center",
+                alignItems: "flex-start",
+              }}
+            >
+              <Box sx={{ flex: 1, minWidth: 300, height: 400 }}>
+                <Bar
+                  data={chartData}
+                  options={chartOptions}
+                  key={selectedYear.year()}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  flex: 1,
+                  minWidth: 300,
+                  height: 400,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6" mb={2}>
+                  Income Breakdown by Type - {selectedYear.year()}
+                </Typography>
+                <Box sx={{ width: "100%", height: "100%" }}>
+                  <Pie data={pieChartData} key={`pie-${selectedYear.year()}`} />
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </Box>
+        </>
+      )}
     </>
   );
 };
