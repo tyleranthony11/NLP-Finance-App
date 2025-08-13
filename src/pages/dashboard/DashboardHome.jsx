@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Store";
-import PendingIcon from "@mui/icons-material/AccessTime";
-import LeadsIcon from "@mui/icons-material/PersonAdd";
-import DealsIcon from "@mui/icons-material/MonetizationOn";
+import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import StatCard from "../../components/StatCard";
 
-const DashboardHome = ({
-  activeListings = 0,
-  pendingListings = 0,
-  newLeads = 0,
-  monthlyFundedDeals = 0,
-}) => {
+const DashboardHome = () => {
+  const [activeListings, setActiveListings] = useState(0);
+  const [pendingListings, setPendingListings] = useState(0);
+
+  useEffect(() => {
+    const listings = JSON.parse(localStorage.getItem("listings")) || [];
+
+    const active = listings.filter((listing) => listing.status === "active");
+    setActiveListings(active.length);
+
+    const pending = listings.filter((listing) => listing.status === "pending");
+    setPendingListings(pending.length);
+  }, []);
+
   return (
     <Box
       sx={{
@@ -27,19 +33,9 @@ const DashboardHome = ({
         value={activeListings}
       />
       <StatCard
-        icon={<PendingIcon sx={{ fontSize: 40, color: "#d32f2f" }} />}
+        icon={<PendingIcon sx={{ fontSize: 40, color: "#ff9800" }} />}
         label="Pending Listings"
         value={pendingListings}
-      />
-      <StatCard
-        icon={<LeadsIcon sx={{ fontSize: 40, color: "#2e7d32" }} />}
-        label="New Leads"
-        value={newLeads}
-      />
-      <StatCard
-        icon={<DealsIcon sx={{ fontSize: 40, color: "#7b1fa2" }} />}
-        label="Monthly Funded Deals"
-        value={monthlyFundedDeals}
       />
     </Box>
   );
