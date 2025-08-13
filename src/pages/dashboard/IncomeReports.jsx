@@ -356,17 +356,40 @@ const IncomeReports = () => {
       </Box>
 
       {viewMode === "marketplace" ? (
-        <Box sx={{ flex: 1, minWidth: 300, height: 400 }}>
-          <Bar
-            data={marketplaceChartData}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              scales: { y: { beginAtZero: true } },
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
+              mb: 5,
+              flexWrap: "wrap",
             }}
-            key={`marketplace-${selectedYear.year()}`}
-          />
-        </Box>
+          >
+            <StatCard
+              icon={<MonetizationOnIcon sx={styles.icon} />}
+              label={`Total Ads - ${selectedYear.year()}`}
+              value={allMonths.reduce(
+                (sum, month) => sum + (adsByMonth[month] || 0),
+                0
+              )}
+            />
+            <Box sx={{ alignSelf: "flex-start" }}>
+              <YearPicker value={selectedYear} onChange={setSelectedYear} />
+            </Box>
+          </Box>
+          <Box sx={{ flex: 1, minWidth: 300, height: 400, maxWidth: 1000 }}>
+            <Bar
+              data={marketplaceChartData}
+              options={{
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { y: { beginAtZero: true } },
+              }}
+              key={`marketplace-${selectedYear.year()}`}
+            />
+          </Box>
+        </>
       ) : (
         <>
           <Box sx={styles.statCards}>
