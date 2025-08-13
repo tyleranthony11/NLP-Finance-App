@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import InventoryIcon from "@mui/icons-material/Store";
 import PendingIcon from "@mui/icons-material/HourglassEmpty";
+import FiberNewIcon from "@mui/icons-material/FiberNew";
 import StatCard from "../../components/StatCard";
 
 const DashboardHome = () => {
   const [activeListings, setActiveListings] = useState(0);
   const [pendingListings, setPendingListings] = useState(0);
+  const [newLeads, setNewLeads] = useState(0);
 
   useEffect(() => {
     const listings = JSON.parse(localStorage.getItem("listings")) || [];
@@ -16,6 +18,9 @@ const DashboardHome = () => {
 
     const pending = listings.filter((listing) => listing.status === "pending");
     setPendingListings(pending.length);
+
+    const leads = JSON.parse(localStorage.getItem("financeFormDataList")) || [];
+    setNewLeads(leads.filter((lead) => !lead.confirmed).length);
   }, []);
 
   return (
@@ -36,6 +41,11 @@ const DashboardHome = () => {
         icon={<PendingIcon sx={{ fontSize: 40, color: "#ff9800" }} />}
         label="Pending Listings"
         value={pendingListings}
+      />
+      <StatCard
+        icon={<FiberNewIcon sx={{ fontSize: 40, color: "#4caf50" }} />}
+        label="New Leads"
+        value={newLeads}
       />
     </Box>
   );
