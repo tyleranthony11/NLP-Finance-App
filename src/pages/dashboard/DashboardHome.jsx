@@ -36,14 +36,15 @@ const DashboardHome = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 4 }}>
-      <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
-        <StatCard
-          icon={<DirectionsCarIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
-          label="Active Listings"
-          value={activeListings}
-        />
-      </Link>
+    <Box
+      sx={{
+        display: "flex",
+        gap: 2,
+        flexWrap: "wrap",
+        mb: 4,
+        marginLeft: 25,
+      }}
+    >
       <Link to="/dashboard/pending-listings" style={{ textDecoration: "none" }}>
         <StatCard
           icon={<PendingIcon sx={{ fontSize: 40, color: "#ff9800" }} />}
@@ -65,7 +66,14 @@ const DashboardHome = () => {
           value={currentMonthDealsCount}
         />
       </Link>
-      <Box sx={{ width: 1200, height: 1500 }}>
+      <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
+        <StatCard
+          icon={<DirectionsCarIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
+          label="Active Listings"
+          value={activeListings}
+        />
+      </Link>
+      <Box sx={{ width: 1200, height: 1500, mt: 5 }}>
         <TrafficChart />
       </Box>
     </Box>
