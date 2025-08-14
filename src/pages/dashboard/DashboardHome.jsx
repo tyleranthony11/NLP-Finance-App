@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box } from "@mui/material";
-import InventoryIcon from "@mui/icons-material/Store";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import HandshakeIcon from "@mui/icons-material/Handshake";
@@ -39,7 +39,7 @@ const DashboardHome = () => {
     <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 4 }}>
       <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
         <StatCard
-          icon={<InventoryIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
+          icon={<DirectionsCarIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
           label="Active Listings"
           value={activeListings}
         />
