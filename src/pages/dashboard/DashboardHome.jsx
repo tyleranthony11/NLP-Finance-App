@@ -6,6 +6,7 @@ import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import StatCard from "../../components/StatCard";
+import TrafficChart from "../../components/TrafficChart";
 import dayjs from "dayjs";
 
 const DashboardHome = () => {
@@ -64,6 +65,9 @@ const DashboardHome = () => {
           value={currentMonthDealsCount}
         />
       </Link>
+      <Box sx={{ width: 1200, height: 1500 }}>
+        <TrafficChart />
+      </Box>
     </Box>
   );
 };
