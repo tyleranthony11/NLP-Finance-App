@@ -174,7 +174,7 @@ export default function MarketplaceDetail() {
             approval.
           </p>
 
-          <a href="/finance" className="apply-now-btn">
+          <a href="/finance" target="_blank" className="apply-now-btn">
             Apply Now
           </a>
         </div>
