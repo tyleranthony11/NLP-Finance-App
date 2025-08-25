@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// ... other imports
 
 function App() {
   const [user, setUser] = useState(null);
