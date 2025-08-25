@@ -1,4 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import ClientLayout from "./layouts/ClientLayout";
+
+import Home from "./pages/Home";
+import Finance from "./pages/Finance";
+import Marketplace from "./pages/Marketplace";
+import MarketplaceDetail from "./pages/MarketplaceDetail";
+import Dealers from "./pages/Dealers";
+import About from "./pages/About";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import PostAdForm from "./pages/PostAdForm";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -15,6 +31,7 @@ function App() {
     storedVisits[today] = (storedVisits[today] || 0) + 1;
     localStorage.setItem("visits", JSON.stringify(storedVisits));
   }, [user]);
+
   return (
     <div className="app-container">
       <Router>
@@ -92,7 +109,14 @@ function App() {
             }
           />
 
-          <Route path="/dashboard/*" element={<Dashboard user={user} />} />
+          <Route
+            path="/dashboard/*"
+            element={
+              <ClientLayout>
+                <Dashboard user={user} />
+              </ClientLayout>
+            }
+          />
         </Routes>
       </Router>
     </div>
