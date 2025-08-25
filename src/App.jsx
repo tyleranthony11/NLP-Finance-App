@@ -92,7 +92,7 @@ function App() {
             }
           />
 
-          <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/dashboard/*" element={<Dashboard user={user} />} />
         </Routes>
       </Router>
     </div>
