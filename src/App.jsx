@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -17,21 +17,17 @@ import PostAdForm from "./pages/PostAdForm";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [user, setUser] = useState(null);
-
   useEffect(() => {
-    if (!user) {
-      setUser({ name: "Test User" });
-    }
-
-    AOS.init({ duration: 1000, once: true });
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
 
     const today = new Date().toISOString().split("T")[0];
     const storedVisits = JSON.parse(localStorage.getItem("visits") || "{}");
     storedVisits[today] = (storedVisits[today] || 0) + 1;
     localStorage.setItem("visits", JSON.stringify(storedVisits));
-  }, [user]);
-
+  }, []);
   return (
     <div className="app-container">
       <Router>
@@ -109,14 +105,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/dashboard/*"
-            element={
-              <ClientLayout>
-                <Dashboard user={user} />
-              </ClientLayout>
-            }
-          />
+          <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>
       </Router>
     </div>
