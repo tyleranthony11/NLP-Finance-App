@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetail.css";
 import { calculateBiWeekly, calculateWeekly, calculateMonthly } from "../utils";
 import dealers from "../data/dealers";
+import { Email, Phone, Share } from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 export default function MarketplaceDetail() {
   const navigate = useNavigate();
@@ -27,6 +29,24 @@ export default function MarketplaceDetail() {
     const total = listing.photos.length;
     const newIndex = (mainImageIndex + direction + total) % total;
     setMainImageIndex(newIndex);
+  };
+
+  const handleShare = () => {
+    const shareData = {
+      title: `${listing.year} ${listing.make} ${listing.model}`,
+      text: "Check out this listing on NLP Finance Marketplace!",
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      navigator
+        .share(shareData)
+        .catch((err) => console.error("Error sharing:", err));
+    } else {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert("Link copied to clipboard!");
+      });
+    }
   };
 
   return (
@@ -177,6 +197,41 @@ export default function MarketplaceDetail() {
           <a href="/finance" target="_blank" className="apply-now-btn">
             Apply Now
           </a>
+
+          <div className="contact-actions">
+            {listing.email && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Email />}
+                href={`mailto:${listing.email}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Email Seller
+              </Button>
+            )}
+
+            {listing.phone && (
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<Phone />}
+                href={`tel:${listing.phone}`}
+              >
+                Call Seller
+              </Button>
+            )}
+
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<Share />}
+              onClick={handleShare}
+            >
+              Share
+            </Button>
+          </div>
         </div>
       </div>
       <div className="info-row">

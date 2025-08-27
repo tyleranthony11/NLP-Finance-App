@@ -37,7 +37,6 @@
   min-width: 300px;
 }
 
-
 .image-gallery .main-image {
   width: 100%;
   aspect-ratio: 4/3;
@@ -65,7 +64,6 @@
   position: relative;
   display: in;
 }
-
 
 .thumbnail-row {
   display: flex;
@@ -96,7 +94,7 @@
   background-color: #f9f9f9;
   border-radius: 12px;
   padding: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .detail-sidebar p {
@@ -182,7 +180,7 @@
 .estimated-payment .main-payment-amount {
   font-size: 2.5rem;
   font-weight: bold;
-  color: #d71a20; 
+  color: #d71a20;
 }
 
 .plus-hst {
@@ -244,4 +242,11 @@
   gap: 2rem;
   flex-wrap: wrap;
   margin-top: 2rem;
+}
+
+.contact-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
 }
