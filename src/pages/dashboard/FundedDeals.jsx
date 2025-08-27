@@ -6,6 +6,8 @@ import StatCard from "../../components/StatCard";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 import MonthPicker from "../../components/MonthPicker";
 import dayjs from "dayjs";
 import { NumericFormat } from "react-number-format";
@@ -42,6 +44,12 @@ const FundedDeals = () => {
       dealDate.month() === selectedDate.month()
     );
   });
+
+  const handleDelete = (id) => {
+    const updatedDeals = deals.filter((_, index) => index !== id);
+    setDeals(updatedDeals);
+    localStorage.setItem("fundedDeals", JSON.stringify(updatedDeals));
+  };
 
   const rows = filteredDeals.map((deal, index) => {
     const income =
@@ -165,6 +173,19 @@ const FundedDeals = () => {
       headerAlign: "center",
       renderCell: currencyRender,
       editable: false,
+    },
+    {
+      field: "actions",
+      headerName: "Delete",
+      sortable: false,
+      filterable: false,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => (
+        <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+          <DeleteIcon />
+        </IconButton>
+      ),
     },
   ];
 
