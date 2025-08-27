@@ -223,9 +223,22 @@ const Inventory = () => {
 
   return (
     <Box sx={{ height: 600, width: "100%", padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Inventory
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Inventory
+        </Typography>
+
+        <Button variant="contained" color="primary">
+          Import
+        </Button>
+      </Box>
 
       <DataGrid
         showToolbar
