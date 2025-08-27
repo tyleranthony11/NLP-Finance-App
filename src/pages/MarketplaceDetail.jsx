@@ -204,7 +204,7 @@ export default function MarketplaceDetail() {
                 variant="contained"
                 color="primary"
                 startIcon={<Email />}
-                href={`mailto:${listing.email}`}
+                href={`mailto:${listing.email}?cc=marketplace@nlpfinance.ca`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
