@@ -1,5 +1,4 @@
 import React from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import {
   Box,
   CssBaseline,
@@ -11,26 +10,22 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Collapse,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
-import StorefrontIcon from "@mui/icons-material/Storefront";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { Collapse } from "@mui/material";
-import DashboardHome from "../pages/dashboard/DashboardHome";
-import Leads from "../pages/dashboard/Leads";
-import Inventory from "../pages/dashboard/Inventory";
-import PendingListings from "../pages/dashboard/PendingListings";
-import PostAd from "../pages/dashboard/PostAd";
-import FundedDeals from "../pages/dashboard/FundedDeals";
-import IncomeReports from "../pages/dashboard/IncomeReports";
-import Settings from "../pages/dashboard/Settings";
+import {
+  ExpandLess,
+  ExpandMore,
+  Home as HomeIcon,
+  Storefront as StorefrontIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
+  HourglassEmpty as HourglassEmptyIcon,
+  AddBox as AddBoxIcon,
+  ContactPhone as ContactPhoneIcon,
+  AttachMoney as AttachMoneyIcon,
+  BarChart as BarChartIcon,
+  Settings as SettingsIcon,
+} from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./DashboardLayout.css";
 
 const logoUrl = "/images/nlplogo1.png";
@@ -83,10 +78,12 @@ const navItems = [
     route: "/dashboard/settings",
   },
 ];
-const DashboardLayout = () => {
+
+const DashboardLayout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [openMenus, setOpenMenus] = React.useState({});
+
   const handleToggle = (text) => {
     setOpenMenus((prev) => ({ ...prev, [text]: !prev[text] }));
   };
@@ -165,16 +162,7 @@ const DashboardLayout = () => {
       </Drawer>
 
       <Box component="main" className="dashboard-main">
-        <Routes>
-          <Route path="/" element={<DashboardHome />} />
-          <Route path="leads" element={<Leads />} />
-          <Route path="inventory" element={<Inventory />} />
-          <Route path="pending-listings" element={<PendingListings />} />
-          <Route path="post-ad" element={<PostAd />} />
-          <Route path="funded-deals" element={<FundedDeals />} />
-          <Route path="income-reports" element={<IncomeReports />} />
-          <Route path="settings" element={<Settings />} />
-        </Routes>
+        {children}
       </Box>
     </Box>
   );
