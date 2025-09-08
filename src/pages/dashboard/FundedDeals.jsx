@@ -182,7 +182,7 @@ const FundedDeals = () => {
       align: "center",
       headerAlign: "center",
       renderCell: (params) => (
-        <IconButton color="error" onClick={() => handleDelete(params.row.id)}>
+        <IconButton color="grey" onClick={() => handleDelete(params.row.id)}>
           <DeleteIcon />
         </IconButton>
       ),
