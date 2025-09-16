@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { calculateBiWeekly } from "../utils";
+import { dummyListings } from "../data/dummyListings";
 import "./Marketplace.css";
 
 function Marketplace() {
@@ -8,13 +9,19 @@ function Marketplace() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
+  const [inventoryListings, setInventoryListings] = useState([]);
 
-  const [inventoryListings, setInventoryListings] = useState(() => {
-    const saved = localStorage.getItem("listings");
-    const activeListings = saved ? JSON.parse(saved) : [];
-    console.log("Loaded inventory listings:", activeListings);
-    return activeListings.filter((item) => item.status === "active");
-  });
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("listings")) || [];
+
+    const listingsToUse = saved.length === 0 ? dummyListings : saved;
+
+    localStorage.setItem("listings", JSON.stringify(listingsToUse));
+
+    setInventoryListings(
+      listingsToUse.filter((item) => item.status === "active")
+    );
+  }, []);
 
   const allDealers = Array.from(
     new Set(inventoryListings.map((item) => item.dealership))
@@ -23,17 +30,13 @@ function Marketplace() {
   const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
 
-    if (selectedDealers.length > 0 && !selectedDealers.includes(dealerName)) {
+    if (selectedDealers.length > 0 && !selectedDealers.includes(dealerName))
       return false;
-    }
-
     if (
       selectedCategories.length > 0 &&
       !selectedCategories.includes(item.category)
-    ) {
+    )
       return false;
-    }
-
     if (priceRange === "under10k" && item.price >= 10000) return false;
     if (priceRange === "10kto25k" && (item.price < 10000 || item.price > 25000))
       return false;
@@ -83,13 +86,12 @@ function Marketplace() {
                   checked={selectedDealers.includes(dealer)}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (e.target.checked) {
+                    if (e.target.checked)
                       setSelectedDealers([...selectedDealers, value]);
-                    } else {
+                    else
                       setSelectedDealers(
                         selectedDealers.filter((d) => d !== value)
                       );
-                    }
                   }}
                 />
                 {dealer}
@@ -107,13 +109,12 @@ function Marketplace() {
                   checked={selectedCategories.includes(category)}
                   onChange={(e) => {
                     const value = e.target.value;
-                    if (e.target.checked) {
+                    if (e.target.checked)
                       setSelectedCategories([...selectedCategories, value]);
-                    } else {
+                    else
                       setSelectedCategories(
                         selectedCategories.filter((c) => c !== value)
                       );
-                    }
                   }}
                 />
                 {category.charAt(0).toUpperCase() + category.slice(1)}
