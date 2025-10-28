@@ -10,34 +10,33 @@
 }
 
 .footer-links {
-    display: flex;
-    gap: 1rem;
+  display: flex;
+  gap: 1rem;
 }
 
 .footer-links a {
-    color: #bbb;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: #bbb;
+  text-decoration: none;
+  font-size: 0.9rem;
 }
 
 .footer-links a:hover {
-    color: #fff;
-
+  color: #fff;
 }
 
 .footer-right {
-    display: flex;
-    gap: 1rem;
-    font-size: 1.2rem;
+  display: flex;
+  gap: 1rem;
+  font-size: 1.2rem;
 }
 
 .footer-right a {
-    color: #bbb;
-    transition: color 0.3s;
+  color: #bbb;
+  transition: color 0.3s;
 }
 
 .footer-right a:hover {
-    color: #fff;
+  color: #fff;
 }
 
 .footer-center {

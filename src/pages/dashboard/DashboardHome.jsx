@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box } from "@mui/material";
-import InventoryIcon from "@mui/icons-material/Store";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import StatCard from "../../components/StatCard";
+import TrafficChart from "../../components/TrafficChart";
 import dayjs from "dayjs";
 
 const DashboardHome = () => {
@@ -35,14 +36,15 @@ const DashboardHome = () => {
   }, []);
 
   return (
-    <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: 4 }}>
-      <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
-        <StatCard
-          icon={<InventoryIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
-          label="Active Listings"
-          value={activeListings}
-        />
-      </Link>
+    <Box
+      sx={{
+        display: "flex",
+        gap: 2,
+        flexWrap: "wrap",
+        mb: 4,
+        marginLeft: 25,
+      }}
+    >
       <Link to="/dashboard/pending-listings" style={{ textDecoration: "none" }}>
         <StatCard
           icon={<PendingIcon sx={{ fontSize: 40, color: "#ff9800" }} />}
@@ -64,6 +66,16 @@ const DashboardHome = () => {
           value={currentMonthDealsCount}
         />
       </Link>
+      <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
+        <StatCard
+          icon={<DirectionsCarIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
+          label="Active Listings"
+          value={activeListings}
+        />
+      </Link>
+      <Box sx={{ width: 1200, height: 1500, mt: 5 }}>
+        <TrafficChart />
+      </Box>
     </Box>
   );
 };

@@ -6,6 +6,8 @@ import StatCard from "../../components/StatCard";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
 import MonthPicker from "../../components/MonthPicker";
 import dayjs from "dayjs";
 import { NumericFormat } from "react-number-format";
@@ -25,13 +27,80 @@ const styles = {
   icon: { fontSize: 32 },
 };
 
+const dummyDeals = [
+  {
+    customer: "Alice Johnson",
+    date: "2025-09-03",
+    dealer: "NLP Auto",
+    lender: "AECU",
+    employee: "Bob Smith",
+    brokerageFee: 500,
+    lifeInsurance: 120,
+    ahInsurance: 80,
+    ciInsurance: 60,
+    gapInsurance: 150,
+    warranty: 200,
+    bankReserve: 50,
+    dealerReserve: 100,
+    nlpReserve: 30,
+    otherFI: 20,
+    income: 500 + 120 + 80 + 60 + 150 + 200 + 50 + 100 - 30 + 20,
+  },
+  {
+    customer: "Michael Brown",
+    date: "2025-09-04",
+    dealer: "City Motors",
+    lender: "FinanceIt",
+    employee: "Sara Lee",
+    brokerageFee: 400,
+    lifeInsurance: 100,
+    ahInsurance: 70,
+    ciInsurance: 50,
+    gapInsurance: 120,
+    warranty: 180,
+    bankReserve: 40,
+    dealerReserve: 80,
+    nlpReserve: 25,
+    otherFI: 15,
+    income: 400 + 100 + 70 + 50 + 120 + 180 + 40 + 80 - 25 + 15,
+  },
+  {
+    customer: "John Brown",
+    date: "2024-09-04",
+    dealer: "City Motors",
+    lender: "FinanceIt",
+    employee: "Sara Lee",
+    brokerageFee: 500,
+    lifeInsurance: 100,
+    ahInsurance: 70,
+    ciInsurance: 50,
+    gapInsurance: 120,
+    warranty: 180,
+    bankReserve: 40,
+    dealerReserve: 80,
+    nlpReserve: 25,
+    otherFI: 15,
+    income: 500 + 100 + 70 + 50 + 120 + 180 + 40 + 80 - 25 + 15,
+  },
+];
+
 const FundedDeals = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalOpen, setModalOpen] = useState(false);
 
   const [deals, setDeals] = useState(() => {
     const saved = localStorage.getItem("fundedDeals");
-    return saved ? JSON.parse(saved) : [];
+    let savedDeals = saved ? JSON.parse(saved) : [];
+
+    dummyDeals.forEach((dummy) => {
+      const exists = savedDeals.some(
+        (deal) => deal.customer === dummy.customer && deal.date === dummy.date
+      );
+      if (!exists) savedDeals.push(dummy);
+    });
+
+    localStorage.setItem("fundedDeals", JSON.stringify(savedDeals));
+    return savedDeals;
   });
 
   const parseLocalDate = (dateStr) => dayjs(dateStr);
@@ -42,6 +111,12 @@ const FundedDeals = () => {
       dealDate.month() === selectedDate.month()
     );
   });
+
+  const handleDelete = (id) => {
+    const updatedDeals = deals.filter((_, index) => index !== id);
+    setDeals(updatedDeals);
+    localStorage.setItem("fundedDeals", JSON.stringify(updatedDeals));
+  };
 
   const rows = filteredDeals.map((deal, index) => {
     const income =
@@ -165,6 +240,19 @@ const FundedDeals = () => {
       headerAlign: "center",
       renderCell: currencyRender,
       editable: false,
+    },
+    {
+      field: "actions",
+      headerName: "Delete",
+      sortable: false,
+      filterable: false,
+      align: "center",
+      headerAlign: "center",
+      renderCell: (params) => (
+        <IconButton color="grey" onClick={() => handleDelete(params.row.id)}>
+          <DeleteIcon />
+        </IconButton>
+      ),
     },
   ];
 

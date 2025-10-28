@@ -6,20 +6,35 @@ import {
   Modal,
   Button,
   TextField,
-  Tooltip,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
 import { capitalizeFirstLetter } from "../../utils.js";
+import { dummyListings } from "../../data/dummyListings.js";
 
 const Inventory = () => {
   const [approvedListings, setApprovedListings] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const listings = JSON.parse(localStorage.getItem("listings")) || [];
     const active = listings.filter((post) => post.status === "active");
+    setApprovedListings(active);
+  }, []);*/
+
+  useEffect(() => {
+    const existing = JSON.parse(localStorage.getItem("listings")) || [];
+
+    const withoutDummies = existing.filter(
+      (item) => !dummyListings.some((dummy) => dummy.id === item.id)
+    );
+
+    const combined = [...dummyListings, ...withoutDummies];
+
+    localStorage.setItem("listings", JSON.stringify(combined));
+
+    const active = combined.filter((post) => post.status === "active");
     setApprovedListings(active);
   }, []);
 
@@ -224,9 +239,22 @@ const Inventory = () => {
 
   return (
     <Box sx={{ height: 600, width: "100%", padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Inventory
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Inventory
+        </Typography>
+
+        <Button variant="contained" color="primary">
+          Import
+        </Button>
+      </Box>
 
       <DataGrid
         showToolbar

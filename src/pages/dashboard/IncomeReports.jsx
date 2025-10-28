@@ -60,12 +60,10 @@ const IncomeReports = () => {
 
   useEffect(() => {
     const saved = localStorage.getItem("fundedDeals");
-    const parsed = saved ? JSON.parse(saved) : [];
-    setDeals(parsed);
+    setDeals(saved ? JSON.parse(saved) : []);
 
     const savedListings = localStorage.getItem("listings");
-    const parsedListings = savedListings ? JSON.parse(savedListings) : [];
-    setListings(parsedListings);
+    setListings(savedListings ? JSON.parse(savedListings) : []);
   }, []);
 
   const filteredDeals = deals.filter((deal) => {
@@ -453,11 +451,25 @@ const IncomeReports = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" mb={2}>
-                  Income Breakdown by Type - {selectedYear.year()}
-                </Typography>
-                <Box sx={{ width: "100%", height: "100%" }}>
-                  <Pie data={pieChartData} key={`pie-${selectedYear.year()}`} />
+                <Box
+                  sx={{
+                    flex: 1,
+                    minWidth: 300,
+                    height: 400,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography variant="h6" mb={2} textAlign="center">
+                    Income Breakdown by Type - {selectedYear.year()}
+                  </Typography>
+                  <Box sx={{ width: "100%", flex: 1 }}>
+                    <Pie
+                      data={pieChartData}
+                      key={`pie-${selectedYear.year()}`}
+                    />
+                  </Box>
                 </Box>
               </Box>
             </Box>
