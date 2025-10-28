@@ -17,6 +17,12 @@ const dealers = {
     website: "https://bluewatermarine.ca/",
     location: "Mount Pearl, NL",
   },
+  "Bruce's Recreation": {
+    name: "Bruce's Recreation",
+    logo: "/images/dealers/bruces-recreation.png",
+    website: "https://www.brucesrecreation.nf.ca/",
+    location: "Clarenville, NL",
+  },
   "Honda One": {
     name: "Honda One",
     logo: "/images/dealers/nlp-finance-marketplace.png",
@@ -64,6 +70,12 @@ const dealers = {
     logo: "/images/dealers/nlp-finance-marketplace.png",
     website: "https://www.route460.com/",
     location: "Stephenville, NL",
+  },
+  "Rugged Rock Harley-Davidson": {
+    name: "Rugged Rock Harley-Davidson",
+    logo: "/images/dealers/rugged-rock.png",
+    website: "https://ruggedrockhd.com/",
+    location: "Mount Pearl, NL",
   },
   "The Hot Tub & Sauna Depot": {
     name: "The Hot Tub & Sauna Depot",
