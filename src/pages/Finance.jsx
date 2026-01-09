@@ -77,39 +77,38 @@ const styles = {
 function Finance() {
   const { register, handleSubmit, reset } = useForm();
 
- const onSubmit = async (data: any) => {
-  try {
-    const response = await fetch("http://localhost:5001/api/leads/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        phone: data.phone,
-        email: data.email,
-        location: data.location,
-        vehicle: data.vehicle,
-        seller: data.seller,
-        additionalInfo: data.additionalInfo || null,
-      }),
-    });
+  const onSubmit = async (data) => {
+    try {
+      const response = await fetch("http://localhost:5001/api/leads/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone,
+          email: data.email,
+          location: data.location,
+          vehicle: data.vehicle,
+          seller: data.seller,
+          additionalInfo: data.additionalInfo || null,
+        }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
 
-    if (result.success) {
-      toast.success("Application submitted! We'll be in touch shortly.");
-      reset(); 
-    } else {
-      toast.error(`Error: ${result.message}`);
+      if (result.success) {
+        toast.success("Application submitted! We'll be in touch shortly.");
+        reset();
+      } else {
+        toast.error(`Error: ${result.message}`);
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again.");
+      console.error(error);
     }
-  } catch (error: any) {
-    toast.error("An unexpected error occurred. Please try again.");
-    console.error(error);
-  }
-};
-
+  };
 
   return (
     <div>
