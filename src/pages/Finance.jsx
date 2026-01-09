@@ -119,13 +119,20 @@ function Finance() {
       <section style={styles.financeFormSection}>
         <form style={styles.financeForm} onSubmit={handleSubmit(onSubmit)}>
           <div style={styles.formGroup}>
-            <label style={styles.label}>Full Name</label>
+            <label style={styles.label}>First Name</label>
             <input
-              name="fullName"
               type="text"
-              {...register("fullName")}
+              {...register("firstName", { required: true })}
               style={styles.input}
-              required
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label style={styles.label}>Last Name</label>
+            <input
+              type="text"
+              {...register("lastName", { required: true })}
+              style={styles.input}
             />
           </div>
 
