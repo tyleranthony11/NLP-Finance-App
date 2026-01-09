@@ -77,22 +77,39 @@ const styles = {
 function Finance() {
   const { register, handleSubmit, reset } = useForm();
 
-  const onSubmit = (data) => {
-    const existingLeads =
-      JSON.parse(localStorage.getItem("financeFormDataList")) || [];
+ const onSubmit = async (data: any) => {
+  try {
+    const response = await fetch("http://localhost:5001/api/leads/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        email: data.email,
+        location: data.location,
+        vehicle: data.vehicle,
+        seller: data.seller,
+        additionalInfo: data.additionalInfo || null,
+      }),
+    });
 
-    const newLead = {
-      ...data,
-      submittedAt: new Date().toISOString(),
-      confirmed: false,
-    };
+    const result = await response.json();
 
-    const updatedLeads = [...existingLeads, newLead];
-    localStorage.setItem("financeFormDataList", JSON.stringify(updatedLeads));
+    if (result.success) {
+      toast.success("Application submitted! We'll be in touch shortly.");
+      reset(); 
+    } else {
+      toast.error(`Error: ${result.message}`);
+    }
+  } catch (error: any) {
+    toast.error("An unexpected error occurred. Please try again.");
+    console.error(error);
+  }
+};
 
-    toast.success("Application submitted! We'll be in touch shortly.");
-    reset();
-  };
 
   return (
     <div>
