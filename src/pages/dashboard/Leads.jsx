@@ -50,8 +50,8 @@ function Leads() {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            followed_up: true,
-            followed_up_at: new Date().toISOString(),
+            followedUp: true,
+            followedUpAt: new Date().toISOString(),
           }),
         }
       );
@@ -75,8 +75,8 @@ function Leads() {
         })
       : "N/A";
 
-  const newLeads = leads.filter((lead) => !lead.followed_up);
-  const followedUpLeads = leads.filter((lead) => lead.followed_up);
+  const newLeads = leads.filter((lead) => !lead.followedUp);
+  const followedUpLeads = leads.filter((lead) => lead.followedUp);
 
   return (
     <Box sx={{ p: 4, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
@@ -183,7 +183,7 @@ function Leads() {
                       <CheckCircleIcon
                         sx={{ verticalAlign: "middle", mr: 1, color: "green" }}
                       />
-                      {formatDate(lead.followed_up_at)}
+                      {formatDate(lead.followedUpAt)}
                     </TableCell>
                   </TableRow>
                 ))}
