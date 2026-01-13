@@ -42,14 +42,24 @@ function Leads() {
     fetchLeads();
   }, []);
 
-  const handleConfirm = (index) => {
-    const updatedLeads = [...leads];
-    updatedLeads[index] = {
-      ...updatedLeads[index],
-      confirmed: true,
-      confirmedAt: new Date().toISOString(),
-    };
-    setLeads(updatedLeads);
+  const handleConfirm = async (lead) => {
+    try {
+      const res = await fetch(`/api/leads/${lead.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          followedUp: true,
+          followedUpAt: new Date().toISOString(),
+        }),
+      });
+
+      const json = await res.json();
+      if (json.success) {
+        setLeads((prev) => prev.map((l) => (l.id === lead.id ? json.data : l)));
+      }
+    } catch (err) {
+      console.error("Failed to mark as followed up", err);
+    }
   };
 
   const formatDate = (iso) =>
@@ -63,8 +73,8 @@ function Leads() {
         })
       : "N/A";
 
-  const newLeads = leads.filter((lead) => !lead.confirmed);
-  const followedUpLeads = leads.filter((lead) => lead.confirmed);
+  const newLeads = leads.filter((lead) => !lead.followed_up);
+  const followedUpLeads = leads.filter((lead) => lead.followed_up);
 
   return (
     <Box sx={{ p: 4, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
@@ -120,7 +130,7 @@ function Leads() {
               <Button
                 variant="contained"
                 sx={{ mt: 2 }}
-                onClick={() => handleConfirm(index)}
+                onClick={() => handleConfirm(lead)}
               >
                 Mark as Followed Up
               </Button>
@@ -171,7 +181,7 @@ function Leads() {
                       <CheckCircleIcon
                         sx={{ verticalAlign: "middle", mr: 1, color: "green" }}
                       />
-                      {formatDate(lead.confirmedAt)}
+                      {formatDate(lead.followed_up_at)}
                     </TableCell>
                   </TableRow>
                 ))}
