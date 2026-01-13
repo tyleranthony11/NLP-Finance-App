@@ -44,14 +44,17 @@ function Leads() {
 
   const handleConfirm = async (lead) => {
     try {
-      const res = await fetch(`/api/leads/${lead.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          followedUp: true,
-          followedUpAt: new Date().toISOString(),
-        }),
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/leads/${lead.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            followed_up: true,
+            followed_up_at: new Date().toISOString(),
+          }),
+        }
+      );
 
       const json = await res.json();
       if (json.success) {
@@ -61,7 +64,6 @@ function Leads() {
       console.error("Failed to mark as followed up", err);
     }
   };
-
   const formatDate = (iso) =>
     iso
       ? new Date(iso).toLocaleString(undefined, {
@@ -91,7 +93,7 @@ function Leads() {
             <FiberNewIcon color="primary" /> New Leads
           </Typography>
 
-          {newLeads.map((lead, index) => (
+          {newLeads.map((lead) => (
             <Paper
               key={lead.id}
               sx={{ p: 3, mb: 2, borderRadius: 2, boxShadow: 2 }}
