@@ -52,7 +52,16 @@ function Leads() {
     setLeads(updatedLeads);
   };
 
-  const formatDate = (iso) => (iso ? new Date(iso).toLocaleString() : "N/A");
+  const formatDate = (iso) =>
+    iso
+      ? new Date(iso).toLocaleString(undefined, {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      : "N/A";
 
   const newLeads = leads.filter((lead) => !lead.confirmed);
   const followedUpLeads = leads.filter((lead) => lead.confirmed);
