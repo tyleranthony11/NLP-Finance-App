@@ -26,9 +26,20 @@ function Leads() {
   const [leads, setLeads] = useState([]);
 
   useEffect(() => {
-    const storedLeads =
-      JSON.parse(localStorage.getItem("financeFormDataList")) || [];
-    setLeads(storedLeads.reverse());
+    const fetchLeads = async () => {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/leads`);
+        const json = await res.json();
+
+        if (json.success) {
+          setLeads(json.data);
+        }
+      } catch (err) {
+        console.error("Failed to load leads", err);
+      }
+    };
+
+    fetchLeads();
   }, []);
 
   const handleConfirm = (index) => {
@@ -38,11 +49,6 @@ function Leads() {
       confirmed: true,
       confirmedAt: new Date().toISOString(),
     };
-
-    localStorage.setItem(
-      "financeFormDataList",
-      JSON.stringify([...updatedLeads].reverse())
-    );
     setLeads(updatedLeads);
   };
 
@@ -68,12 +74,13 @@ function Leads() {
 
           {newLeads.map((lead, index) => (
             <Paper
-              key={index}
+              key={lead.id}
               sx={{ p: 3, mb: 2, borderRadius: 2, boxShadow: 2 }}
             >
               <Typography variant="h6" gutterBottom>
-                {lead.fullName}
+                {lead.first_name} {lead.last_name}
               </Typography>
+
               <Typography>
                 <EmailIcon /> {lead.email}
               </Typography>
@@ -89,21 +96,22 @@ function Leads() {
               <Typography>
                 <StoreIcon /> {lead.seller}
               </Typography>
-              {lead.additionalInfo && (
+
+              {lead.additional_info && (
                 <Typography>
-                  <NotesIcon /> {lead.additionalInfo}
+                  <NotesIcon /> {lead.additional_info}
                 </Typography>
               )}
+
               <Typography>
                 <CalendarTodayIcon fontSize="small" sx={{ mr: 1 }} />
-                Submitted: {formatDate(lead.submittedAt)}
+                Submitted: {formatDate(lead.created_at)}
               </Typography>
 
               <Button
                 variant="contained"
-                color="primary"
-                onClick={() => handleConfirm(index)}
                 sx={{ mt: 2 }}
+                onClick={() => handleConfirm(index)}
               >
                 Mark as Followed Up
               </Button>
@@ -137,16 +145,19 @@ function Leads() {
                   <TableCell>Followed Up</TableCell>
                 </TableRow>
               </TableHead>
+
               <TableBody>
-                {followedUpLeads.map((lead, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{lead.fullName}</TableCell>
+                {followedUpLeads.map((lead) => (
+                  <TableRow key={lead.id}>
+                    <TableCell>
+                      {lead.first_name} {lead.last_name}
+                    </TableCell>
                     <TableCell>{lead.email}</TableCell>
                     <TableCell>{lead.phone}</TableCell>
                     <TableCell>{lead.location}</TableCell>
                     <TableCell>{lead.vehicle}</TableCell>
                     <TableCell>{lead.seller}</TableCell>
-                    <TableCell>{formatDate(lead.submittedAt)}</TableCell>
+                    <TableCell>{formatDate(lead.created_at)}</TableCell>
                     <TableCell>
                       <CheckCircleIcon
                         sx={{ verticalAlign: "middle", mr: 1, color: "green" }}
