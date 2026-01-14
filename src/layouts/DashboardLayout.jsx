@@ -26,6 +26,9 @@ import {
   Settings as SettingsIcon,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useMsal } from "@azure/msal-react";
+import LogoutIcon from "@mui/icons-material/Logout";
+
 import "./DashboardLayout.css";
 
 const logoUrl = "/images/nlplogo1.png";
@@ -88,6 +91,17 @@ const DashboardLayout = ({ children }) => {
     setOpenMenus((prev) => ({ ...prev, [text]: !prev[text] }));
   };
 
+  const { instance } = useMsal();
+
+  const handleLogout = async () => {
+    try {
+      await instance.logoutPopup();
+      navigate("/");
+    } catch (err) {
+      console.error("Logout failed", err);
+    }
+  };
+
   return (
     <Box className="dashboard-root">
       <CssBaseline />
@@ -103,7 +117,10 @@ const DashboardLayout = ({ children }) => {
         <Toolbar className="dashboard-logo">
           <img src={logoUrl} alt="Company Logo" />
         </Toolbar>
-        <Box className="dashboard-nav">
+        <Box
+          className="dashboard-nav"
+          sx={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
           <List>
             {navItems.map(({ text, icon, route, children }) => (
               <React.Fragment key={text}>
@@ -158,6 +175,20 @@ const DashboardLayout = ({ children }) => {
               </React.Fragment>
             ))}
           </List>
+
+          <Box sx={{ mt: "auto" }}>
+            <List>
+              <ListItemButton
+                onClick={handleLogout}
+                className="dashboard-nav-item"
+              >
+                <ListItemIcon className="dashboard-nav-icon">
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItemButton>
+            </List>
+          </Box>
         </Box>
       </Drawer>
 
