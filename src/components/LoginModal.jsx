@@ -18,8 +18,9 @@ function LoginModal({ open, onClose }) {
 
   const handleLogin = async () => {
     try {
-      await instance.loginPopup({
+      await instance.loginRedirect({
         scopes: ["openid", "profile", "email"],
+        redirectStartPage: `${window.location.origin}/dashboard`,
       });
 
       onClose();
