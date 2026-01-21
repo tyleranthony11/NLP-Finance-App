@@ -205,8 +205,30 @@ const FundedDeals = () => {
     setDeals((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const handleAddDeal = (newDeal) => {
-    setDeals((prev) => [...prev, newDeal]);
+  const handleAddDeal = async (newDeal) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/funded-deals`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newDeal),
+        },
+      );
+
+      const json = await res.json();
+
+      if (!json.success) {
+        console.error("Create funded deal failed:", json.message || json);
+        alert(json.message || "Failed to create funded deal");
+        return;
+      }
+
+      setDeals((prev) => [...prev, json.data]);
+    } catch (err) {
+      console.error("Create funded deal failed:", err);
+      alert("Failed to create funded deal");
+    }
   };
 
   const handleRowUpdate = (newRow) => {
