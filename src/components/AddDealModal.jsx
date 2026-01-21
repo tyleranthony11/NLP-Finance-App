@@ -29,11 +29,11 @@ const cancelButtonStyle = { mr: 2 };
 
 export default function AddDealModal({ open, onClose, onAdd }) {
   const [formData, setFormData] = useState({
-    customer: "",
-    date: "",
-    dealer: "",
-    lender: "",
-    employee: "",
+    customerName: "",
+    dealDate: "",
+    dealerName: "",
+    lenderName: "",
+    employeeName: "",
     brokerageFee: "",
     lifeInsurance: "",
     ahInsurance: "",
@@ -68,14 +68,15 @@ export default function AddDealModal({ open, onClose, onAdd }) {
   };
 
   const handleSubmit = () => {
-    const { customer, date, dealer, lender, employee } = formData;
+    const { customerName, dealDate, dealerName, lenderName, employeeName } =
+      formData;
 
     if (
-      !customer.trim() ||
-      !date.trim() ||
-      !dealer.trim() ||
-      !lender.trim() ||
-      !employee.trim()
+      !customerName.trim() ||
+      !dealDate.trim() ||
+      !dealerName.trim() ||
+      !lenderName.trim() ||
+      !employeeName.trim()
     ) {
       alert("Please fill out all required fields");
       return;
@@ -93,26 +94,16 @@ export default function AddDealModal({ open, onClose, onAdd }) {
       warranty: parseFloat(formData.warranty || 0),
       gapInsurance: parseFloat(formData.gapInsurance || 0),
       otherFI: parseFloat(formData.otherFI || 0),
-      income:
-        parseFloat(formData.brokerageFee || 0) +
-        parseFloat(formData.lifeInsurance || 0) +
-        parseFloat(formData.ahInsurance || 0) +
-        parseFloat(formData.ciInsurance || 0) +
-        parseFloat(formData.bankReserve || 0) +
-        parseFloat(formData.dealerReserve || 0) -
-        parseFloat(formData.nlpReserve || 0) +
-        parseFloat(formData.warranty || 0) +
-        parseFloat(formData.gapInsurance || 0) +
-        parseFloat(formData.otherFI || 0),
     };
 
     onAdd(parsedData);
     onClose();
     setFormData({
-      customer: "",
-      date: "",
-      dealer: "",
-      lender: "",
+      customerName: "",
+      dealDate: "",
+      dealerName: "",
+      lenderName: "",
+      employeeName: "",
       brokerageFee: "",
       lifeInsurance: "",
       ahInsurance: "",
@@ -139,8 +130,8 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               label="Customer Name"
               fullWidth
               required
-              value={formData.customer}
-              onChange={handleChange("customer")}
+              value={formData.customerName}
+              onChange={handleChange("customerName")}
             />
           </Grid>
 
@@ -151,17 +142,17 @@ export default function AddDealModal({ open, onClose, onAdd }) {
               fullWidth
               required
               InputLabelProps={{ shrink: true }}
-              value={formData.date}
-              onChange={handleChange("date")}
+              value={formData.dealDate}
+              onChange={handleChange("dealDate")}
             />
           </Grid>
 
           <Grid item xs={6}>
             <Autocomplete
               options={lenderOptions}
-              value={formData.lender}
+              value={formData.lenderName}
               onChange={(event, newValue) =>
-                setFormData((prev) => ({ ...prev, lender: newValue || "" }))
+                setFormData((prev) => ({ ...prev, lenderName: newValue || "" }))
               }
               renderInput={(params) => (
                 <TextField {...params} label="Lender" fullWidth required />
@@ -171,9 +162,12 @@ export default function AddDealModal({ open, onClose, onAdd }) {
           <Grid item xs={6}>
             <Autocomplete
               options={employeeOptions}
-              value={formData.employee}
+              value={formData.employeeName}
               onChange={(event, newValue) =>
-                setFormData((prev) => ({ ...prev, employee: newValue || "" }))
+                setFormData((prev) => ({
+                  ...prev,
+                  employeeName: newValue || "",
+                }))
               }
               renderInput={(params) => (
                 <TextField {...params} label="Employee" fullWidth required />
@@ -184,9 +178,9 @@ export default function AddDealModal({ open, onClose, onAdd }) {
           <Grid item xs={12}>
             <Autocomplete
               options={dealerOptions}
-              value={formData.dealer}
+              value={formData.dealerName}
               onChange={(event, newValue) =>
-                setFormData((prev) => ({ ...prev, dealer: newValue || "" }))
+                setFormData((prev) => ({ ...prev, dealerName: newValue || "" }))
               }
               renderInput={(params) => (
                 <TextField {...params} label="Dealer" fullWidth required />
