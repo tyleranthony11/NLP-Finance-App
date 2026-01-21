@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
@@ -27,98 +27,44 @@ const styles = {
   icon: { fontSize: 32 },
 };
 
-const dummyDeals = [
-  {
-    customer: "Alice Johnson",
-    date: "2025-09-03",
-    dealer: "NLP Auto",
-    lender: "AECU",
-    employee: "Bob Smith",
-    brokerageFee: 500,
-    lifeInsurance: 120,
-    ahInsurance: 80,
-    ciInsurance: 60,
-    gapInsurance: 150,
-    warranty: 200,
-    bankReserve: 50,
-    dealerReserve: 100,
-    nlpReserve: 30,
-    otherFI: 20,
-    income: 500 + 120 + 80 + 60 + 150 + 200 + 50 + 100 - 30 + 20,
-  },
-  {
-    customer: "Michael Brown",
-    date: "2025-09-04",
-    dealer: "City Motors",
-    lender: "FinanceIt",
-    employee: "Sara Lee",
-    brokerageFee: 400,
-    lifeInsurance: 100,
-    ahInsurance: 70,
-    ciInsurance: 50,
-    gapInsurance: 120,
-    warranty: 180,
-    bankReserve: 40,
-    dealerReserve: 80,
-    nlpReserve: 25,
-    otherFI: 15,
-    income: 400 + 100 + 70 + 50 + 120 + 180 + 40 + 80 - 25 + 15,
-  },
-  {
-    customer: "John Brown",
-    date: "2024-09-04",
-    dealer: "City Motors",
-    lender: "FinanceIt",
-    employee: "Sara Lee",
-    brokerageFee: 500,
-    lifeInsurance: 100,
-    ahInsurance: 70,
-    ciInsurance: 50,
-    gapInsurance: 120,
-    warranty: 180,
-    bankReserve: 40,
-    dealerReserve: 80,
-    nlpReserve: 25,
-    otherFI: 15,
-    income: 500 + 100 + 70 + 50 + 120 + 180 + 40 + 80 - 25 + 15,
-  },
-];
-
 const FundedDeals = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [deals, setDeals] = useState(() => {
-    const saved = localStorage.getItem("fundedDeals");
-    let savedDeals = saved ? JSON.parse(saved) : [];
+  const [deals, setDeals] = useState([]);
 
-    dummyDeals.forEach((dummy) => {
-      const exists = savedDeals.some(
-        (deal) => deal.customer === dummy.customer && deal.date === dummy.date
-      );
-      if (!exists) savedDeals.push(dummy);
-    });
+  useEffect(() => {
+    const fetchDeals = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/funded-deals`,
+        );
+        const json = await res.json();
 
-    localStorage.setItem("fundedDeals", JSON.stringify(savedDeals));
-    return savedDeals;
-  });
+        if (json.success) {
+          setDeals(json.data);
+        } else {
+          console.error("Failed to load funded deals", json);
+        }
+      } catch (err) {
+        console.error("Failed to load funded deals", err);
+      }
+    };
 
-  const parseLocalDate = (dateStr) => dayjs(dateStr);
+    fetchDeals();
+  }, []);
+
+  const parseDate = (dateStr) => dayjs(dateStr);
+
   const filteredDeals = deals.filter((deal) => {
-    const dealDate = parseLocalDate(deal.date);
+    const dealDate = parseDate(deal.dealDate);
     return (
       dealDate.year() === selectedDate.year() &&
       dealDate.month() === selectedDate.month()
     );
   });
 
-  const handleDelete = (id) => {
-    const updatedDeals = deals.filter((_, index) => index !== id);
-    setDeals(updatedDeals);
-    localStorage.setItem("fundedDeals", JSON.stringify(updatedDeals));
-  };
-
-  const rows = filteredDeals.map((deal, index) => {
+  const rows = filteredDeals.map((deal) => {
     const income =
       Number(deal.brokerageFee || 0) +
       Number(deal.lifeInsurance || 0) +
@@ -132,8 +78,8 @@ const FundedDeals = () => {
       Number(deal.otherFI || 0);
 
     return {
-      id: index,
       ...deal,
+      id: deal.id,
       income,
     };
   });
@@ -153,7 +99,7 @@ const FundedDeals = () => {
 
   const columns = [
     {
-      field: "customer",
+      field: "customerName",
       headerName: "Customer Name",
       flex: 1,
       align: "center",
@@ -161,7 +107,7 @@ const FundedDeals = () => {
       editable: true,
     },
     {
-      field: "date",
+      field: "dealDate",
       headerName: "Date",
       flex: 1,
       align: "center",
@@ -169,9 +115,9 @@ const FundedDeals = () => {
       editable: true,
       renderCell: (params) => dayjs(params.value).format("MMMM D, YYYY"),
     },
-    { field: "dealer", headerName: "Dealer" },
-    { field: "lender", headerName: "Lender" },
-    { field: "employee", headerName: "Employee" },
+    { field: "dealerName", headerName: "Dealer" },
+    { field: "lenderName", headerName: "Lender" },
+    { field: "employeeName", headerName: "Employee" },
     {
       field: "brokerageFee",
       headerName: "Brokerage Fee",
@@ -255,14 +201,15 @@ const FundedDeals = () => {
       ),
     },
   ];
-
-  const handleAddDeal = (newDeal) => {
-    const updatedDeals = [...deals, newDeal];
-    setDeals(updatedDeals);
-    localStorage.setItem("fundedDeals", JSON.stringify(updatedDeals));
+  const handleDelete = (id) => {
+    setDeals((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const handleRowUpdate = (newRow, oldRow) => {
+  const handleAddDeal = (newDeal) => {
+    setDeals((prev) => [...prev, newDeal]);
+  };
+
+  const handleRowUpdate = (newRow) => {
     const calculateIncome = (row) => {
       return (
         Number(row.brokerageFee || 0) +
@@ -278,17 +225,11 @@ const FundedDeals = () => {
       );
     };
 
-    const updatedRow = {
-      ...newRow,
-      income: calculateIncome(newRow),
-    };
+    const updatedRow = { ...newRow, income: calculateIncome(newRow) };
 
-    const updatedRows = deals.map((row, index) =>
-      index === oldRow.id ? updatedRow : row
+    setDeals((prev) =>
+      prev.map((d) => (d.id === updatedRow.id ? updatedRow : d)),
     );
-
-    setDeals(updatedRows);
-    localStorage.setItem("fundedDeals", JSON.stringify(updatedRows));
 
     return updatedRow;
   };
@@ -321,7 +262,7 @@ const FundedDeals = () => {
             {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
-            }
+            },
           )}`}
         />
       </Box>
@@ -349,9 +290,9 @@ const FundedDeals = () => {
           initialState={{
             columns: {
               columnVisibilityModel: {
-                dealer: false,
-                lender: false,
-                employee: false,
+                dealerName: false,
+                lenderName: false,
+                employeeName: false,
                 brokerageFee: false,
                 lifeInsurance: false,
                 ahInsurance: false,
