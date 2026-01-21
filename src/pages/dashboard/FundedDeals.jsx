@@ -249,7 +249,7 @@ const FundedDeals = () => {
     }
   };
 
-  const handleRowUpdate = (newRow) => {
+  const handleRowUpdate = async (newRow, oldRow) => {
     const calculateIncome = (row) => {
       return (
         Number(row.brokerageFee || 0) +
@@ -265,13 +265,43 @@ const FundedDeals = () => {
       );
     };
 
-    const updatedRow = { ...newRow, income: calculateIncome(newRow) };
+    const updatedRow = {
+      ...newRow,
+      income: calculateIncome(newRow),
+    };
 
-    setDeals((prev) =>
-      prev.map((d) => (d.id === updatedRow.id ? updatedRow : d)),
+    const changes = {};
+    Object.keys(updatedRow).forEach((key) => {
+      if (key === "income") return;
+      if (updatedRow[key] !== oldRow[key]) {
+        changes[key] = updatedRow[key];
+      }
+    });
+
+    if (Object.keys(changes).length === 0) {
+      return oldRow;
+    }
+
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/funded-deals/${oldRow.id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(changes),
+      },
     );
 
-    return updatedRow;
+    const json = await res.json();
+
+    if (!json.success) {
+      throw new Error(json.message || "Update failed");
+    }
+
+    const savedRow = json.data;
+
+    setDeals((prev) => prev.map((d) => (d.id === savedRow.id ? savedRow : d)));
+
+    return savedRow;
   };
 
   return (
@@ -327,6 +357,10 @@ const FundedDeals = () => {
           rowsPerPageOptions={[10]}
           disableRowSelectionOnClick
           processRowUpdate={handleRowUpdate}
+          onProcessRowUpdateError={(err) => {
+            console.error(err);
+            alert(err.message || "Update failed");
+          }}
           initialState={{
             columns: {
               columnVisibilityModel: {
