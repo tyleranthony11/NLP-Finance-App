@@ -201,8 +201,26 @@ const FundedDeals = () => {
       ),
     },
   ];
-  const handleDelete = (id) => {
-    setDeals((prev) => prev.filter((d) => d.id !== id));
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/funded-deals/${id}`,
+        { method: "DELETE" },
+      );
+
+      const json = await res.json();
+
+      if (!json.success) {
+        console.error("Delete funded deal failed:", json.message || json);
+        alert(json.message || "Failed to delete funded deal");
+        return;
+      }
+
+      setDeals((prev) => prev.filter((d) => d.id !== id));
+    } catch (err) {
+      console.error("Delete funded deal failed:", err);
+      alert("Failed to delete funded deal");
+    }
   };
 
   const handleAddDeal = async (newDeal) => {
