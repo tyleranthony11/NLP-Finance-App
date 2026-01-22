@@ -64,27 +64,16 @@ const FundedDeals = () => {
     );
   });
 
-  const rows = filteredDeals.map((deal) => {
-    const income =
-      Number(deal.brokerageFee || 0) +
-      Number(deal.lifeInsurance || 0) +
-      Number(deal.ahInsurance || 0) +
-      Number(deal.ciInsurance || 0) +
-      Number(deal.gapInsurance || 0) +
-      Number(deal.warranty || 0) +
-      Number(deal.bankReserve || 0) +
-      Number(deal.dealerReserve || 0) -
-      Number(deal.nlpReserve || 0) +
-      Number(deal.otherFI || 0);
+  const rows = filteredDeals.map((deal) => ({
+    ...deal,
+    id: deal.id,
+    income: Number(deal.income || 0),
+  }));
 
-    return {
-      ...deal,
-      id: deal.id,
-      income,
-    };
-  });
-
-  const totalMonthlyIncome = rows.reduce((sum, deal) => sum + deal.income, 0);
+  const totalMonthlyIncome = rows.reduce(
+    (sum, deal) => sum + Number(deal.income || 0),
+    0,
+  );
 
   const currencyRender = (params) => (
     <NumericFormat
