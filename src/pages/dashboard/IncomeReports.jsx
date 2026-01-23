@@ -34,7 +34,7 @@ ChartJS.register(
   LinearScale,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const styles = {
@@ -59,15 +59,31 @@ const IncomeReports = () => {
   const [selectedEmployee, setSelectedEmployee] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("fundedDeals");
-    setDeals(saved ? JSON.parse(saved) : []);
+    const fetchDeals = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/funded-deals`,
+        );
+        const json = await res.json();
+
+        if (json.success) {
+          setDeals(json.data);
+        } else {
+          console.error("Failed to load funded deals", json);
+        }
+      } catch (err) {
+        console.error("Failed to load funded deals", err);
+      }
+    };
 
     const savedListings = localStorage.getItem("listings");
     setListings(savedListings ? JSON.parse(savedListings) : []);
+
+    fetchDeals();
   }, []);
 
   const filteredDeals = deals.filter((deal) => {
-    const date = dayjs(deal.date);
+    const date = dayjs(deal.dealDate);
     return date.year() === selectedYear.year();
   });
 
@@ -88,11 +104,11 @@ const IncomeReports = () => {
 
   const dealsInView = filteredDeals.filter((deal) => {
     if (viewMode === "dealer" && selectedDealer)
-      return deal.dealer === selectedDealer;
+      return deal.dealerName === selectedDealer;
     if (viewMode === "lender" && selectedLender)
-      return deal.lender === selectedLender;
+      return deal.lenderName === selectedLender;
     if (viewMode === "employee" && selectedEmployee)
-      return deal.employee === selectedEmployee;
+      return deal.employeeName === selectedEmployee;
     return true;
   });
 
@@ -125,12 +141,12 @@ const IncomeReports = () => {
   const totalDeals = dealsInView.length;
   const totalIncome = dealsInView.reduce(
     (sum, deal) => sum + Number(deal.income || 0),
-    0
+    0,
   );
   const avgIncome = totalDeals > 0 ? totalIncome / totalDeals : 0;
 
   const incomeByMonth = dealsInView.reduce((acc, deal) => {
-    const date = dayjs(deal.date);
+    const date = dayjs(deal.dealDate);
     const month = date.format("MMM");
     acc[month] = (acc[month] || 0) + Number(deal.income || 0);
     return acc;
@@ -158,7 +174,7 @@ const IncomeReports = () => {
   ];
 
   const previousYears = deals.filter((deal) => {
-    const date = dayjs(deal.date);
+    const date = dayjs(deal.dealDate);
     return date.year() < selectedYear.year();
   });
 
@@ -166,7 +182,7 @@ const IncomeReports = () => {
   const incomeCounts = {};
 
   previousYears.forEach((deal) => {
-    const date = dayjs(deal.date);
+    const date = dayjs(deal.dealDate);
     const month = date.format("MMM");
     incomeSums[month] = (incomeSums[month] || 0) + Number(deal.income || 0);
     incomeCounts[month] = (incomeCounts[month] || 0) + 1;
@@ -369,7 +385,7 @@ const IncomeReports = () => {
               label={`Total Ads - ${selectedYear.year()}`}
               value={allMonths.reduce(
                 (sum, month) => sum + (adsByMonth[month] || 0),
-                0
+                0,
               )}
             />
             <Box sx={{ alignSelf: "flex-start" }}>
