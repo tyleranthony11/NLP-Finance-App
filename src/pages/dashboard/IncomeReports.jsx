@@ -93,13 +93,13 @@ const IncomeReports = () => {
   });
 
   const uniqueDealers = [
-    ...new Set(filteredDeals.map((d) => d.dealer).filter(Boolean)),
+    ...new Set(filteredDeals.map((d) => d.dealerName).filter(Boolean)),
   ];
   const uniqueLenders = [
-    ...new Set(filteredDeals.map((d) => d.lender).filter(Boolean)),
+    ...new Set(filteredDeals.map((d) => d.lenderName).filter(Boolean)),
   ];
   const uniqueEmployees = [
-    ...new Set(filteredDeals.map((d) => d.employee).filter(Boolean)),
+    ...new Set(filteredDeals.map((d) => d.employeeName).filter(Boolean)),
   ];
 
   const dealsInView = filteredDeals.filter((deal) => {
