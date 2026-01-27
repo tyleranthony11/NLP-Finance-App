@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { calculateBiWeekly } from "../utils";
-import { dummyListings } from "../data/dummyListings";
 import "./Marketplace.css";
 
 function Marketplace() {
@@ -19,12 +18,12 @@ function Marketplace() {
     localStorage.setItem("listings", JSON.stringify(listingsToUse));
 
     setInventoryListings(
-      listingsToUse.filter((item) => item.status === "active")
+      listingsToUse.filter((item) => item.status === "active"),
     );
   }, []);
 
   const allDealers = Array.from(
-    new Set(inventoryListings.map((item) => item.dealership))
+    new Set(inventoryListings.map((item) => item.dealership)),
   );
 
   const filteredListings = inventoryListings.filter((item) => {
@@ -90,7 +89,7 @@ function Marketplace() {
                       setSelectedDealers([...selectedDealers, value]);
                     else
                       setSelectedDealers(
-                        selectedDealers.filter((d) => d !== value)
+                        selectedDealers.filter((d) => d !== value),
                       );
                   }}
                 />
@@ -113,7 +112,7 @@ function Marketplace() {
                       setSelectedCategories([...selectedCategories, value]);
                     else
                       setSelectedCategories(
-                        selectedCategories.filter((c) => c !== value)
+                        selectedCategories.filter((c) => c !== value),
                       );
                   }}
                 />
@@ -183,7 +182,7 @@ function Marketplace() {
                     {calculateBiWeekly(
                       item.price,
                       item.interestRate,
-                      item.term
+                      item.term,
                     )}{" "}
                     bi-weekly
                   </p>

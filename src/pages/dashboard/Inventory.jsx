@@ -12,7 +12,7 @@ import { NumericFormat } from "react-number-format";
 import { capitalizeFirstLetter } from "../../utils.js";
 
 const Inventory = () => {
-  const [approvedListings, setApprovedListings] = useState([]);
+  const [listings, setListings] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
@@ -29,7 +29,7 @@ const Inventory = () => {
           return;
         }
 
-        setApprovedListings(json.data);
+        setListings(json.data);
       } catch (err) {
         console.error("Failed to load marketplace listings", err);
       }
@@ -56,32 +56,62 @@ const Inventory = () => {
     }));
   };
 
-  const handleSaveChanges = () => {
-    const listings = JSON.parse(localStorage.getItem("listings")) || [];
+  const handleSaveChanges = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(selectedListing),
+        },
+      );
 
-    const updated = listings.map((item) =>
-      item.id === selectedListing.id ? { ...item, ...selectedListing } : item,
-    );
+      const json = await res.json();
 
-    localStorage.setItem("listings", JSON.stringify(updated));
+      if (!json.success) {
+        console.error("Update listing failed:", json);
+        alert(json.message || "Failed to update listing");
+        return;
+      }
 
-    const active = updated.filter((post) => post.status === "active");
-    setApprovedListings(active);
-    handleClose();
+      const saved = json.data;
+
+      setListings((prev) => prev.map((l) => (l.id === saved.id ? saved : l)));
+      handleClose();
+    } catch (err) {
+      console.error("Update listing failed:", err);
+      alert("Failed to update listing");
+    }
   };
 
-  const handleMarkAsSold = () => {
-    const listings = JSON.parse(localStorage.getItem("listings")) || [];
+  const handleMarkAsSold = async () => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "sold" }),
+        },
+      );
 
-    const updatedListings = listings.map((post) =>
-      post.id === selectedListing.id ? { ...post, status: "sold" } : post,
-    );
+      const json = await res.json();
 
-    localStorage.setItem("listings", JSON.stringify(updatedListings));
+      if (!json.success) {
+        console.error("Mark as sold failed:", json);
+        alert(json.message || "Failed to mark as sold");
+        return;
+      }
 
-    const active = updatedListings.filter((post) => post.status === "active");
-    setApprovedListings(active);
-    handleClose();
+      const saved = json.data;
+
+      setListings((prev) => prev.map((l) => (l.id === saved.id ? saved : l)));
+      handleClose();
+    } catch (err) {
+      console.error("Mark as sold failed:", err);
+      alert("Failed to mark as sold");
+    }
   };
 
   const columns = [
@@ -217,7 +247,7 @@ const Inventory = () => {
     },
   ];
 
-  const rows = approvedListings.map((listing) => ({
+  const rows = listings.map((listing) => ({
     id: listing.id,
     photo: listing.photos?.[0] || "",
     category: listing.category || "",
