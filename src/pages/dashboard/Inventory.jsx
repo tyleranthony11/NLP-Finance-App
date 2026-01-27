@@ -17,25 +17,26 @@ const Inventory = () => {
   const [open, setOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
 
-  /*useEffect(() => {
-    const listings = JSON.parse(localStorage.getItem("listings")) || [];
-    const active = listings.filter((post) => post.status === "active");
-    setApprovedListings(active);
-  }, []);*/
-
   useEffect(() => {
-    const existing = JSON.parse(localStorage.getItem("listings")) || [];
+    const fetchListings = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/marketplace/admin`,
+        );
+        const json = await res.json();
 
-    const withoutDummies = existing.filter(
-      (item) => !dummyListings.some((dummy) => dummy.id === item.id)
-    );
+        if (!json.success) {
+          console.error("Failed to load marketplace listings", json);
+          return;
+        }
 
-    const combined = [...dummyListings, ...withoutDummies];
+        setApprovedListings(json.data);
+      } catch (err) {
+        console.error("Failed to load marketplace listings", err);
+      }
+    };
 
-    localStorage.setItem("listings", JSON.stringify(combined));
-
-    const active = combined.filter((post) => post.status === "active");
-    setApprovedListings(active);
+    fetchListings();
   }, []);
 
   const handleRowClick = (params) => {
@@ -60,7 +61,7 @@ const Inventory = () => {
     const listings = JSON.parse(localStorage.getItem("listings")) || [];
 
     const updated = listings.map((item) =>
-      item.id === selectedListing.id ? { ...item, ...selectedListing } : item
+      item.id === selectedListing.id ? { ...item, ...selectedListing } : item,
     );
 
     localStorage.setItem("listings", JSON.stringify(updated));
@@ -74,7 +75,7 @@ const Inventory = () => {
     const listings = JSON.parse(localStorage.getItem("listings")) || [];
 
     const updatedListings = listings.map((post) =>
-      post.id === selectedListing.id ? { ...post, status: "sold" } : post
+      post.id === selectedListing.id ? { ...post, status: "sold" } : post,
     );
 
     localStorage.setItem("listings", JSON.stringify(updatedListings));
