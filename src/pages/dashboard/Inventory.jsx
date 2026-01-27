@@ -10,7 +10,6 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
 import { capitalizeFirstLetter } from "../../utils.js";
-import { dummyListings } from "../../data/dummyListings.js";
 
 const Inventory = () => {
   const [approvedListings, setApprovedListings] = useState([]);
