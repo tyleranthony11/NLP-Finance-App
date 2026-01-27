@@ -11,60 +11,84 @@ function Marketplace() {
   const [inventoryListings, setInventoryListings] = useState([]);
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("listings")) || [];
+    const fetchActiveListings = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/marketplace`,
+        );
+        const json = await res.json();
 
-    const listingsToUse = saved.length === 0 ? dummyListings : saved;
+        if (!json.success) {
+          console.error("Failed to load marketplace listings", json);
+          return;
+        }
 
-    localStorage.setItem("listings", JSON.stringify(listingsToUse));
+        // This endpoint should already be active-only, but filtering is safe.
+        const active = (json.data || []).filter(
+          (item) => item.status === "active",
+        );
+        setInventoryListings(active);
+      } catch (err) {
+        console.error("Failed to load marketplace listings", err);
+      }
+    };
 
-    setInventoryListings(
-      listingsToUse.filter((item) => item.status === "active"),
-    );
+    fetchActiveListings();
   }, []);
 
   const allDealers = Array.from(
-    new Set(inventoryListings.map((item) => item.dealership)),
-  );
+    new Set(
+      inventoryListings.map((item) => item.dealership || "Private Seller"),
+    ),
+  ).filter(Boolean);
 
   const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
 
     if (selectedDealers.length > 0 && !selectedDealers.includes(dealerName))
       return false;
+
     if (
       selectedCategories.length > 0 &&
       !selectedCategories.includes(item.category)
     )
       return false;
-    if (priceRange === "under10k" && item.price >= 10000) return false;
-    if (priceRange === "10kto25k" && (item.price < 10000 || item.price > 25000))
+
+    const price = Number(item.price || 0);
+
+    if (priceRange === "under10k" && price >= 10000) return false;
+    if (priceRange === "10kto25k" && (price < 10000 || price > 25000))
       return false;
-    if (
-      priceRange === "25kto50k" &&
-      (item.price <= 25000 || item.price >= 50000)
-    )
+    if (priceRange === "25kto50k" && (price <= 25000 || price >= 50000))
       return false;
-    if (priceRange === "over50k" && item.price < 50000) return false;
+    if (priceRange === "over50k" && price < 50000) return false;
 
     return true;
   });
 
   const sortedListings = [...filteredListings].sort((a, b) => {
+    const aPrice = Number(a.price || 0);
+    const bPrice = Number(b.price || 0);
+    const aYear = Number(a.year || 0);
+    const bYear = Number(b.year || 0);
+    const aMake = (a.make || "").toString();
+    const bMake = (b.make || "").toString();
+
     switch (sortKey) {
       case "price-asc":
-        return a.price - b.price;
+        return aPrice - bPrice;
       case "price-desc":
-        return b.price - a.price;
+        return bPrice - aPrice;
       case "year-asc":
-        return a.year - b.year;
+        return aYear - bYear;
       case "year-desc":
-        return b.year - a.year;
+        return bYear - aYear;
       case "make-asc":
-        return a.make.localeCompare(b.make);
+        return aMake.localeCompare(bMake);
       case "make-desc":
-        return b.make.localeCompare(a.make);
+        return bMake.localeCompare(aMake);
       default:
-        return b.id - a.id;
+        return (Number(b.id) || 0) - (Number(a.id) || 0);
     }
   });
 
@@ -86,10 +110,10 @@ function Marketplace() {
                   onChange={(e) => {
                     const value = e.target.value;
                     if (e.target.checked)
-                      setSelectedDealers([...selectedDealers, value]);
+                      setSelectedDealers((prev) => [...prev, value]);
                     else
-                      setSelectedDealers(
-                        selectedDealers.filter((d) => d !== value),
+                      setSelectedDealers((prev) =>
+                        prev.filter((d) => d !== value),
                       );
                   }}
                 />
@@ -109,10 +133,10 @@ function Marketplace() {
                   onChange={(e) => {
                     const value = e.target.value;
                     if (e.target.checked)
-                      setSelectedCategories([...selectedCategories, value]);
+                      setSelectedCategories((prev) => [...prev, value]);
                     else
-                      setSelectedCategories(
-                        selectedCategories.filter((c) => c !== value),
+                      setSelectedCategories((prev) =>
+                        prev.filter((c) => c !== value),
                       );
                   }}
                 />
@@ -169,20 +193,24 @@ function Marketplace() {
                 key={item.id}
                 className="marketplace-card"
               >
-                <img src={item.photos[0]} alt={item.model} />
+                <img
+                  src={item.photos?.[0] || ""}
+                  alt={item.model || "Listing"}
+                />
                 <div className="marketplace-info">
                   <h3>
                     {item.year} {item.make} {item.model}
                   </h3>
                   <p>
-                    <strong>Price:</strong> ${item.price.toLocaleString()}
+                    <strong>Price:</strong> $
+                    {Number(item.price || 0).toLocaleString()}
                   </p>
                   <p>
                     <strong>Payment:</strong> $
                     {calculateBiWeekly(
-                      item.price,
-                      item.interestRate,
-                      item.term,
+                      Number(item.price || 0),
+                      Number(item.interestRate || 0),
+                      Number(item.term || 0),
                     )}{" "}
                     bi-weekly
                   </p>
@@ -192,6 +220,10 @@ function Marketplace() {
                 </div>
               </Link>
             ))}
+
+            {sortedListings.length === 0 && (
+              <p style={{ padding: "1rem" }}>No listings match your filters.</p>
+            )}
           </div>
         </div>
       </div>
