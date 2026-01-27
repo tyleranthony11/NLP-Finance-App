@@ -78,6 +78,7 @@ const Inventory = () => {
       const saved = json.data;
 
       setListings((prev) => prev.map((l) => (l.id === saved.id ? saved : l)));
+
       handleClose();
     } catch (err) {
       console.error("Update listing failed:", err);
@@ -106,7 +107,8 @@ const Inventory = () => {
 
       const saved = json.data;
 
-      setListings((prev) => prev.map((l) => (l.id === saved.id ? saved : l)));
+      setListings((prev) => prev.filter((l) => l.id !== saved.id));
+
       handleClose();
     } catch (err) {
       console.error("Mark as sold failed:", err);
@@ -247,25 +249,27 @@ const Inventory = () => {
     },
   ];
 
-  const rows = listings.map((listing) => ({
-    id: listing.id,
-    photo: listing.photos?.[0] || "",
-    category: listing.category || "",
-    year: listing.year || "",
-    make: listing.make || "",
-    model: listing.model || "",
-    price: listing.price || "",
-    kms: listing.kms || "",
-    description: listing.description || "",
-    name: listing.name || "",
-    email: listing.email || "",
-    phone: listing.phone || "",
-    photos: listing.photos || [],
-    interestRate: listing.interestRate || "",
-    term: listing.term || "",
-    dealership: listing.dealership || "",
-    status: listing.status || "active",
-  }));
+  const rows = listings
+    .filter((listing) => listing.status !== "sold")
+    .map((listing) => ({
+      id: listing.id,
+      photo: listing.photos?.[0] || "",
+      category: listing.category || "",
+      year: listing.year || "",
+      make: listing.make || "",
+      model: listing.model || "",
+      price: listing.price || "",
+      kms: listing.kms || "",
+      description: listing.description || "",
+      name: listing.name || "",
+      email: listing.email || "",
+      phone: listing.phone || "",
+      photos: listing.photos || [],
+      interestRate: listing.interestRate || "",
+      term: listing.term || "",
+      dealership: listing.dealership || "",
+      status: listing.status || "active",
+    }));
 
   return (
     <Box sx={{ height: 600, width: "100%", padding: 3 }}>
