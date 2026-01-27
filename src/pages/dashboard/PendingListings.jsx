@@ -39,9 +39,28 @@ const PendingListings = () => {
   const [dealership, setDealership] = useState("");
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("listings")) || [];
-    const pending = stored.filter((post) => post.status === "pending");
-    setPostings(pending);
+    const fetchPending = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/marketplace/admin`,
+        );
+        const json = await res.json();
+
+        if (!json.success) {
+          console.error("Failed to load listings:", json);
+          return;
+        }
+
+        const pending = (json.data || []).filter(
+          (p) => (p.status || "").toLowerCase() === "pending",
+        );
+        setPostings(pending);
+      } catch (err) {
+        console.error("Failed to load pending listings:", err);
+      }
+    };
+
+    fetchPending();
   }, []);
 
   const handleOpen = (post) => {
@@ -63,6 +82,8 @@ const PendingListings = () => {
   const handleClose = () => {
     setOpen(false);
     setSelectedPost(null);
+    setPhotos([]);
+    setCategory("");
     setYear("");
     setMake("");
     setModel("");
@@ -74,34 +95,49 @@ const PendingListings = () => {
     setDealership("");
   };
 
-  const handleApprove = () => {
+  const handleApprove = async () => {
     if (!selectedPost) return;
 
-    const allListings = JSON.parse(localStorage.getItem("listings")) || [];
+    try {
+      const payload = {
+        status: "active",
+        photos,
+        category,
+        year: year ? Number(year) : null,
+        make,
+        model,
+        kms: kms ? Number(kms) : null,
+        price: price ? Number(price) : null,
+        description,
+        interestRate: interestRate ? Number(interestRate) : null,
+        term: term ? Number(term) : null,
+        dealership,
+      };
 
-    const updatedListings = allListings.map((post) =>
-      post.id === selectedPost.id
-        ? {
-            ...post,
-            status: "active",
-            photos,
-            category,
-            year,
-            make,
-            model,
-            kms,
-            price: Number(price),
-            description,
-            interestRate: Number(interestRate),
-            term: Number(term),
-            dealership,
-          }
-        : post
-    );
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedPost.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
 
-    localStorage.setItem("listings", JSON.stringify(updatedListings));
-    setPostings((prev) => prev.filter((post) => post.id !== selectedPost.id));
-    handleClose();
+      const json = await res.json();
+
+      if (!json.success) {
+        console.error("Approve failed:", json);
+        alert(json.message || "Failed to approve listing");
+        return;
+      }
+
+      // Remove from pending list UI
+      setPostings((prev) => prev.filter((p) => p.id !== selectedPost.id));
+      handleClose();
+    } catch (err) {
+      console.error("Approve failed:", err);
+      alert("Failed to approve listing");
+    }
   };
 
   return (
@@ -127,13 +163,14 @@ const PendingListings = () => {
                 <TableCell>Review</TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {postings.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell>
                     <Avatar
                       variant="rounded"
-                      src={post.photos[0]}
+                      src={post.photos?.[0] || ""}
                       alt={`${post.make} ${post.model}`}
                       sx={{ width: 64, height: 40 }}
                     />
@@ -161,6 +198,7 @@ const PendingListings = () => {
           </Table>
         </TableContainer>
       )}
+
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
@@ -266,15 +304,16 @@ const PendingListings = () => {
                     multiple
                     type="file"
                     onChange={(e) => {
-                      const files = Array.from(e.target.files);
-                      const readers = files.map((file) => {
-                        return new Promise((resolve) => {
-                          const reader = new FileReader();
-                          reader.onload = (event) =>
-                            resolve(event.target.result);
-                          reader.readAsDataURL(file);
-                        });
-                      });
+                      const files = Array.from(e.target.files || []);
+                      const readers = files.map(
+                        (file) =>
+                          new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onload = (event) =>
+                              resolve(event.target.result);
+                            reader.readAsDataURL(file);
+                          }),
+                      );
 
                       Promise.all(readers).then((newPhotos) => {
                         setPhotos((prev) => [...prev, ...newPhotos]);
@@ -297,6 +336,7 @@ const PendingListings = () => {
                 <MenuItem value="rv">RV / Travel Trailer</MenuItem>
                 <MenuItem value="automotive">Automotive</MenuItem>
               </TextField>
+
               <TextField
                 label="Year"
                 value={year}

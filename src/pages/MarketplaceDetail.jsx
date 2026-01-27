@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./MarketplaceDetail.css";
 import { calculateBiWeekly, calculateWeekly, calculateMonthly } from "../utils";
@@ -9,29 +9,75 @@ import { Button } from "@mui/material";
 export default function MarketplaceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const listings = JSON.parse(localStorage.getItem("listings") || "[]");
-  const listing = listings.find(
-    (l) => l.id.toString() === id && l.status === "active"
-  );
-  const dealerInfo = listing.dealership ? dealers[listing.dealership] : null;
+
+  const [listing, setListing] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+
   const [downPayment, setDownPayment] = useState("");
-  const [customPrice, setCustomPrice] = useState(listing.price);
-  const [customRate, setCustomRate] = useState(listing.interestRate);
-  const [customTerm, setCustomTerm] = useState(listing.term);
+  const [customPrice, setCustomPrice] = useState(0);
+  const [customRate, setCustomRate] = useState(0);
+  const [customTerm, setCustomTerm] = useState(0);
   const [frequency, setFrequency] = useState("bi-weekly");
   const minRate = 5.29;
   const maxRate = 24.99;
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
-  const mainImage = listing.photos[mainImageIndex];
+
+  useEffect(() => {
+    const fetchListing = async () => {
+      setLoading(true);
+      setLoadError("");
+
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/marketplace/${id}`,
+        );
+        const json = await res.json();
+
+        if (!res.ok || !json.success) {
+          setListing(null);
+          setLoadError(json.message || "Listing not found");
+          return;
+        }
+
+        setListing(json.data);
+
+        setCustomPrice(Number(json.data.price || 0));
+        setCustomRate(Number(json.data.interestRate || 0));
+        setCustomTerm(Number(json.data.term || 0));
+        setDownPayment("");
+        setMainImageIndex(0);
+      } catch (err) {
+        console.error("Failed to load listing", err);
+        setListing(null);
+        setLoadError("Failed to load listing");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchListing();
+  }, [id]);
+
+  const dealerInfo = useMemo(() => {
+    if (!listing) return null;
+    return listing.dealership ? dealers[listing.dealership] : null;
+  }, [listing]);
+
+  const photos = listing?.photos || [];
+  const mainImage = photos[mainImageIndex] || "";
 
   const handleImageNav = (direction) => {
-    const total = listing.photos.length;
+    const total = photos.length;
+    if (!total) return;
     const newIndex = (mainImageIndex + direction + total) % total;
     setMainImageIndex(newIndex);
   };
 
   const handleShare = () => {
+    if (!listing) return;
+
     const shareData = {
       title: `${listing.year} ${listing.make} ${listing.model}`,
       text: "Check out this listing on NLP Finance Marketplace!",
@@ -41,7 +87,7 @@ export default function MarketplaceDetail() {
     if (navigator.share) {
       navigator
         .share(shareData)
-        .catch((err) => console.error("Error sharing:", err));
+        .catch((err) => console.error("Share error:", err));
     } else {
       navigator.clipboard.writeText(window.location.href).then(() => {
         alert("Link copied to clipboard!");
@@ -49,11 +95,35 @@ export default function MarketplaceDetail() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="marketplace-detail">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          &larr; Back to Listings
+        </button>
+        <h2>Loading listing...</h2>
+      </div>
+    );
+  }
+
+  if (!listing) {
+    return (
+      <div className="marketplace-detail">
+        <button className="back-button" onClick={() => navigate(-1)}>
+          &larr; Back to Listings
+        </button>
+        <h2>Listing not found</h2>
+        <p>{loadError || "This listing may be sold or no longer available."}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="marketplace-detail">
       <button className="back-button" onClick={() => navigate(-1)}>
         &larr; Back to Listings
       </button>
+
       <h2>
         {listing.year} {listing.make} {listing.model}
       </h2>
@@ -68,9 +138,20 @@ export default function MarketplaceDetail() {
             >
               &#10094;
             </button>
-            <a href={mainImage} target="_blank" rel="noopener noreferrer">
-              <img className="main-image" src={mainImage} alt="Main unit" />
-            </a>
+
+            {mainImage ? (
+              <a href={mainImage} target="_blank" rel="noopener noreferrer">
+                <img className="main-image" src={mainImage} alt="Main unit" />
+              </a>
+            ) : (
+              <div
+                className="main-image"
+                style={{ display: "grid", placeItems: "center" }}
+              >
+                No image
+              </div>
+            )}
+
             <button
               className="image-arrow right"
               onClick={() => handleImageNav(1)}
@@ -81,7 +162,7 @@ export default function MarketplaceDetail() {
           </div>
 
           <div className="thumbnail-row">
-            {listing.photos.map((url, idx) => (
+            {photos.map((url, idx) => (
               <img
                 key={idx}
                 src={url}
@@ -95,7 +176,7 @@ export default function MarketplaceDetail() {
 
         <div className="detail-sidebar">
           <p className="price">
-            ${listing.price.toLocaleString()}
+            ${Number(listing.price || 0).toLocaleString()}
             <span className="plus-hst">+ HST</span>
           </p>
 
@@ -108,13 +189,14 @@ export default function MarketplaceDetail() {
                 weekly: calculateWeekly,
                 monthly: calculateMonthly,
               }[frequency](
-                customPrice - Number(downPayment || 0),
-                customRate,
-                customTerm
+                Number(customPrice || 0) - Number(downPayment || 0),
+                Number(customRate || 0),
+                Number(customTerm || 0),
               )}{" "}
               / {frequency.charAt(0).toUpperCase() + frequency.slice(1)}
             </div>
           </div>
+
           <div className="payment-calculator">
             <label>
               Product Price ($):
@@ -135,7 +217,7 @@ export default function MarketplaceDetail() {
                 value={downPayment}
                 onChange={(e) => {
                   const value = e.target.value;
-                  if (Number(value) <= customPrice) {
+                  if (Number(value) <= Number(customPrice || 0)) {
                     setDownPayment(value);
                   }
                 }}
@@ -188,13 +270,19 @@ export default function MarketplaceDetail() {
               </select>
             </label>
           </div>
+
           <p className="calculator-disclaimer">
             *Payment amount is an estimate for illustrative purposes only. HST
             and other fees not included. All clients are subject to credit
             approval.
           </p>
 
-          <a href="/finance" target="_blank" className="apply-now-btn">
+          <a
+            href="/finance"
+            target="_blank"
+            className="apply-now-btn"
+            rel="noreferrer"
+          >
             Apply Now
           </a>
 
@@ -234,6 +322,7 @@ export default function MarketplaceDetail() {
           </div>
         </div>
       </div>
+
       <div className="info-row">
         <div className="specs">
           <h3>Specifications</h3>

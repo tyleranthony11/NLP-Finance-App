@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./PostAdForm.css";
-const fileToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
+
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
     reader.readAsDataURL(file);
   });
-};
 
 function PostAdForm() {
   const [formData, setFormData] = useState({
@@ -25,48 +26,101 @@ function PostAdForm() {
     photos: [],
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
     if (name === "photos") {
-      setFormData({ ...formData, photos: Array.from(files) });
-    } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prev) => ({ ...prev, photos: Array.from(files || []) }));
+      return;
     }
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    const base64Photos = await Promise.all(
-      formData.photos.map((photoFile) => fileToBase64(photoFile))
-    );
+    try {
+      const base64Photos = await Promise.all(
+        (formData.photos || []).map((photoFile) => fileToBase64(photoFile)),
+      );
 
-    const listingData = {
-      ...formData,
-      photos: base64Photos,
-      status: "pending",
-      id: Date.now(),
-    };
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        category: formData.category,
+        year: formData.year ? Number(formData.year) : null,
+        make: formData.make,
+        model: formData.model,
+        kms: formData.kms ? Number(formData.kms) : null,
+        price: formData.price ? Number(formData.price) : null,
+        description: formData.description,
+        photos: base64Photos,
+        status: "pending",
+      };
 
-    const listings = JSON.parse(localStorage.getItem("listings")) || [];
-    listings.push(listingData);
-    localStorage.setItem("listings", JSON.stringify(listings));
+      const url = `${import.meta.env.VITE_API_URL}/api/marketplace`;
+      console.log("POSTING TO:", url);
+      console.log("PAYLOAD SIZE (chars):", JSON.stringify(payload).length);
 
-    toast.success("Your listing has been submitted for review!");
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      category: "",
-      year: "",
-      make: "",
-      model: "",
-      kms: "",
-      price: "",
-      description: "",
-      photos: [],
-    });
+      const contentType = res.headers.get("content-type") || "";
+      const raw = await res.text();
+
+      console.log("STATUS:", res.status);
+      console.log("RESPONSE TEXT (first 500):", raw.slice(0, 500));
+
+      let json = null;
+      if (contentType.includes("application/json")) {
+        try {
+          json = JSON.parse(raw);
+        } catch (e) {
+          // JSON header but invalid JSON body
+        }
+      }
+
+      if (!res.ok) {
+        const msg = json?.message || `Request failed (${res.status})`;
+        toast.error(msg);
+        return;
+      }
+
+      if (json && json.success === false) {
+        toast.error(json.message || "Failed to submit listing.");
+        return;
+      }
+
+      toast.success("Your listing has been submitted for review!");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        year: "",
+        make: "",
+        model: "",
+        kms: "",
+        price: "",
+        description: "",
+        photos: [],
+      });
+    } catch (err) {
+      console.error("Submit listing failed:", err);
+      toast.error("Failed to submit listing.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -76,8 +130,10 @@ function PostAdForm() {
         alt="Marketplace Logo"
         className="marketplace-logo"
       />
+
       <h2>List Your Vehicle for Sale</h2>
       <p>Fill out the form below to submit your unit to our marketplace.</p>
+
       <form onSubmit={handleSubmit} className="post-ad-form">
         <fieldset>
           <legend>Seller Information</legend>
@@ -121,6 +177,7 @@ function PostAdForm() {
             <option value="rv">RV / Travel Trailer</option>
             <option value="automotive">Automotive</option>
           </select>
+
           <input
             type="number"
             name="year"
@@ -135,6 +192,7 @@ function PostAdForm() {
             placeholder="Make"
             required
             value={formData.make}
+            num
             onChange={handleChange}
           />
           <input
@@ -180,10 +238,11 @@ function PostAdForm() {
           />
         </fieldset>
 
-        <button type="submit" className="submit-button">
-          Submit Ad
+        <button type="submit" className="submit-button" disabled={isSubmitting}>
+          {isSubmitting ? "Submitting..." : "Submit Ad"}
         </button>
       </form>
+
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
