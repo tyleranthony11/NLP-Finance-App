@@ -8,14 +8,22 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import dealers from "../../data/dealers";
 import { Autocomplete } from "@mui/material";
+import dealers from "../../data/dealers";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const MAX_PHOTOS = 10;
+
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 
 const PostAd = () => {
-  const navigate = useNavigate();
-
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -33,64 +41,148 @@ const PostAd = () => {
     photos: [],
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (field) => (e) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: e.target.value,
-    }));
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
   const handlePhotoUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    const base64Photos = await Promise.all(
-      files.map((file) => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      })
-    );
+    const files = Array.from(e.target.files || []);
 
-    setForm((prev) => ({
-      ...prev,
-      photos: [...prev.photos, ...base64Photos],
-    }));
+    if (form.photos.length + files.length > MAX_PHOTOS) {
+      toast.error(`You can upload a maximum of ${MAX_PHOTOS} photos.`);
+      e.target.value = "";
+      return;
+    }
+
+    try {
+      const base64Photos = await Promise.all(files.map(fileToBase64));
+      setForm((prev) => ({
+        ...prev,
+        photos: [...prev.photos, ...base64Photos],
+      }));
+    } catch (err) {
+      console.error("Photo upload failed:", err);
+      toast.error("Failed to read one of the photos.");
+    } finally {
+      e.target.value = "";
+    }
   };
 
-  const handleSubmit = () => {
-    const newListing = {
-      ...form,
-      id: Date.now(),
-      status: "active",
-      price: Number(form.price),
-      year: Number(form.year),
-      kms: Number(form.kms),
-      interestRate: Number(form.interestRate),
-      term: Number(form.term),
-    };
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
 
-    const existing = JSON.parse(localStorage.getItem("listings")) || [];
-    localStorage.setItem("listings", JSON.stringify([...existing, newListing]));
+    if (!form.photos || form.photos.length < 1) {
+      toast.error("Please upload at least one photo.");
+      return;
+    }
 
-    toast.success("Listing created successfully!");
-    setForm({
-      name: "",
-      email: "",
-      phone: "",
-      category: "",
-      year: "",
-      make: "",
-      model: "",
-      kms: "",
-      price: "",
-      description: "",
-      interestRate: "",
-      term: "",
-      dealership: "",
-      photos: [],
-    });
+    if (
+      !form.name ||
+      !form.email ||
+      !form.phone ||
+      !form.category ||
+      !form.year ||
+      !form.make ||
+      !form.model ||
+      !form.price ||
+      !form.description
+    ) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const createPayload = {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        category: form.category,
+        year: Number(form.year),
+        make: form.make,
+        model: form.model,
+        kms: form.kms ? Number(form.kms) : null,
+        price: Number(form.price),
+        description: form.description,
+        photos: form.photos,
+      };
+
+      const createRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/marketplace`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(createPayload),
+        },
+      );
+
+      const createJson = await createRes.json();
+
+      if (!createRes.ok || !createJson?.success) {
+        console.error("Create listing failed:", createJson);
+        toast.error(
+          createJson?.message ||
+            `Failed to create listing (${createRes.status})`,
+        );
+        return;
+      }
+
+      const created = createJson.data;
+
+      const updatePayload = {
+        status: "active",
+        dealership: form.dealership || null,
+        interestRate: form.interestRate ? Number(form.interestRate) : null,
+        term: form.term ? Number(form.term) : null,
+      };
+
+      const updateRes = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/marketplace/${created.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updatePayload),
+        },
+      );
+
+      const updateJson = await updateRes.json();
+
+      if (!updateRes.ok || !updateJson?.success) {
+        console.error("Activate listing failed:", updateJson);
+        toast.error(
+          updateJson?.message ||
+            `Created but failed to activate (${updateRes.status})`,
+        );
+        return;
+      }
+
+      toast.success("Listing created and added to inventory!");
+
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        year: "",
+        make: "",
+        model: "",
+        kms: "",
+        price: "",
+        description: "",
+        interestRate: "",
+        term: "",
+        dealership: "",
+        photos: [],
+      });
+    } catch (err) {
+      console.error("Post Ad failed:", err);
+      toast.error("Failed to create listing.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -170,6 +262,7 @@ const PostAd = () => {
         fullWidth
         margin="normal"
       />
+
       <TextField
         label="Description"
         value={form.description}
@@ -187,6 +280,7 @@ const PostAd = () => {
         fullWidth
         margin="normal"
       />
+
       <TextField
         select
         label="Term (Months)"
@@ -195,20 +289,18 @@ const PostAd = () => {
         fullWidth
         margin="normal"
       >
-        {[24, 36, 48, 60, 72, 84, 96, 120, 180, 240].map((term) => (
-          <MenuItem key={term} value={term}>
-            {term}
+        {[24, 36, 48, 60, 72, 84, 96, 120, 180, 240].map((t) => (
+          <MenuItem key={t} value={t}>
+            {t}
           </MenuItem>
         ))}
       </TextField>
+
       <Autocomplete
         options={Object.keys(dealers)}
         value={form.dealership}
-        onChange={(event, newValue) => {
-          setForm((prev) => ({
-            ...prev,
-            dealership: newValue || "",
-          }));
+        onChange={(_event, newValue) => {
+          setForm((prev) => ({ ...prev, dealership: newValue || "" }));
         }}
         renderInput={(params) => (
           <TextField {...params} label="Dealership" margin="normal" fullWidth />
@@ -218,7 +310,7 @@ const PostAd = () => {
 
       <Box mt={2}>
         <Button variant="outlined" component="label">
-          Upload Photos
+          Upload Photos (min 1, max 10)
           <input
             type="file"
             accept="image/*"
@@ -244,10 +336,16 @@ const PostAd = () => {
       </Box>
 
       <Box mt={3} display="flex" justifyContent="flex-end">
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Post Ad
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Posting..." : "Post Ad"}
         </Button>
       </Box>
+
       <ToastContainer position="top-center" autoClose={3000} />
     </Paper>
   );
