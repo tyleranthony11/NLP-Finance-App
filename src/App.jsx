@@ -5,6 +5,7 @@ import "aos/dist/aos.css";
 
 import ClientLayout from "./layouts/ClientLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
+import DashboardAuth from "./auth/DashboardAuth";
 
 // Client pages
 import Home from "./pages/Home";
@@ -120,65 +121,81 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <DashboardLayout>
-                <DashboardHome />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <DashboardHome />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/leads"
             element={
-              <DashboardLayout>
-                <Leads />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <Leads />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/inventory"
             element={
-              <DashboardLayout>
-                <Inventory />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <Inventory />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/pending-listings"
             element={
-              <DashboardLayout>
-                <PendingListings />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <PendingListings />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/post-ad"
             element={
-              <DashboardLayout>
-                <PostAd />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <PostAd />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/funded-deals"
             element={
-              <DashboardLayout>
-                <FundedDeals />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <FundedDeals />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/income-reports"
             element={
-              <DashboardLayout>
-                <IncomeReports />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <IncomeReports />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
           <Route
             path="/dashboard/settings"
             element={
-              <DashboardLayout>
-                <Settings />
-              </DashboardLayout>
+              <DashboardAuth>
+                <DashboardLayout>
+                  <Settings />
+                </DashboardLayout>
+              </DashboardAuth>
             }
           />
         </Routes>
