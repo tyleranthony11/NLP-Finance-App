@@ -3,6 +3,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./PostAdForm.css";
 
+const maxImages = 10;
+
 const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -28,11 +30,21 @@ function PostAdForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const MAX_PHOTOS = 10;
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
     if (name === "photos") {
-      setFormData((prev) => ({ ...prev, photos: Array.from(files || []) }));
+      const selected = Array.from(files || []);
+
+      if (selected.length > MAX_PHOTOS) {
+        toast.error(`You can upload a maximum of ${MAX_PHOTOS} photos.`);
+        e.target.value = "";
+        return;
+      }
+
+      setFormData((prev) => ({ ...prev, photos: selected }));
       return;
     }
 
@@ -41,6 +53,11 @@ function PostAdForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.photos || formData.photos.length === 0) {
+      toast.error("Please upload at least one photo.");
+      return;
+    }
     if (isSubmitting) return;
     setIsSubmitting(true);
 
