@@ -256,23 +256,26 @@ function PostAdForm() {
             value={formData.model}
             onChange={handleChange}
           />
-          <input
-            type="number"
-            name="odometerValue"
-            placeholder="Odometer"
-            value={formData.odometerValue}
-            onChange={handleChange}
-          />
-          <select
-            name="odometerUnit"
-            value={formData.odometerUnit}
-            onChange={handleChange}
-            disabled={!formData.odometerValue}
-          >
-            <option value="km">Kilometers</option>
-            <option value="mi">Miles</option>
-            <option value="hrs">Hours</option>
-          </select>
+          <div className="odometer-row">
+            <input
+              type="number"
+              name="odometerValue"
+              placeholder="Odometer"
+              value={formData.odometerValue}
+              onChange={handleChange}
+            />
+            <select
+              name="odometerUnit"
+              value={formData.odometerUnit}
+              onChange={handleChange}
+              disabled={!formData.odometerValue}
+            >
+              <option value="km">Kilometers (km)</option>
+              <option value="mi">Miles (mi)</option>
+              <option value="hrs">Hours (hrs)</option>
+            </select>
+          </div>
+
           <input
             type="number"
             name="price"
