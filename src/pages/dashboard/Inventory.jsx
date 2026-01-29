@@ -6,6 +6,7 @@ import {
   Modal,
   Button,
   TextField,
+  MenuItem,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
@@ -57,13 +58,49 @@ const Inventory = () => {
   };
 
   const handleSaveChanges = async () => {
+    if (!selectedListing) return;
+
     try {
+      const payload = {
+        title: selectedListing.title ?? null,
+        condition: selectedListing.condition ?? null,
+        category: selectedListing.category ?? null,
+        subcategory: selectedListing.subcategory ?? null,
+        year: selectedListing.year ?? null,
+        make: selectedListing.make ?? null,
+        model: selectedListing.model ?? null,
+        price: selectedListing.price ?? null,
+        description: selectedListing.description ?? null,
+        interestRate: selectedListing.interestRate ?? null,
+        term: selectedListing.term ?? null,
+        dealership: selectedListing.dealership ?? null,
+        status: selectedListing.status ?? null,
+      };
+
+      // Odometer: must update together (per your controller)
+      const odoValue = selectedListing.odometerValue;
+      const odoUnit = selectedListing.odometerUnit;
+
+      const hasValue =
+        odoValue !== null && odoValue !== undefined && odoValue !== "";
+      const hasUnit =
+        odoUnit !== null && odoUnit !== undefined && odoUnit !== "";
+
+      if (hasValue && hasUnit) {
+        payload.odometerValue = Number(odoValue);
+        payload.odometerUnit = odoUnit;
+      } else if (!hasValue && !hasUnit) {
+        payload.odometerValue = null;
+        payload.odometerUnit = null;
+      }
+      // else: don't send either (user mid-edit)
+
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(selectedListing),
+          body: JSON.stringify(payload),
         },
       );
 
@@ -76,9 +113,7 @@ const Inventory = () => {
       }
 
       const saved = json.data;
-
       setListings((prev) => prev.map((l) => (l.id === saved.id ? saved : l)));
-
       handleClose();
     } catch (err) {
       console.error("Update listing failed:", err);
@@ -87,6 +122,8 @@ const Inventory = () => {
   };
 
   const handleMarkAsSold = async () => {
+    if (!selectedListing) return;
+
     try {
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
@@ -106,9 +143,7 @@ const Inventory = () => {
       }
 
       const saved = json.data;
-
       setListings((prev) => prev.filter((l) => l.id !== saved.id));
-
       handleClose();
     } catch (err) {
       console.error("Mark as sold failed:", err);
@@ -139,16 +174,42 @@ const Inventory = () => {
       field: "category",
       headerName: "Category",
       flex: 0.5,
-      minWidth: 80,
+      minWidth: 100,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => capitalizeFirstLetter(params.value),
     },
     {
+      field: "subcategory",
+      headerName: "Subcategory",
+      flex: 0.9,
+      minWidth: 140,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "condition",
+      headerName: "Condition",
+      flex: 0.6,
+      minWidth: 110,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) =>
+        params.value ? capitalizeFirstLetter(params.value) : "",
+    },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1.6,
+      minWidth: 180,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
       field: "year",
       headerName: "Year",
       flex: 0.5,
-      minWidth: 80,
+      minWidth: 90,
       headerAlign: "center",
       align: "center",
     },
@@ -156,7 +217,7 @@ const Inventory = () => {
       field: "make",
       headerName: "Make",
       flex: 1,
-      minWidth: 80,
+      minWidth: 110,
       headerAlign: "center",
       align: "center",
     },
@@ -164,15 +225,15 @@ const Inventory = () => {
       field: "model",
       headerName: "Model",
       flex: 1,
-      minWidth: 80,
+      minWidth: 120,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "price",
       headerName: "Price",
-      flex: 0.5,
-      minWidth: 80,
+      flex: 0.6,
+      minWidth: 110,
       headerAlign: "center",
       align: "center",
       renderCell: (params) => (
@@ -184,66 +245,28 @@ const Inventory = () => {
         />
       ),
     },
+
     {
-      field: "kms",
-      headerName: "KMs",
-      flex: 0.5,
-      minWidth: 80,
+      field: "odometer",
+      headerName: "Odometer",
+      flex: 0.8,
+      minWidth: 130,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) => (
-        <NumericFormat
-          value={params.value}
-          displayType="text"
-          thousandSeparator
-        />
-      ),
-    },
-    {
-      field: "name",
-      headerName: "Seller",
-      flex: 0.5,
-      minWidth: 80,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      flex: 0.5,
-      minWidth: 80,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
-      flex: 0.5,
-      minWidth: 80,
-      headerAlign: "center",
-      align: "center",
+      sortable: false,
+      renderCell: (params) => {
+        const v = params?.row?.odometerValue;
+        const u = params?.row?.odometerUnit;
+
+        if (v === null || v === undefined || v === "" || !u) return "";
+        return `${Number(v).toLocaleString()} ${u}`;
+      },
     },
     {
       field: "dealership",
       headerName: "Dealership",
       flex: 1,
-      minWidth: 80,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "interestRate",
-      headerName: "Interest Rate (%)",
-      flex: 0.5,
-      minWidth: 80,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "term",
-      headerName: "Term (Months)",
-      flex: 0.5,
-      minWidth: 80,
+      minWidth: 160,
       headerAlign: "center",
       align: "center",
     },
@@ -254,19 +277,30 @@ const Inventory = () => {
     .map((listing) => ({
       id: listing.id,
       photo: listing.photos?.[0] || "",
+
       category: listing.category || "",
+      subcategory: listing.subcategory || "",
+
+      title: listing.title || "",
+      condition: listing.condition || "",
+
       year: listing.year || "",
       make: listing.make || "",
       model: listing.model || "",
+
+      odometerValue: listing.odometerValue ?? "",
+      odometerUnit: listing.odometerUnit ?? "",
+
       price: listing.price || "",
-      kms: listing.kms || "",
       description: listing.description || "",
+
       name: listing.name || "",
       email: listing.email || "",
       phone: listing.phone || "",
+
       photos: listing.photos || [],
-      interestRate: listing.interestRate || "",
-      term: listing.term || "",
+      interestRate: listing.interestRate ?? "",
+      term: listing.term ?? "",
       dealership: listing.dealership || "",
       status: listing.status || "active",
     }));
@@ -302,18 +336,17 @@ const Inventory = () => {
           columns: {
             columnVisibilityModel: {
               photo: true,
+              title: true,
               year: true,
               make: true,
               model: true,
               price: true,
+              odometer: true,
               dealership: true,
+
               category: false,
-              kms: false,
-              name: false,
-              email: false,
-              phone: false,
-              interestRate: false,
-              term: false,
+              subcategory: false,
+              condition: false,
             },
           },
         }}
@@ -340,6 +373,7 @@ const Inventory = () => {
               <Typography variant="h6" gutterBottom>
                 Edit Listing
               </Typography>
+
               <Typography variant="subtitle1" gutterBottom>
                 <strong>Seller:</strong> {selectedListing.name}
                 <br />
@@ -349,7 +383,7 @@ const Inventory = () => {
               </Typography>
 
               <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
-                {selectedListing.photos.map((src, idx) => (
+                {(selectedListing.photos || []).map((src, idx) => (
                   <Avatar
                     key={idx}
                     variant="rounded"
@@ -360,29 +394,147 @@ const Inventory = () => {
                 ))}
               </Box>
 
-              {[
-                "year",
-                "make",
-                "model",
-                "kms",
-                "price",
-                "description",
-                "interestRate",
-                "term",
-                "dealership",
-              ].map((field) => (
-                <TextField
-                  key={field}
-                  label={field.charAt(0).toUpperCase() + field.slice(1)}
-                  name={field}
-                  value={selectedListing[field]}
-                  onChange={handleInputChange}
-                  fullWidth
-                  margin="normal"
-                  multiline={field === "description"}
-                  rows={field === "description" ? 4 : 1}
-                />
-              ))}
+              <TextField
+                label="Title"
+                name="title"
+                value={selectedListing.title ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                select
+                label="Condition"
+                name="condition"
+                value={selectedListing.condition ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              >
+                <MenuItem value="new">New</MenuItem>
+                <MenuItem value="used">Used</MenuItem>
+              </TextField>
+
+              <TextField
+                label="Category"
+                name="category"
+                value={selectedListing.category ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Subcategory"
+                name="subcategory"
+                value={selectedListing.subcategory ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Year"
+                name="year"
+                value={selectedListing.year ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Make"
+                name="make"
+                value={selectedListing.make ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Model"
+                name="model"
+                value={selectedListing.model ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Odometer Value"
+                name="odometerValue"
+                value={selectedListing.odometerValue ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                select
+                label="Odometer Unit"
+                name="odometerUnit"
+                value={selectedListing.odometerUnit ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+                disabled={
+                  selectedListing.odometerValue === null ||
+                  selectedListing.odometerValue === undefined ||
+                  selectedListing.odometerValue === ""
+                }
+              >
+                <MenuItem value="km">Kilometers</MenuItem>
+                <MenuItem value="mi">Miles</MenuItem>
+                <MenuItem value="hrs">Hours</MenuItem>
+              </TextField>
+
+              <TextField
+                label="Price"
+                name="price"
+                value={selectedListing.price ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Description"
+                name="description"
+                value={selectedListing.description ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={4}
+              />
+
+              <TextField
+                label="Interest Rate"
+                name="interestRate"
+                value={selectedListing.interestRate ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Term"
+                name="term"
+                value={selectedListing.term ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Dealership"
+                name="dealership"
+                value={selectedListing.dealership ?? ""}
+                onChange={handleInputChange}
+                fullWidth
+                margin="normal"
+              />
 
               <Box mt={3} display="flex" justifyContent="space-between">
                 <Button variant="outlined" onClick={handleClose}>

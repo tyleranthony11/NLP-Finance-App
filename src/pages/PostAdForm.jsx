@@ -3,8 +3,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./PostAdForm.css";
 
-const maxImages = 10;
-
 const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -19,10 +17,17 @@ function PostAdForm() {
     email: "",
     phone: "",
     category: "",
+
+    condition: "",
+    title: "",
+
     year: "",
     make: "",
     model: "",
-    kms: "",
+
+    odometerValue: "",
+    odometerUnit: "km",
+
     price: "",
     description: "",
     photos: [],
@@ -71,14 +76,22 @@ function PostAdForm() {
         email: formData.email,
         phone: formData.phone,
         category: formData.category,
+
         year: formData.year ? Number(formData.year) : null,
         make: formData.make,
         model: formData.model,
-        kms: formData.kms ? Number(formData.kms) : null,
+
+        title: formData.title,
+        condition: formData.condition,
+
+        odometerValue: formData.odometerValue
+          ? Number(formData.odometerValue)
+          : null,
+        odometerUnit: formData.odometerValue ? formData.odometerUnit : null,
+
         price: formData.price ? Number(formData.price) : null,
         description: formData.description,
         photos: base64Photos,
-        status: "pending",
       };
 
       const url = `${import.meta.env.VITE_API_URL}/api/marketplace`;
@@ -124,10 +137,17 @@ function PostAdForm() {
         email: "",
         phone: "",
         category: "",
+
+        condition: "",
+        title: "",
+
         year: "",
         make: "",
         model: "",
-        kms: "",
+
+        odometerValue: "",
+        odometerUnit: "km",
+
         price: "",
         description: "",
         photos: [],
@@ -194,7 +214,23 @@ function PostAdForm() {
             <option value="rv">RV / Travel Trailer</option>
             <option value="automotive">Automotive</option>
           </select>
-
+          <select
+            name="condition"
+            required
+            value={formData.condition}
+            onChange={handleChange}
+          >
+            <option value="">Select Condition</option>
+            <option value="new">New</option>
+            <option value="used">Used</option>
+          </select>
+          <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            value={formData.title}
+            onChange={handleChange}
+          />
           <input
             type="number"
             name="year"
@@ -222,11 +258,21 @@ function PostAdForm() {
           />
           <input
             type="number"
-            name="kms"
-            placeholder="Kilometers (optional)"
-            value={formData.kms}
+            name="odometerValue"
+            placeholder="Odometer"
+            value={formData.odometerValue}
             onChange={handleChange}
           />
+          <select
+            name="odometerUnit"
+            value={formData.odometerUnit}
+            onChange={handleChange}
+            disabled={!formData.odometerValue}
+          >
+            <option value="km">Kilometers</option>
+            <option value="mi">Miles</option>
+            <option value="hrs">Hours</option>
+          </select>
           <input
             type="number"
             name="price"

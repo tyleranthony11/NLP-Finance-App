@@ -27,13 +27,23 @@ const PendingListings = () => {
   const [postings, setPostings] = useState([]);
 
   const [photos, setPhotos] = useState([]);
+
   const [category, setCategory] = useState("");
+  const [subcategory, setSubcategory] = useState("");
+
+  const [condition, setCondition] = useState("used");
+  const [title, setTitle] = useState("");
+
   const [year, setYear] = useState("");
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
-  const [kms, setKms] = useState("");
+
+  const [odometerValue, setOdometerValue] = useState("");
+  const [odometerUnit, setOdometerUnit] = useState("km");
+
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
+
   const [interestRate, setInterestRate] = useState("");
   const [term, setTerm] = useState("");
   const [dealership, setDealership] = useState("");
@@ -65,31 +75,54 @@ const PendingListings = () => {
 
   const handleOpen = (post) => {
     setSelectedPost(post);
+
     setPhotos(post.photos || []);
+
     setCategory(post.category || "");
-    setYear(post.year || "");
+    setSubcategory(post.subcategory || "");
+
+    setCondition(post.condition || "used");
+    setTitle(post.title || "");
+
+    setYear(post.year ?? "");
     setMake(post.make || "");
     setModel(post.model || "");
-    setKms(post.kms || "");
-    setPrice(post.price || "");
+
+    setOdometerValue(post.odometerValue ?? "");
+    setOdometerUnit(post.odometerUnit || "km");
+
+    setPrice(post.price ?? "");
     setDescription(post.description || "");
-    setInterestRate(post.interestRate || "");
-    setTerm(post.term || "");
+
+    setInterestRate(post.interestRate ?? "");
+    setTerm(post.term ?? "");
     setDealership(post.dealership || "");
+
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
     setSelectedPost(null);
+
     setPhotos([]);
+
     setCategory("");
+    setSubcategory("");
+
+    setCondition("used");
+    setTitle("");
+
     setYear("");
     setMake("");
     setModel("");
-    setKms("");
+
+    setOdometerValue("");
+    setOdometerUnit("km");
+
     setPrice("");
     setDescription("");
+
     setInterestRate("");
     setTerm("");
     setDealership("");
@@ -98,20 +131,53 @@ const PendingListings = () => {
   const handleApprove = async () => {
     if (!selectedPost) return;
 
+    const computedTitle =
+      title && title.trim().length > 0
+        ? title.trim()
+        : `${year || ""} ${make || ""} ${model || ""}`.trim();
+
+    const hasOdoValue = odometerValue !== "" && odometerValue !== null;
+    const hasOdoUnit = odometerUnit !== "" && odometerUnit !== null;
+
+    let odoPayload = {};
+    if (hasOdoValue && hasOdoUnit) {
+      odoPayload = {
+        odometerValue: Number(odometerValue),
+        odometerUnit,
+      };
+    } else if (!hasOdoValue && !hasOdoUnit) {
+      odoPayload = {
+        odometerValue: null,
+        odometerUnit: null,
+      };
+    } else {
+      alert("Odometer value and unit must be set together (or both blank).");
+      return;
+    }
+
     try {
       const payload = {
         status: "active",
         photos,
+
         category,
+        subcategory: subcategory ? subcategory.trim() : null,
+
+        condition,
+        title: computedTitle || null,
+
         year: year ? Number(year) : null,
         make,
         model,
-        kms: kms ? Number(kms) : null,
+
+        ...odoPayload,
+
         price: price ? Number(price) : null,
         description,
+
         interestRate: interestRate ? Number(interestRate) : null,
         term: term ? Number(term) : null,
-        dealership,
+        dealership: dealership || null,
       };
 
       const res = await fetch(
@@ -131,7 +197,6 @@ const PendingListings = () => {
         return;
       }
 
-      // Remove from pending list UI
       setPostings((prev) => prev.filter((p) => p.id !== selectedPost.id));
       handleClose();
     } catch (err) {
@@ -156,6 +221,7 @@ const PendingListings = () => {
                 <TableCell>Email</TableCell>
                 <TableCell>Phone</TableCell>
                 <TableCell>Category</TableCell>
+                <TableCell>Title</TableCell>
                 <TableCell>Year</TableCell>
                 <TableCell>Make</TableCell>
                 <TableCell>Model</TableCell>
@@ -179,6 +245,7 @@ const PendingListings = () => {
                   <TableCell>{post.email}</TableCell>
                   <TableCell>{post.phone}</TableCell>
                   <TableCell>{post.category}</TableCell>
+                  <TableCell>{post.title || ""}</TableCell>
                   <TableCell>{post.year}</TableCell>
                   <TableCell>{post.make}</TableCell>
                   <TableCell>{post.model}</TableCell>
@@ -324,6 +391,26 @@ const PendingListings = () => {
               </Box>
 
               <TextField
+                label="Title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                select
+                label="Condition"
+                value={condition}
+                onChange={(e) => setCondition(e.target.value)}
+                fullWidth
+                margin="normal"
+              >
+                <MenuItem value="new">New</MenuItem>
+                <MenuItem value="used">Used</MenuItem>
+              </TextField>
+
+              <TextField
                 select
                 label="Category"
                 value={category}
@@ -338,12 +425,21 @@ const PendingListings = () => {
               </TextField>
 
               <TextField
+                label="Subcategory"
+                value={subcategory}
+                onChange={(e) => setSubcategory(e.target.value)}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
                 label="Year"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
                 fullWidth
                 margin="normal"
               />
+
               <TextField
                 label="Make"
                 value={make}
@@ -351,6 +447,7 @@ const PendingListings = () => {
                 fullWidth
                 margin="normal"
               />
+
               <TextField
                 label="Model"
                 value={model}
@@ -358,13 +455,31 @@ const PendingListings = () => {
                 fullWidth
                 margin="normal"
               />
-              <TextField
-                label="Kilometers"
-                value={kms}
-                onChange={(e) => setKms(e.target.value)}
-                fullWidth
-                margin="normal"
-              />
+
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  label="Odometer Value"
+                  value={odometerValue}
+                  onChange={(e) => setOdometerValue(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                />
+
+                <TextField
+                  select
+                  label="Unit"
+                  value={odometerUnit}
+                  onChange={(e) => setOdometerUnit(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  disabled={odometerValue === "" || odometerValue === null}
+                >
+                  <MenuItem value="km">Kilometers</MenuItem>
+                  <MenuItem value="mi">Miles</MenuItem>
+                  <MenuItem value="hrs">Hours</MenuItem>
+                </TextField>
+              </Box>
+
               <TextField
                 label="Price"
                 type="number"
@@ -373,6 +488,7 @@ const PendingListings = () => {
                 fullWidth
                 margin="normal"
               />
+
               <TextField
                 label="Description"
                 value={description}
