@@ -28,16 +28,27 @@ const PostAd = () => {
     name: "",
     email: "",
     phone: "",
+
     category: "",
+    subcategory: "",
+
+    condition: "used",
+    title: "",
+
     year: "",
     make: "",
     model: "",
-    kms: "",
+
+    odometerValue: "",
+    odometerUnit: "km",
+
     price: "",
     description: "",
+
     interestRate: "",
     term: "",
     dealership: "",
+
     photos: [],
   });
 
@@ -87,7 +98,8 @@ const PostAd = () => {
       !form.make ||
       !form.model ||
       !form.price ||
-      !form.description
+      !form.description ||
+      !form.condition
     ) {
       toast.error("Please fill out all required fields.");
       return;
@@ -96,15 +108,30 @@ const PostAd = () => {
     setIsSubmitting(true);
 
     try {
+      // Only send odometer fields if there is a value
+      const odoValue =
+        form.odometerValue === "" || form.odometerValue === null
+          ? null
+          : Number(form.odometerValue);
+
       const createPayload = {
         name: form.name,
         email: form.email,
         phone: form.phone,
+
         category: form.category,
+        subcategory: form.subcategory?.trim() ? form.subcategory.trim() : null,
+
+        title: form.title?.trim() ? form.title.trim() : "",
+        condition: form.condition, // "new" | "used"
+
         year: Number(form.year),
         make: form.make,
         model: form.model,
-        kms: form.kms ? Number(form.kms) : null,
+
+        odometerValue: odoValue,
+        odometerUnit: odoValue ? form.odometerUnit : null, // "km" | "mi" | "hrs"
+
         price: Number(form.price),
         description: form.description,
         photos: form.photos,
@@ -165,16 +192,27 @@ const PostAd = () => {
         name: "",
         email: "",
         phone: "",
+
         category: "",
+        subcategory: "",
+
+        condition: "used",
+        title: "",
+
         year: "",
         make: "",
         model: "",
-        kms: "",
+
+        odometerValue: "",
+        odometerUnit: "km",
+
         price: "",
         description: "",
+
         interestRate: "",
         term: "",
         dealership: "",
+
         photos: [],
       });
     } catch (err) {
@@ -228,6 +266,36 @@ const PostAd = () => {
       </TextField>
 
       <TextField
+        label="Subcategory"
+        value={form.subcategory}
+        onChange={handleChange("subcategory")}
+        fullWidth
+        margin="normal"
+        placeholder="e.g. ATV, Side-by-side, Dirt Bike, Snowmobile"
+      />
+
+      <TextField
+        select
+        label="Condition"
+        value={form.condition}
+        onChange={handleChange("condition")}
+        fullWidth
+        margin="normal"
+      >
+        <MenuItem value="new">New</MenuItem>
+        <MenuItem value="used">Used</MenuItem>
+      </TextField>
+
+      <TextField
+        label="Title (optional)"
+        value={form.title}
+        onChange={handleChange("title")}
+        fullWidth
+        margin="normal"
+        placeholder="Leave blank to auto-generate"
+      />
+
+      <TextField
         label="Year"
         value={form.year}
         onChange={handleChange("year")}
@@ -248,13 +316,30 @@ const PostAd = () => {
         fullWidth
         margin="normal"
       />
-      <TextField
-        label="Kilometers"
-        value={form.kms}
-        onChange={handleChange("kms")}
-        fullWidth
-        margin="normal"
-      />
+
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <TextField
+          label="Odometer (optional)"
+          value={form.odometerValue}
+          onChange={handleChange("odometerValue")}
+          fullWidth
+          margin="normal"
+          type="number"
+        />
+        <TextField
+          select
+          label="Unit"
+          value={form.odometerUnit}
+          onChange={handleChange("odometerUnit")}
+          sx={{ width: 140 }}
+          margin="normal"
+        >
+          <MenuItem value="km">km</MenuItem>
+          <MenuItem value="mi">mi</MenuItem>
+          <MenuItem value="hrs">hrs</MenuItem>
+        </TextField>
+      </Box>
+
       <TextField
         label="Price"
         value={form.price}
