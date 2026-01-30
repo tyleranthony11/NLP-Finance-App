@@ -9,6 +9,9 @@ function Marketplace() {
   const [priceRange, setPriceRange] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
   const [inventoryListings, setInventoryListings] = useState([]);
+  const [selectedConditions, setSelectedConditions] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
+  const [selectedOdoUnits, setSelectedOdoUnits] = useState([]);
 
   useEffect(() => {
     const fetchActiveListings = async () => {
@@ -41,6 +44,20 @@ function Marketplace() {
     ),
   ).filter(Boolean);
 
+  const allSubcategories = Array.from(
+    new Set(
+      inventoryListings
+        .map((item) => (item.subcategory || "").trim())
+        .filter(Boolean),
+    ),
+  ).sort((a, b) => a.localeCompare(b));
+
+  const allConditions = ["new", "used"];
+
+  const allOdoUnits = Array.from(
+    new Set(inventoryListings.map((item) => item.odometerUnit).filter(Boolean)),
+  ).sort();
+
   const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
 
@@ -50,6 +67,24 @@ function Marketplace() {
     if (
       selectedCategories.length > 0 &&
       !selectedCategories.includes(item.category)
+    )
+      return false;
+
+    if (
+      selectedConditions.length > 0 &&
+      !selectedConditions.includes((item.condition || "").toLowerCase())
+    )
+      return false;
+
+    if (
+      selectedSubcategories.length > 0 &&
+      !selectedSubcategories.includes((item.subcategory || "").trim())
+    )
+      return false;
+
+    if (
+      selectedOdoUnits.length > 0 &&
+      !selectedOdoUnits.includes(item.odometerUnit)
     )
       return false;
 
@@ -120,6 +155,28 @@ function Marketplace() {
               </label>
             ))}
           </div>
+          <div className="filter-group">
+            <h4>Condition</h4>
+            {allConditions.map((c) => (
+              <label key={c}>
+                <input
+                  type="checkbox"
+                  value={c}
+                  checked={selectedConditions.includes(c)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (e.target.checked)
+                      setSelectedConditions((prev) => [...prev, value]);
+                    else
+                      setSelectedConditions((prev) =>
+                        prev.filter((x) => x !== value),
+                      );
+                  }}
+                />
+                {c.charAt(0).toUpperCase() + c.slice(1)}
+              </label>
+            ))}
+          </div>
 
           <div className="filter-group">
             <h4>Category</h4>
@@ -142,6 +199,36 @@ function Marketplace() {
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </label>
             ))}
+          </div>
+
+          <div className="filter-group">
+            <h4>Subcategory</h4>
+
+            {allSubcategories.length === 0 ? (
+              <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
+                No subcategories yet.
+              </p>
+            ) : (
+              allSubcategories.map((subcat) => (
+                <label key={subcat}>
+                  <input
+                    type="checkbox"
+                    value={subcat}
+                    checked={selectedSubcategories.includes(subcat)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (e.target.checked)
+                        setSelectedSubcategories((prev) => [...prev, value]);
+                      else
+                        setSelectedSubcategories((prev) =>
+                          prev.filter((s) => s !== value),
+                        );
+                    }}
+                  />
+                  {subcat}
+                </label>
+              ))
+            )}
           </div>
 
           <div className="filter-group">

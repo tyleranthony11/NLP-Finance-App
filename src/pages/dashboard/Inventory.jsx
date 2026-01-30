@@ -10,12 +10,17 @@ import {
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
+import ImportInventoryModal from "../../components/ImportInventoryModal";
+
 import { capitalizeFirstLetter } from "../../utils.js";
 
 const Inventory = () => {
   const [listings, setListings] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importFile, setImportFile] = useState(null);
+  const [importDealership, setImportDealership] = useState("");
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -77,7 +82,6 @@ const Inventory = () => {
         status: selectedListing.status ?? null,
       };
 
-      // Odometer: must update together (per your controller)
       const odoValue = selectedListing.odometerValue;
       const odoUnit = selectedListing.odometerUnit;
 
@@ -93,7 +97,6 @@ const Inventory = () => {
         payload.odometerValue = null;
         payload.odometerUnit = null;
       }
-      // else: don't send either (user mid-edit)
 
       const res = await fetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
@@ -149,6 +152,16 @@ const Inventory = () => {
       console.error("Mark as sold failed:", err);
       alert("Failed to mark as sold");
     }
+  };
+  const handleImport = async () => {
+    if (!importFile || !importDealership) return;
+
+    console.log("IMPORT FILE:", importFile);
+    console.log("DEALERSHIP:", importDealership);
+
+    setImportOpen(false);
+    setImportFile(null);
+    setImportDealership("");
   };
 
   const columns = [
@@ -319,7 +332,11 @@ const Inventory = () => {
           Inventory
         </Typography>
 
-        <Button variant="contained" color="primary">
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setImportOpen(true)}
+        >
           Import
         </Button>
       </Box>
@@ -562,6 +579,15 @@ const Inventory = () => {
           )}
         </Box>
       </Modal>
+      <ImportInventoryModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onImport={handleImport}
+        file={importFile}
+        setFile={setImportFile}
+        dealership={importDealership}
+        setDealership={setImportDealership}
+      />
     </Box>
   );
 };
