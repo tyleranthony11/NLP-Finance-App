@@ -24,6 +24,23 @@ export default function MarketplaceDetail() {
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
 
+  const formatOdometer = (odoValue, odoUnit) => {
+    if (odoValue === null || odoValue === undefined || odoValue === "")
+      return "N/A";
+    if (!odoUnit) return Number(odoValue).toLocaleString();
+
+    const unitLabel =
+      odoUnit === "km"
+        ? "km"
+        : odoUnit === "mi"
+          ? "mi"
+          : odoUnit === "hrs"
+            ? "hrs"
+            : odoUnit;
+
+    return `${Number(odoValue).toLocaleString()} ${unitLabel}`;
+  };
+
   useEffect(() => {
     const fetchListing = async () => {
       setLoading(true);
@@ -79,7 +96,8 @@ export default function MarketplaceDetail() {
     if (!listing) return;
 
     const shareData = {
-      title: `${listing.year} ${listing.make} ${listing.model}`,
+      title:
+        listing.title || `${listing.year} ${listing.make} ${listing.model}`,
       text: "Check out this listing on NLP Finance Marketplace!",
       url: window.location.href,
     };
@@ -125,7 +143,7 @@ export default function MarketplaceDetail() {
       </button>
 
       <h2>
-        {listing.year} {listing.make} {listing.model}
+        {listing.title || `${listing.year} ${listing.make} ${listing.model}`}
       </h2>
 
       <div className="detail-layout">
@@ -336,7 +354,12 @@ export default function MarketplaceDetail() {
             <strong>Model:</strong> {listing.model}
           </div>
           <div>
-            <strong>Odometer:</strong> {listing.kms} km
+            <strong>Condition:</strong>{" "}
+            {listing.condition ? listing.condition.toUpperCase() : "N/A"}
+          </div>
+          <div>
+            <strong>Odometer:</strong>{" "}
+            {formatOdometer(listing.odometerValue, listing.odometerUnit)}
           </div>
         </div>
 

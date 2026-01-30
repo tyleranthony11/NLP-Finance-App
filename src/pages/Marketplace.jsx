@@ -23,7 +23,6 @@ function Marketplace() {
           return;
         }
 
-        // This endpoint should already be active-only, but filtering is safe.
         const active = (json.data || []).filter(
           (item) => item.status === "active",
         );
