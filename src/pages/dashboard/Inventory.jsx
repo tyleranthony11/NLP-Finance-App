@@ -156,12 +156,36 @@ const Inventory = () => {
   const handleImport = async () => {
     if (!importFile || !importDealership) return;
 
-    console.log("IMPORT FILE:", importFile);
-    console.log("DEALERSHIP:", importDealership);
+    try {
+      const fd = new FormData();
+      fd.append("dealership", importDealership);
+      fd.append("file", importFile);
 
-    setImportOpen(false);
-    setImportFile(null);
-    setImportDealership("");
+      const url = `${import.meta.env.VITE_API_URL}/api/marketplace/import`;
+
+      const res = await fetch(url, {
+        method: "POST",
+        body: fd,
+      });
+
+      const json = await res.json().catch(() => null);
+
+      if (!res.ok || !json?.success) {
+        console.error("IMPORT FAILED:", json);
+        alert(json?.message || `Import failed (${res.status})`);
+        return;
+      }
+
+      const created = json.data || [];
+      setListings((prev) => [...created, ...prev]);
+
+      setImportOpen(false);
+      setImportFile(null);
+      setImportDealership("");
+    } catch (err) {
+      console.error("IMPORT ERROR:", err);
+      alert("Import failed");
+    }
   };
 
   const columns = [
@@ -337,7 +361,7 @@ const Inventory = () => {
           color="primary"
           onClick={() => setImportOpen(true)}
         >
-          Import
+          Import CSV
         </Button>
       </Box>
 
