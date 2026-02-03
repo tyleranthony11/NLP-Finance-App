@@ -359,7 +359,15 @@ const Inventory = () => {
     }));
 
   return (
-    <Box sx={{ height: 600, width: "100%", padding: 3 }}>
+    <Box
+      sx={{
+        height: "calc(100vh - 75px)",
+        width: "100%",
+        p: 3,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Box
         sx={{
           display: "flex",
