@@ -18,21 +18,52 @@ const DashboardHome = () => {
   const currentMonth = dayjs().format("MMMM");
 
   useEffect(() => {
-    const listings = JSON.parse(localStorage.getItem("listings")) || [];
-    setActiveListings(listings.filter((l) => l.status === "active").length);
-    setPendingListings(listings.filter((l) => l.status === "pending").length);
+    const fetchDashboardData = async () => {
+      try {
+        const listingsRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/marketplace/admin`,
+        );
+        const listingsJson = await listingsRes.json();
 
-    const leads = JSON.parse(localStorage.getItem("financeFormDataList")) || [];
-    setNewLeads(leads.filter((lead) => !lead.confirmed).length);
+        if (listingsJson.success) {
+          const listings = listingsJson.data || [];
+          setActiveListings(
+            listings.filter((l) => l.status === "active").length,
+          );
+          setPendingListings(
+            listings.filter((l) => l.status === "pending").length,
+          );
+        }
 
-    const savedDeals = JSON.parse(localStorage.getItem("fundedDeals")) || [];
-    const now = dayjs();
-    const filteredDeals = savedDeals.filter(
-      (deal) =>
-        dayjs(deal.date).year() === now.year() &&
-        dayjs(deal.date).month() === now.month()
-    );
-    setCurrentMonthDealsCount(filteredDeals.length);
+        const leadsRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/leads`,
+        );
+        const leadsJson = await leadsRes.json();
+
+        if (leadsJson.success) {
+          const leads = leadsJson.data || [];
+          setNewLeads(leads.filter((lead) => !lead.confirmed).length);
+        }
+
+        const dealsRes = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/funded-deals`,
+        );
+        const dealsJson = await dealsRes.json();
+
+        if (dealsJson.success) {
+          const now = dayjs();
+          const currentMonthDeals = (dealsJson.data || []).filter((deal) =>
+            dayjs(deal.dealDate).isSame(now, "month"),
+          );
+
+          setCurrentMonthDealsCount(currentMonthDeals.length);
+        }
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
   return (
