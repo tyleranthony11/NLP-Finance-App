@@ -1,5 +1,0 @@
-category,year,make,model,price,description,condition,subcategory,odometerValue,odometerUnit,images
-powersports,2022,Ski-Doo,Renegade 850,12999,Clean sled - test import,used,Snowmobile,3500,km,https://example.com/img1.jpg|https://example.com/img2.jpg
-marine,2019,Sea-Doo,GTI 130,8999,Great condition - test import,used,PWC,120,hrs,https://example.com/img3.jpg
-rv,2020,Jayco,Jay Flight 267BHS,27999,Family trailer - test import,used,Travel Trailer,0,km,https://example.com/img4.jpg
-automotive,2018,Ford,F-150 XLT,23999,Truck - test import,used,Pickup,145000,km,https://example.com/img5.jpg
