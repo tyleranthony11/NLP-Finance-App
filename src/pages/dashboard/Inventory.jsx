@@ -307,6 +307,22 @@ const Inventory = () => {
       headerAlign: "center",
       align: "center",
     },
+    {
+      field: "interestRate",
+      headerName: "Interest Rate",
+      flex: 0.6,
+      minWidth: 160,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "term",
+      headerName: "Term",
+      flex: 0.6,
+      minWidth: 160,
+      headerAlign: "center",
+      align: "center",
+    },
   ];
 
   const rows = listings
