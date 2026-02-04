@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { calculateBiWeekly } from "../utils";
 import "./Marketplace.css";
@@ -44,19 +44,54 @@ function Marketplace() {
     ),
   ).filter(Boolean);
 
-  const allSubcategories = Array.from(
-    new Set(
-      inventoryListings
-        .map((item) => (item.subcategory || "").trim())
-        .filter(Boolean),
-    ),
-  ).sort((a, b) => a.localeCompare(b));
-
   const allConditions = ["new", "used"];
 
   const allOdoUnits = Array.from(
     new Set(inventoryListings.map((item) => item.odometerUnit).filter(Boolean)),
   ).sort();
+
+  // category -> subcategories map
+  const subcategoriesByCategory = useMemo(() => {
+    const map = new Map();
+
+    for (const item of inventoryListings) {
+      const category = (item.category || "").trim();
+      const subcat = (item.subcategory || "").trim();
+      if (!category || !subcat) continue;
+
+      if (!map.has(category)) map.set(category, new Set());
+      map.get(category).add(subcat);
+    }
+
+    return map;
+  }, [inventoryListings]);
+
+  // only show subcategories for selected category(ies)
+  const availableSubcategories = useMemo(() => {
+    if (selectedCategories.length === 0) return [];
+
+    const set = new Set();
+    for (const cat of selectedCategories) {
+      const s = subcategoriesByCategory.get(cat);
+      if (!s) continue;
+      for (const sub of s) set.add(sub);
+    }
+
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [selectedCategories, subcategoriesByCategory]);
+
+  // clear/prune invalid subcategory selections when category changes
+  useEffect(() => {
+    if (selectedCategories.length === 0) {
+      if (selectedSubcategories.length > 0) setSelectedSubcategories([]);
+      return;
+    }
+
+    setSelectedSubcategories((prev) =>
+      prev.filter((s) => availableSubcategories.includes(s)),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategories, availableSubcategories]);
 
   const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
@@ -129,6 +164,7 @@ function Marketplace() {
   return (
     <div className="marketplace-container">
       <h1>Marketplace</h1>
+
       <div className="marketplace-content">
         <aside className="marketplace-filters">
           <h3>Filters</h3>
@@ -155,6 +191,7 @@ function Marketplace() {
               </label>
             ))}
           </div>
+
           <div className="filter-group">
             <h4>Condition</h4>
             {allConditions.map((c) => (
@@ -201,35 +238,38 @@ function Marketplace() {
             ))}
           </div>
 
-          <div className="filter-group">
-            <h4>Subcategory</h4>
+          {/* Hide subcategory until category is selected */}
+          {selectedCategories.length > 0 && (
+            <div className="filter-group">
+              <h4>Subcategory</h4>
 
-            {allSubcategories.length === 0 ? (
-              <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
-                No subcategories yet.
-              </p>
-            ) : (
-              allSubcategories.map((subcat) => (
-                <label key={subcat}>
-                  <input
-                    type="checkbox"
-                    value={subcat}
-                    checked={selectedSubcategories.includes(subcat)}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (e.target.checked)
-                        setSelectedSubcategories((prev) => [...prev, value]);
-                      else
-                        setSelectedSubcategories((prev) =>
-                          prev.filter((s) => s !== value),
-                        );
-                    }}
-                  />
-                  {subcat}
-                </label>
-              ))
-            )}
-          </div>
+              {availableSubcategories.length === 0 ? (
+                <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
+                  No subcategories for selected category.
+                </p>
+              ) : (
+                availableSubcategories.map((subcat) => (
+                  <label key={subcat}>
+                    <input
+                      type="checkbox"
+                      value={subcat}
+                      checked={selectedSubcategories.includes(subcat)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (e.target.checked)
+                          setSelectedSubcategories((prev) => [...prev, value]);
+                        else
+                          setSelectedSubcategories((prev) =>
+                            prev.filter((s) => s !== value),
+                          );
+                      }}
+                    />
+                    {subcat}
+                  </label>
+                ))
+              )}
+            </div>
+          )}
 
           <div className="filter-group">
             <h4>Price Range</h4>
@@ -287,10 +327,12 @@ function Marketplace() {
                   <h3>
                     {item.year} {item.make} {item.model}
                   </h3>
+
                   <p>
                     <strong>Price:</strong> $
                     {Number(item.price || 0).toLocaleString()}
                   </p>
+
                   <p>
                     <strong>Payment:</strong> $
                     {calculateBiWeekly(
@@ -300,6 +342,7 @@ function Marketplace() {
                     )}{" "}
                     bi-weekly
                   </p>
+
                   <p id="terms">
                     Based on {item.term} months at {item.interestRate}% APR
                   </p>
