@@ -35,6 +35,12 @@ const dealers = {
     website: "https://marblerv.ca/",
     location: "Corner Brook, NL",
   },
+  "Merle's Parts & Recreation": {
+    name: "Merle's Parts & Recreation",
+    logo: "/images/dealers/merles-recreation.png",
+    website: "https://www.partsandrecreation.ca/",
+    location: "Grand Falls-Windsor, NL",
+  },
   "MF Motorsports": {
     name: "MF Motorsports",
     logo: "/images/dealers/mf-motors.png",
