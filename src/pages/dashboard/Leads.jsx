@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { authFetch } from "../../auth/authFetch.js";
 import {
   Box,
   Button,
@@ -28,7 +29,10 @@ function Leads() {
   useEffect(() => {
     const fetchLeads = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/leads`);
+        const res = await authFetch(
+          `${import.meta.env.VITE_API_URL}/api/leads`,
+        );
+        if (!res) return;
         const json = await res.json();
 
         if (json.success) {
@@ -44,19 +48,19 @@ function Leads() {
 
   const handleConfirm = async (lead) => {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/leads/${lead.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             followedUp: true,
             followedUpAt: new Date().toISOString(),
           }),
-        }
+        },
       );
-
+      if (!res) return;
       const json = await res.json();
+
       if (json.success) {
         setLeads((prev) => prev.map((l) => (l.id === lead.id ? json.data : l)));
       }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { authFetch } from "../../auth/authFetch.js";
 import { Box, Button, Typography } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
@@ -30,15 +31,16 @@ const styles = {
 const FundedDeals = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalOpen, setModalOpen] = useState(false);
-
   const [deals, setDeals] = useState([]);
 
   useEffect(() => {
     const fetchDeals = async () => {
       try {
-        const res = await fetch(
+        const res = await authFetch(
           `${import.meta.env.VITE_API_URL}/api/funded-deals`,
         );
+        if (!res) return;
+
         const json = await res.json();
 
         if (json.success) {
@@ -85,6 +87,29 @@ const FundedDeals = () => {
       fixedDecimalScale
     />
   );
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await authFetch(
+        `${import.meta.env.VITE_API_URL}/api/funded-deals/${id}`,
+        { method: "DELETE" },
+      );
+      if (!res) return;
+
+      const json = await res.json();
+
+      if (!json.success) {
+        console.error("Delete funded deal failed:", json.message || json);
+        alert(json.message || "Failed to delete funded deal");
+        return;
+      }
+
+      setDeals((prev) => prev.filter((d) => d.id !== id));
+    } catch (err) {
+      console.error("Delete funded deal failed:", err);
+      alert("Failed to delete funded deal");
+    }
+  };
 
   const columns = [
     {
@@ -190,38 +215,17 @@ const FundedDeals = () => {
       ),
     },
   ];
-  const handleDelete = async (id) => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/funded-deals/${id}`,
-        { method: "DELETE" },
-      );
-
-      const json = await res.json();
-
-      if (!json.success) {
-        console.error("Delete funded deal failed:", json.message || json);
-        alert(json.message || "Failed to delete funded deal");
-        return;
-      }
-
-      setDeals((prev) => prev.filter((d) => d.id !== id));
-    } catch (err) {
-      console.error("Delete funded deal failed:", err);
-      alert("Failed to delete funded deal");
-    }
-  };
 
   const handleAddDeal = async (newDeal) => {
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/funded-deals`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newDeal),
         },
       );
+      if (!res) return;
 
       const json = await res.json();
 
@@ -239,57 +243,42 @@ const FundedDeals = () => {
   };
 
   const handleRowUpdate = async (newRow, oldRow) => {
-    const calculateIncome = (row) => {
-      return (
-        Number(row.brokerageFee || 0) +
-        Number(row.lifeInsurance || 0) +
-        Number(row.ahInsurance || 0) +
-        Number(row.ciInsurance || 0) +
-        Number(row.gapInsurance || 0) +
-        Number(row.warranty || 0) +
-        Number(row.bankReserve || 0) +
-        Number(row.dealerReserve || 0) -
-        Number(row.nlpReserve || 0) +
-        Number(row.otherFI || 0)
-      );
-    };
+    const calculateIncome = (row) =>
+      Number(row.brokerageFee || 0) +
+      Number(row.lifeInsurance || 0) +
+      Number(row.ahInsurance || 0) +
+      Number(row.ciInsurance || 0) +
+      Number(row.gapInsurance || 0) +
+      Number(row.warranty || 0) +
+      Number(row.bankReserve || 0) +
+      Number(row.dealerReserve || 0) -
+      Number(row.nlpReserve || 0) +
+      Number(row.otherFI || 0);
 
-    const updatedRow = {
-      ...newRow,
-      income: calculateIncome(newRow),
-    };
+    const updatedRow = { ...newRow, income: calculateIncome(newRow) };
 
     const changes = {};
     Object.keys(updatedRow).forEach((key) => {
       if (key === "income") return;
-      if (updatedRow[key] !== oldRow[key]) {
-        changes[key] = updatedRow[key];
-      }
+      if (updatedRow[key] !== oldRow[key]) changes[key] = updatedRow[key];
     });
 
-    if (Object.keys(changes).length === 0) {
-      return oldRow;
-    }
+    if (Object.keys(changes).length === 0) return oldRow;
 
-    const res = await fetch(
+    const res = await authFetch(
       `${import.meta.env.VITE_API_URL}/api/funded-deals/${oldRow.id}`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(changes),
       },
     );
+    if (!res) return oldRow;
 
     const json = await res.json();
-
-    if (!json.success) {
-      throw new Error(json.message || "Update failed");
-    }
+    if (!json.success) throw new Error(json.message || "Update failed");
 
     const savedRow = json.data;
-
     setDeals((prev) => prev.map((d) => (d.id === savedRow.id ? savedRow : d)));
-
     return savedRow;
   };
 
@@ -318,10 +307,7 @@ const FundedDeals = () => {
           label="Average Income/Deal"
           value={`$${(totalMonthlyIncome / (rows.length || 1)).toLocaleString(
             undefined,
-            {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            },
+            { minimumFractionDigits: 2, maximumFractionDigits: 2 },
           )}`}
         />
       </Box>

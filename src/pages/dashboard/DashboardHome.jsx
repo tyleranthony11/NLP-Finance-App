@@ -8,6 +8,7 @@ import HandshakeIcon from "@mui/icons-material/Handshake";
 import StatCard from "../../components/StatCard";
 import TrafficChart from "../../components/TrafficChart";
 import dayjs from "dayjs";
+import { authFetch } from "../../auth/authFetch.js";
 
 const DashboardHome = () => {
   const [activeListings, setActiveListings] = useState(0);
@@ -20,11 +21,12 @@ const DashboardHome = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const listingsRes = await fetch(
+        const listingsRes = await authFetch(
           `${import.meta.env.VITE_API_URL}/api/marketplace/admin`,
         );
-        const listingsJson = await listingsRes.json();
+        if (!listingsRes) return;
 
+        const listingsJson = await listingsRes.json();
         if (listingsJson.success) {
           const listings = listingsJson.data || [];
           setActiveListings(
@@ -35,21 +37,24 @@ const DashboardHome = () => {
           );
         }
 
-        const leadsRes = await fetch(
+        const leadsRes = await authFetch(
           `${import.meta.env.VITE_API_URL}/api/leads`,
         );
-        const leadsJson = await leadsRes.json();
+        if (!leadsRes) return;
 
+        const leadsJson = await leadsRes.json();
         if (leadsJson.success) {
           const leads = leadsJson.data || [];
-          setNewLeads(leads.filter((lead) => !lead.confirmed).length);
+
+          setNewLeads(leads.filter((lead) => !lead.followedUp).length);
         }
 
-        const dealsRes = await fetch(
+        const dealsRes = await authFetch(
           `${import.meta.env.VITE_API_URL}/api/funded-deals`,
         );
-        const dealsJson = await dealsRes.json();
+        if (!dealsRes) return;
 
+        const dealsJson = await dealsRes.json();
         if (dealsJson.success) {
           const now = dayjs();
           const currentMonthDeals = (dealsJson.data || []).filter((deal) =>

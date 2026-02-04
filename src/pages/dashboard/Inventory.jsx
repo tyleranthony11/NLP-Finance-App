@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { authFetch } from "../../auth/authFetch.js";
 import {
   Box,
   Typography,
@@ -11,7 +12,6 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
 import ImportInventoryModal from "../../components/ImportInventoryModal";
-
 import { capitalizeFirstLetter } from "../../utils.js";
 
 const Inventory = () => {
@@ -25,9 +25,11 @@ const Inventory = () => {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const res = await fetch(
+        const res = await authFetch(
           `${import.meta.env.VITE_API_URL}/api/marketplace/admin`,
         );
+        if (!res) return;
+
         const json = await res.json();
 
         if (!json.success) {
@@ -98,14 +100,14 @@ const Inventory = () => {
         payload.odometerUnit = null;
       }
 
-      const res = await fetch(
+      const res = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         },
       );
+      if (!res) return;
 
       const json = await res.json();
 
@@ -128,14 +130,14 @@ const Inventory = () => {
     if (!selectedListing) return;
 
     try {
-      const res = await fetch(
+      const res = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedListing.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ status: "sold" }),
         },
       );
+      if (!res) return;
 
       const json = await res.json();
 
@@ -153,6 +155,7 @@ const Inventory = () => {
       alert("Failed to mark as sold");
     }
   };
+
   const handleImport = async () => {
     if (!importFile || !importDealership) return;
 
@@ -163,10 +166,11 @@ const Inventory = () => {
 
       const url = `${import.meta.env.VITE_API_URL}/api/marketplace/import`;
 
-      const res = await fetch(url, {
+      const res = await authFetch(url, {
         method: "POST",
         body: fd,
       });
+      if (!res) return;
 
       const json = await res.json().catch(() => null);
 
@@ -282,7 +286,6 @@ const Inventory = () => {
         />
       ),
     },
-
     {
       field: "odometer",
       headerName: "Odometer",
@@ -294,7 +297,6 @@ const Inventory = () => {
       renderCell: (params) => {
         const v = params?.row?.odometerValue;
         const u = params?.row?.odometerUnit;
-
         if (v === null || v === undefined || v === "" || !u) return "";
         return `${Number(v).toLocaleString()} ${u}`;
       },
@@ -330,27 +332,20 @@ const Inventory = () => {
     .map((listing) => ({
       id: listing.id,
       photo: listing.photos?.[0] || "",
-
       category: listing.category || "",
       subcategory: listing.subcategory || "",
-
       title: listing.title || "",
       condition: listing.condition || "",
-
       year: listing.year || "",
       make: listing.make || "",
       model: listing.model || "",
-
       odometerValue: listing.odometerValue ?? "",
       odometerUnit: listing.odometerUnit ?? "",
-
       price: listing.price || "",
       description: listing.description || "",
-
       name: listing.name || "",
       email: listing.email || "",
       phone: listing.phone || "",
-
       photos: listing.photos || [],
       interestRate: listing.interestRate ?? "",
       term: listing.term ?? "",
@@ -408,7 +403,6 @@ const Inventory = () => {
               price: true,
               odometer: true,
               dealership: true,
-
               category: false,
               subcategory: false,
               condition: false,
@@ -627,6 +621,7 @@ const Inventory = () => {
           )}
         </Box>
       </Modal>
+
       <ImportInventoryModal
         open={importOpen}
         onClose={() => setImportOpen(false)}
