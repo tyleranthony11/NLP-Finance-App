@@ -50,7 +50,6 @@ function Marketplace() {
     new Set(inventoryListings.map((item) => item.odometerUnit).filter(Boolean)),
   ).sort();
 
-  // category -> subcategories map
   const subcategoriesByCategory = useMemo(() => {
     const map = new Map();
 
@@ -66,7 +65,6 @@ function Marketplace() {
     return map;
   }, [inventoryListings]);
 
-  // only show subcategories for selected category(ies)
   const availableSubcategories = useMemo(() => {
     if (selectedCategories.length === 0) return [];
 
@@ -80,7 +78,6 @@ function Marketplace() {
     return Array.from(set).sort((a, b) => a.localeCompare(b));
   }, [selectedCategories, subcategoriesByCategory]);
 
-  // clear/prune invalid subcategory selections when category changes
   useEffect(() => {
     if (selectedCategories.length === 0) {
       if (selectedSubcategories.length > 0) setSelectedSubcategories([]);
@@ -90,7 +87,6 @@ function Marketplace() {
     setSelectedSubcategories((prev) =>
       prev.filter((s) => availableSubcategories.includes(s)),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategories, availableSubcategories]);
 
   const filteredListings = inventoryListings.filter((item) => {
@@ -238,7 +234,6 @@ function Marketplace() {
             ))}
           </div>
 
-          {/* Hide subcategory until category is selected */}
           {selectedCategories.length > 0 && (
             <div className="filter-group">
               <h4>Subcategory</h4>
