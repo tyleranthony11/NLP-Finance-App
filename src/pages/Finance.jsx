@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 const styles = {
   financeSection: {
@@ -79,7 +80,7 @@ function Finance() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:5001/api/leads/", {
+      const response = await fetch(`${apiUrl}/api/leads`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
