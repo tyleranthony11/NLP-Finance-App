@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { authFetch } from "../../auth/authFetch.js";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -51,9 +52,11 @@ const PendingListings = () => {
   useEffect(() => {
     const fetchPending = async () => {
       try {
-        const res = await fetch(
+        const res = await authFetch(
           `${import.meta.env.VITE_API_URL}/api/marketplace/admin`,
         );
+        if (!res) return;
+
         const json = await res.json();
 
         if (!json.success) {
@@ -180,14 +183,14 @@ const PendingListings = () => {
         dealership: dealership || null,
       };
 
-      const res = await fetch(
+      const res = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${selectedPost.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         },
       );
+      if (!res) return;
 
       const json = await res.json();
 
