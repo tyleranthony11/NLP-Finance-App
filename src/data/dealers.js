@@ -89,6 +89,12 @@ const dealers = {
     website: "https://hottubandsaunadepot.com/",
     location: "Mount Pearl, NL",
   },
+  "The Outdoor Shoppe": {
+    name: "The Outdoor Shoppe",
+    logo: "/images/dealers/outdoor-shoppe.png",
+    website: "https://www.theoutdoorshoppe.ca/en/",
+    location: "St. Anthony, NL",
+  },
   "Wisemans Sales & Service": {
     name: "Wisemans Sales & Service",
     logo: "/images/dealers/nlp-finance-marketplace.png",
