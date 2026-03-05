@@ -108,7 +108,6 @@ const PostAd = () => {
     setIsSubmitting(true);
 
     try {
-      // Only send odometer fields if there is a value
       const odoValue =
         form.odometerValue === "" || form.odometerValue === null
           ? null
@@ -359,12 +358,19 @@ const PostAd = () => {
       />
 
       <TextField
+        select
         label="Interest Rate (%)"
         value={form.interestRate}
         onChange={handleChange("interestRate")}
         fullWidth
         margin="normal"
-      />
+      >
+        {[5.99, 6.99, 7.99, 8.99, 9.99, 10.99, 11.99].map((t) => (
+          <MenuItem key={t} value={t}>
+            {t}
+          </MenuItem>
+        ))}
+      </TextField>
 
       <TextField
         select
