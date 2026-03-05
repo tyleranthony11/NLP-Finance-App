@@ -17,49 +17,57 @@ function Home() {
       </section>
       <section className="vehicle-banner">
         <div className="vehicle-section text-banner">
-          <p>FINANCING FOR EVERY LIFESTYLE</p>
+          <p>WHAT ARE YOU LOOKING FOR?</p>
         </div>
         <div className="vehicle-section image-banner">
-          <Link to="/finance?vehicle=powersports">
-          <img src="/images/atvicon.png" alt="Powersports" />
-          <p>Powersports</p></Link>
+          <Link to="/marketplace?category=powersports">
+            <img src="/images/atvicon.png" alt="Powersports" />
+            <p>Powersports</p>
+          </Link>
         </div>
         <div className="vehicle-section image-banner">
-          <Link to="/finance?vehicle=marine">
-          <img src="/images/boaticon.png" alt="Marine" />
-          <p>Marine</p></Link>
+          <Link to="/marketplace?category=marine">
+            <img src="/images/boaticon.png" alt="Marine" />
+            <p>Marine</p>
+          </Link>
         </div>
         <div className="vehicle-section image-banner">
-            <Link to="/finance?vehicle=rv">
-          <img src="/images/trailericon.png" alt="Travel Trailer" />
-          <p>Travel Trailer</p></Link>
+          <Link to="/marketplace?category=rv">
+            <img src="/images/trailericon.png" alt="Travel Trailer" />
+            <p>Travel Trailer</p>
+          </Link>
         </div>
         <div className="vehicle-section image-banner">
-          <Link to="/finance?vehicle=automotive">
-          <img src="/images/truckicon.png" alt="Automotive" />
-          <p>Automotive</p></Link>
+          <Link to="/marketplace?category=automotive">
+            <img src="/images/truckicon.png" alt="Automotive" />
+            <p>Automotive</p>
+          </Link>
         </div>
       </section>
       <section className="marketplace-promo">
         <div className="marketplace-text" data-aos="fade-up">
           <h2>Introducing the NLP Finance Marketplace</h2>
-          
+
           <p>
-            Looking to sell your vehicle? Whether it's a powersports unit, RV, boat or autombile - list it for free on our Marketplace and we can offer financing to your buyer at no cost to you.
+            Looking to sell your vehicle? Whether it's a powersports unit, RV,
+            boat or autombile - list it for free on our Marketplace and we can
+            offer financing to your buyer at no cost to you.
           </p>
           <p>
-            Browse a growing selection of both dealership and private-seller listings and get pre-approved for financing directly through us.
+            Browse a growing selection of both dealership and private-seller
+            listings and get pre-approved for financing directly through us.
           </p>
           <div className="marketplace-buttons">
             <Link to="/marketplace" className="browse-button">
-            <FaThLarge className="button-icon" />Browse Marketplace</Link>
+              <FaThLarge className="button-icon" />
+              Browse Marketplace
+            </Link>
             <Link to="/PostAdForm" className="list-button">
-            <FaPencilAlt className="button-icon" />
-            Post an Ad</Link>
+              <FaPencilAlt className="button-icon" />
+              Post an Ad
+            </Link>
           </div>
         </div>
-      
-
       </section>
 
       <section className="why-choose-us">

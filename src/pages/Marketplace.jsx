@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { calculateBiWeekly } from "../utils";
 import "./Marketplace.css";
 
@@ -12,6 +12,16 @@ function Marketplace() {
   const [selectedConditions, setSelectedConditions] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedOdoUnits, setSelectedOdoUnits] = useState([]);
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const category = params.get("category");
+
+    if (category) {
+      setSelectedCategories([category]);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     const fetchActiveListings = async () => {
