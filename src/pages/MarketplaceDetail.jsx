@@ -9,6 +9,7 @@ import { Button } from "@mui/material";
 export default function MarketplaceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [secureOpen, setSecureOpen] = useState(false);
 
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -295,14 +296,13 @@ export default function MarketplaceDetail() {
             approval.
           </p>
 
-          <a
-            href="/finance"
-            target="_blank"
+          <button
+            type="button"
             className="apply-now-btn"
-            rel="noreferrer"
+            onClick={() => setSecureOpen(true)}
           >
-            Apply Now
-          </a>
+            Secure This Unit
+          </button>
 
           <div className="contact-actions">
             {listing.email && (
@@ -389,6 +389,81 @@ export default function MarketplaceDetail() {
         <h4>Description</h4>
         <p>{listing.description}</p>
       </div>
+      {secureOpen && (
+        <div className="secure-overlay" onClick={() => setSecureOpen(false)}>
+          <div className="secure-modal" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="secure-close"
+              onClick={() => setSecureOpen(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+
+            <h2 className="secure-title">Secure This Unit</h2>
+            <p className="secure-subtitle">
+              Select how you'd like to move forward.
+            </p>
+
+            <div className="secure-unit">
+              <h3 className="secure-unit-title">
+                {listing.title ||
+                  `${listing.year} ${listing.make} ${listing.model}`}
+              </h3>
+              <p className="secure-unit-dealer">
+                {listing.dealership || "Private Seller"}
+              </p>
+            </div>
+
+            <div className="secure-options">
+              <div className="secure-option">
+                <h4>Contact the Selling Dealer</h4>
+                <p>
+                  Confirm availability and purchase details directly with the
+                  dealer.
+                </p>
+
+                <a
+                  className="secure-btn"
+                  href={`mailto:${listing.email || "marketplace@nlpfinance.ca"}?subject=${encodeURIComponent(
+                    `Marketplace Inquiry: ${listing.year} ${listing.make} ${listing.model}`,
+                  )}&body=${encodeURIComponent(
+                    `Hi,\n\nI'm interested in this unit:\n${listing.year} ${listing.make} ${listing.model}\nPrice: $${Number(
+                      listing.price || 0,
+                    ).toLocaleString()}\n\nLink: ${window.location.href}\n\nIs it still available?\n\nThanks!`,
+                  )}`}
+                >
+                  Contact Dealer
+                </a>
+
+                <small>Your message goes directly to the selling dealer.</small>
+              </div>
+
+              <div className="secure-divider" />
+
+              <div className="secure-option">
+                <h4>Request Financing Support</h4>
+                <p>Structured financing support aligned with this purchase.</p>
+
+                <button
+                  className="secure-btn"
+                  type="button"
+                  onClick={() => {
+                    // Step 2 will open a form instead of navigating
+                    navigate("/finance");
+                  }}
+                >
+                  Request Financing
+                </button>
+
+                <small>
+                  Financing primarily supports dealership transactions.
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

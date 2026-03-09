@@ -199,6 +199,7 @@
   border-radius: 6px;
   text-align: center;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
 .apply-now-btn:hover {
@@ -383,4 +384,108 @@
   text-transform: none;
   border-radius: 10px;
   padding: 10px 14px;
+}
+.secure-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.secure-modal {
+  width: min(900px, 100%);
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  padding: 28px;
+  position: relative;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.secure-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.secure-title {
+  margin: 0;
+  font-size: 34px;
+}
+
+.secure-subtitle {
+  margin: 6px 0 18px;
+  opacity: 0.75;
+}
+
+.secure-unit {
+  margin: 10px 0 18px;
+}
+
+.secure-unit-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.secure-unit-dealer {
+  margin: 6px 0 0;
+  opacity: 0.75;
+}
+
+.secure-options {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 18px;
+  margin-top: 18px;
+  align-items: stretch;
+}
+
+.secure-divider {
+  background: rgba(0, 0, 0, 0.12);
+  width: 1px;
+}
+
+.secure-option {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+}
+
+.secure-option h4 {
+  margin: 0 0 10px;
+}
+
+.secure-option p {
+  margin: 0 0 14px;
+  opacity: 0.8;
+}
+
+.secure-btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: 2px solid #d81a20;
+  color: #d81a20;
+  background: white;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.secure-option small {
+  display: block;
+  margin-top: 10px;
+  opacity: 0.7;
 }

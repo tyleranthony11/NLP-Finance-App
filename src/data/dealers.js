@@ -23,6 +23,13 @@ const dealers = {
     website: "https://www.brucesrecreation.nf.ca/",
     location: "Clarenville, NL",
   },
+
+  "Coastal Outdoors": {
+    name: "Coastal Outdoors",
+    logo: "/images/dealers/coastal-outdoors.png",
+    website: "https://www.coastaloutdoors.ca/",
+    location: "Clarenville, NL",
+  },
   "Honda One": {
     name: "Honda One",
     logo: "/images/dealers/nlp-finance-marketplace.png",
