@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { calculateBiWeekly } from "../utils";
 import "./Marketplace.css";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { dealers } from "../data/dealers";
 
 function Marketplace() {
   const [sortKey, setSortKey] = useState("");
@@ -318,47 +320,68 @@ function Marketplace() {
           </div>
 
           <div className="marketplace-grid">
-            {sortedListings.map((item) => (
-              <Link
-                to={`/marketplace/${item.id}`}
-                key={item.id}
-                className="marketplace-card"
-              >
-                <img
-                  src={item.photos?.[0] || ""}
-                  alt={item.model || "Listing"}
-                />
+            {sortedListings.map((item) => {
+              const dealerName = (item.dealership || "").trim();
+              const dealer = dealers[dealerName];
 
-                <div className="marketplace-info">
-                  <h3>
-                    {item.year} {item.make} {item.model}
-                  </h3>
+              return (
+                <Link
+                  to={`/marketplace/${item.id}`}
+                  key={item.id}
+                  className="marketplace-card"
+                >
+                  <img
+                    src={item.photos?.[0] || ""}
+                    alt={item.model || "Listing"}
+                  />
 
-                  <p>
-                    <strong>Price:</strong> $
-                    {Number(item.price || 0).toLocaleString()}
-                  </p>
+                  <div className="marketplace-info">
+                    <h3>
+                      {item.year} {item.make} {item.model}
+                    </h3>
 
-                  {item.interestRate && item.term && (
-                    <>
-                      <p>
-                        <strong>Payment:</strong> $
-                        {calculateBiWeekly(
-                          Number(item.price || 0),
-                          Number(item.interestRate),
-                          Number(item.term),
-                        )}{" "}
-                        bi-weekly
-                      </p>
+                    <p>
+                      <strong>Price:</strong> $
+                      {Number(item.price || 0).toLocaleString()}
+                    </p>
 
-                      <p id="terms">
-                        Based on {item.term} months at {item.interestRate}% APR
-                      </p>
-                    </>
-                  )}
-                </div>
-              </Link>
-            ))}
+                    {Number(item.interestRate) > 0 && Number(item.term) > 0 && (
+                      <>
+                        <p>
+                          <strong>Payment:</strong> $
+                          {calculateBiWeekly(
+                            Number(item.price || 0),
+                            Number(item.interestRate),
+                            Number(item.term),
+                          )}{" "}
+                          bi-weekly
+                        </p>
+
+                        <p id="terms">
+                          Based on {item.term} months at {item.interestRate}%
+                          APR
+                        </p>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="marketplace-card-footer">
+                    <span className="offered-by">Offered By:</span>
+
+                    <span className="dealer-name">
+                      {item.dealership || "Private Seller"}
+                    </span>
+
+                    {dealer && (
+                      <span className="dealer-location">
+                        <LocationOnIcon sx={{ fontSize: 14 }} />
+                        {dealer.location}
+                      </span>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>

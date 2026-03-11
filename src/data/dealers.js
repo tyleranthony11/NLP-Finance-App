@@ -1,4 +1,4 @@
-const dealers = {
+export const dealers = {
   "Ashford Sales": {
     name: "Ashford Sales",
     logo: "/images/dealers/nlp-finance-marketplace.png",
