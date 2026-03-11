@@ -3,8 +3,6 @@ export const calculateBiWeekly = (price, rate, termMonths) => {
   const r = Number(rate) / 2600;
   const n = (Number(termMonths) / 12) * 26;
 
-  console.log("calculateBiWeekly inputs:", { p, r, n });
-
   const payment = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 
   return payment.toFixed(2);
