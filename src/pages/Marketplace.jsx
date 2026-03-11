@@ -328,6 +328,7 @@ function Marketplace() {
                   src={item.photos?.[0] || ""}
                   alt={item.model || "Listing"}
                 />
+
                 <div className="marketplace-info">
                   <h3>
                     {item.year} {item.make} {item.model}
@@ -338,26 +339,26 @@ function Marketplace() {
                     {Number(item.price || 0).toLocaleString()}
                   </p>
 
-                  <p>
-                    <strong>Payment:</strong> $
-                    {calculateBiWeekly(
-                      Number(item.price || 0),
-                      Number(item.interestRate || 0),
-                      Number(item.term || 0),
-                    )}{" "}
-                    bi-weekly
-                  </p>
+                  {item.interestRate && item.term && (
+                    <>
+                      <p>
+                        <strong>Payment:</strong> $
+                        {calculateBiWeekly(
+                          Number(item.price || 0),
+                          Number(item.interestRate),
+                          Number(item.term),
+                        )}{" "}
+                        bi-weekly
+                      </p>
 
-                  <p id="terms">
-                    Based on {item.term} months at {item.interestRate}% APR
-                  </p>
+                      <p id="terms">
+                        Based on {item.term} months at {item.interestRate}% APR
+                      </p>
+                    </>
+                  )}
                 </div>
               </Link>
             ))}
-
-            {sortedListings.length === 0 && (
-              <p style={{ padding: "1rem" }}>No listings match your filters.</p>
-            )}
           </div>
         </div>
       </div>

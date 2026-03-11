@@ -199,22 +199,24 @@ export default function MarketplaceDetail() {
             <span className="plus-hst">+ HST</span>
           </p>
 
-          <div className="estimated-payment">
-            <div className="label">Estimated Payment:</div>
-            <div className="main-payment-amount">
-              $
-              {{
-                "bi-weekly": calculateBiWeekly,
-                weekly: calculateWeekly,
-                monthly: calculateMonthly,
-              }[frequency](
-                Number(customPrice || 0) - Number(downPayment || 0),
-                Number(customRate || 0),
-                Number(customTerm || 0),
-              )}{" "}
-              / {frequency.charAt(0).toUpperCase() + frequency.slice(1)}
+          {Number(customRate) > 0 && Number(customTerm) > 0 && (
+            <div className="estimated-payment">
+              <div className="label">Estimated Payment:</div>
+              <div className="main-payment-amount">
+                $
+                {{
+                  "bi-weekly": calculateBiWeekly,
+                  weekly: calculateWeekly,
+                  monthly: calculateMonthly,
+                }[frequency](
+                  Number(customPrice || 0) - Number(downPayment || 0),
+                  Number(customRate),
+                  Number(customTerm),
+                )}{" "}
+                / {frequency.charAt(0).toUpperCase() + frequency.slice(1)}
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="payment-calculator">
             <label>
@@ -449,16 +451,13 @@ export default function MarketplaceDetail() {
                   className="secure-btn"
                   type="button"
                   onClick={() => {
-                    // Step 2 will open a form instead of navigating
                     navigate("/finance");
                   }}
                 >
                   Request Financing
                 </button>
 
-                <small>
-                  Financing primarily supports dealership transactions.
-                </small>
+                <small>Your message goes directly to NLP Finance.</small>
               </div>
             </div>
           </div>

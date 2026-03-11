@@ -13,6 +13,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
 import ImportInventoryModal from "../../components/ImportInventoryModal";
 import { capitalizeFirstLetter } from "../../utils.js";
+import DeleteIcon from "@mui/icons-material/Delete";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
 const Inventory = () => {
   const [listings, setListings] = useState([]);
@@ -21,6 +24,10 @@ const Inventory = () => {
   const [importOpen, setImportOpen] = useState(false);
   const [importFile, setImportFile] = useState(null);
   const [importDealership, setImportDealership] = useState("");
+  const [rowSelection, setRowSelection] = useState({
+    type: "include",
+    ids: new Set(),
+  });
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -189,6 +196,39 @@ const Inventory = () => {
     } catch (err) {
       console.error("IMPORT ERROR:", err);
       alert("Import failed");
+    }
+  };
+
+  const handleDeleteSelected = async () => {
+    const selectedIds = Array.from(rowSelection.ids);
+
+    if (selectedIds.length === 0) return;
+
+    const confirmed = window.confirm(
+      `Delete ${selectedIds.length} selected unit(s)?`,
+    );
+    if (!confirmed) return;
+
+    try {
+      await Promise.all(
+        selectedIds.map((id) =>
+          authFetch(`${import.meta.env.VITE_API_URL}/api/marketplace/${id}`, {
+            method: "DELETE",
+          }),
+        ),
+      );
+
+      setListings((prev) =>
+        prev.filter((listing) => !selectedIds.includes(listing.id)),
+      );
+
+      setRowSelection({
+        type: "include",
+        ids: new Set(),
+      });
+    } catch (err) {
+      console.error("Failed to delete selected listings:", err);
+      alert("Failed to delete selected listings");
     }
   };
 
@@ -371,27 +411,54 @@ const Inventory = () => {
           mb: 2,
         }}
       >
-        <Typography variant="h4" gutterBottom>
+        <Typography variant="h4" sx={{ mb: 0 }}>
           Inventory
         </Typography>
 
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setImportOpen(true)}
-        >
-          Import CSV
-        </Button>
-      </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setImportOpen(true)}
+          >
+            Import CSV
+          </Button>
 
+          <Tooltip title="Delete Selected">
+            <span>
+              <IconButton
+                color="error"
+                onClick={handleDeleteSelected}
+                disabled={rowSelection.ids.size < 1}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </span>
+          </Tooltip>
+
+          {rowSelection.ids.size > 0 && (
+            <Typography variant="body2">
+              {rowSelection.ids.size} selected
+            </Typography>
+          )}
+        </Box>
+      </Box>
       <DataGrid
         showToolbar
         rows={rows}
         columns={columns}
         pageSize={10}
         rowsPerPageOptions={[10, 25, 50]}
-        disableSelectionOnClick
-        onRowClick={handleRowClick}
+        checkboxSelection
+        disableRowSelectionOnClick
+        rowSelectionModel={rowSelection}
+        onRowSelectionModelChange={(newSelection) => {
+          setRowSelection(newSelection);
+        }}
+        onRowClick={(params, event) => {
+          if (event.target?.closest?.(".MuiDataGrid-cellCheckbox")) return;
+          handleRowClick(params);
+        }}
         initialState={{
           columns: {
             columnVisibilityModel: {
@@ -410,7 +477,6 @@ const Inventory = () => {
           },
         }}
       />
-
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
