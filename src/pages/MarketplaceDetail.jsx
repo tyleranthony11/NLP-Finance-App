@@ -128,7 +128,10 @@ export default function MarketplaceDetail() {
   if (!listing) {
     return (
       <div className="marketplace-detail">
-        <button className="back-button" onClick={() => navigate(-1)}>
+        <button
+          className="back-button"
+          onClick={() => navigate("/marketplace")}
+        >
           &larr; Back to Listings
         </button>
         <h2>Listing not found</h2>
@@ -144,7 +147,7 @@ export default function MarketplaceDetail() {
         : "marketplace@nlpfinance.ca";
   return (
     <div className="marketplace-detail">
-      <button className="back-button" onClick={() => navigate(-1)}>
+      <button className="back-button" onClick={() => navigate("/marketplace")}>
         &larr; Back to Listings
       </button>
 
