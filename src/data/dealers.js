@@ -73,8 +73,8 @@ export const dealers = {
     website: "https://nlpfinance.ca/",
     location: "Grand Falls-Windsor, NL",
   },
-  "Pardys Recreation": {
-    name: "Pardys Recreation",
+  "Pardys Recreation & Marine": {
+    name: "Pardys Recreation & Marine",
     logo: "/images/dealers/pardys-recreation",
     website: "https://www.pardysrecreationandmarine.com/",
     location: "Marystown, NL",
