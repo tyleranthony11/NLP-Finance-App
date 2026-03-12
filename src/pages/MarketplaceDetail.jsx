@@ -136,7 +136,12 @@ export default function MarketplaceDetail() {
       </div>
     );
   }
-
+  const dealerEmail =
+    dealerInfo?.email && dealerInfo.email.trim() !== ""
+      ? dealerInfo.email
+      : listing?.email && listing.email.trim() !== ""
+        ? listing.email
+        : "marketplace@nlpfinance.ca";
   return (
     <div className="marketplace-detail">
       <button className="back-button" onClick={() => navigate(-1)}>
@@ -427,12 +432,22 @@ export default function MarketplaceDetail() {
 
                 <a
                   className="secure-btn"
-                  href={`mailto:${listing.email || "marketplace@nlpfinance.ca"}?subject=${encodeURIComponent(
-                    `Marketplace Inquiry: ${listing.year} ${listing.make} ${listing.model}`,
+                  href={`mailto:${dealerEmail}?cc=marketplace@nlpfinance.ca&subject=${encodeURIComponent(
+                    `Marketplace Inquiry: ${listing.title || `${listing.year} ${listing.make} ${listing.model}`}`,
                   )}&body=${encodeURIComponent(
-                    `Hi,\n\nI'm interested in this unit:\n${listing.year} ${listing.make} ${listing.model}\nPrice: $${Number(
-                      listing.price || 0,
-                    ).toLocaleString()}\n\nLink: ${window.location.href}\n\nIs it still available?\n\nThanks!`,
+                    `Hi,
+
+I'm interested in this unit:
+
+${listing.title || `${listing.year} ${listing.make} ${listing.model}`}
+Price: $${Number(listing.price || 0).toLocaleString()}
+
+Listing Link:
+${window.location.href}
+
+Is it still available?
+
+Thanks,`,
                   )}`}
                 >
                   Contact Dealer

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { Autocomplete } from "@mui/material";
 import dealers from "../../data/dealers";
+import { authFetch } from "../../auth/authFetch.js";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -28,31 +29,47 @@ const PostAd = () => {
     name: "",
     email: "",
     phone: "",
-
     category: "",
     subcategory: "",
-
     condition: "used",
     title: "",
-
     year: "",
     make: "",
     model: "",
-
     odometerValue: "",
     odometerUnit: "km",
-
     price: "",
     description: "",
-
     interestRate: "",
     term: "",
     dealership: "",
-
     photos: [],
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const resetForm = () => {
+    setForm({
+      name: "",
+      email: "",
+      phone: "",
+      category: "",
+      subcategory: "",
+      condition: "used",
+      title: "",
+      year: "",
+      make: "",
+      model: "",
+      odometerValue: "",
+      odometerUnit: "km",
+      price: "",
+      description: "",
+      interestRate: "",
+      term: "",
+      dealership: "",
+      photos: [],
+    });
+  };
 
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -84,7 +101,7 @@ const PostAd = () => {
   const handleSubmit = async () => {
     if (isSubmitting) return;
 
-    if (!form.photos || form.photos.length < 1) {
+    if (!form.photos.length) {
       toast.error("Please upload at least one photo.");
       return;
     }
@@ -117,20 +134,15 @@ const PostAd = () => {
         name: form.name,
         email: form.email,
         phone: form.phone,
-
         category: form.category,
         subcategory: form.subcategory?.trim() ? form.subcategory.trim() : null,
-
         title: form.title?.trim() ? form.title.trim() : "",
-        condition: form.condition, // "new" | "used"
-
+        condition: form.condition,
         year: Number(form.year),
         make: form.make,
         model: form.model,
-
         odometerValue: odoValue,
-        odometerUnit: odoValue ? form.odometerUnit : null, // "km" | "mi" | "hrs"
-
+        odometerUnit: odoValue ? form.odometerUnit : null,
         price: Number(form.price),
         description: form.description,
         photos: form.photos,
@@ -140,7 +152,9 @@ const PostAd = () => {
         `${import.meta.env.VITE_API_URL}/api/marketplace`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(createPayload),
         },
       );
@@ -165,14 +179,18 @@ const PostAd = () => {
         term: form.term ? Number(form.term) : null,
       };
 
-      const updateRes = await fetch(
+      const updateRes = await authFetch(
         `${import.meta.env.VITE_API_URL}/api/marketplace/${created.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(updatePayload),
         },
       );
+
+      if (!updateRes) {
+        toast.error("Created listing, but failed to activate it.");
+        return;
+      }
 
       const updateJson = await updateRes.json();
 
@@ -186,34 +204,7 @@ const PostAd = () => {
       }
 
       toast.success("Listing created and added to inventory!");
-
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-
-        category: "",
-        subcategory: "",
-
-        condition: "used",
-        title: "",
-
-        year: "",
-        make: "",
-        model: "",
-
-        odometerValue: "",
-        odometerUnit: "km",
-
-        price: "",
-        description: "",
-
-        interestRate: "",
-        term: "",
-        dealership: "",
-
-        photos: [],
-      });
+      resetForm();
     } catch (err) {
       console.error("Post Ad failed:", err);
       toast.error("Failed to create listing.");

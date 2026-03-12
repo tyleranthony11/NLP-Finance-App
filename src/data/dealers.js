@@ -29,6 +29,7 @@ export const dealers = {
     logo: "/images/dealers/coastal-outdoors.png",
     website: "https://www.coastaloutdoors.ca/",
     location: "Clarenville, NL",
+    email: "test@coastaloutdoors.ca",
   },
   "Honda One": {
     name: "Honda One",
@@ -77,6 +78,13 @@ export const dealers = {
     logo: "/images/dealers/nlp-finance-marketplace.png",
     website: "https://www.pardysrecreationandmarine.com/",
     location: "Marystown, NL",
+  },
+  "Rapid Powersports": {
+    name: "Rapid Powersports",
+    logo: "/images/dealers/rapid-powersports.gif",
+    wesbite: "https://www.rapidpowersports.com/en/",
+    location: "Little Rapids, NL",
+    email: "test@rapidpowersports.ca",
   },
   "Route 460": {
     name: "Route 460",
