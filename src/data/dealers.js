@@ -75,7 +75,7 @@ export const dealers = {
   },
   "Pardys Recreation & Marine": {
     name: "Pardys Recreation & Marine",
-    logo: "/images/dealers/pardys-recreation",
+    logo: "/images/dealers/pardys-recreation.png",
     website: "https://www.pardysrecreationandmarine.com/",
     location: "Marystown, NL",
   },
