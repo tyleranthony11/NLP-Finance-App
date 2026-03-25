@@ -1,42 +1,75 @@
-# NLP Finance Marketplace Web App
+# NLP Finance Web Application (Frontend)
 
-A full-featured front-end web application for NLP Finance, a powersports financing company in Newfoundland and Labrador. This project was built as part of the **Get Building** program (Module 2) to optimize the company’s existing website and internal workflow.
+Frontend application for NLP Finance — a powersports financing platform based in Newfoundland & Labrador.
 
-## Table of Contents
-- [Overview](#overview)  
-- [Features](#features)  
-- [Technologies](#technologies)  
-- [Installation](#installation)  
-- [Usage](#usage)  
-- [Future Improvements](#future-improvements)  
-- [Contributing](#contributing)  
-- [License](#license)  
-- [Links](#links)  
+This app provides a customer-facing marketplace along with an internal dashboard for managing leads, inventory, and funded deals.
 
-## Overview
-While working full-time at NLP Finance, I noticed that the company's website and internal software could be better optimized. This app rebuilds the company’s website and internal dashboard, providing:
+---
 
-- A marketplace for private sellers and dealers to list vehicles  
-- Financing support for customers  
-- An employee dashboard to manage leads, track funded deals, and view income reports  
+## 🚀 Overview
 
-This project provided hands-on experience building a full front-end React application while working directly with employees to create practical solutions for real-world workflows.
+This project is a full-featured React application designed to improve both the customer experience and internal workflows at NLP Finance.
 
-## Features
-- **Marketplace:** Users can browse listings from private sellers or registered dealers with financing options clearly displayed.  
-- **Employee Dashboard:** Staff can review marketplace ads, manage financing leads, track funded deals, and view detailed charts and breakdowns of income (weekly, monthly, yearly).  
-- **Data-Driven Insights:** Live statistics, charts, and reports for decision-making and revenue tracking.  
-- **Responsive Design:** Works on desktop and tablet devices.
+It includes:
+- A marketplace for browsing and listing vehicles  
+- A financing application flow for customers  
+- An internal dashboard for managing business operations  
 
-## Technologies
-- React  
-- Material-UI (MUI)  
-- React Router  
-- Day.js  
-- React Number Format  
-- Local Storage for state persistence  
+---
 
-## Installation
-1. Clone the repository:  
-   ```bash
-   git clone https://github.com/tyleranthony11/NLP-Finance-App.git
+## ✨ Features
+
+### Marketplace
+- Browse listings from private sellers and dealers  
+- Filter by category, dealer, and vehicle type  
+- View estimated financing payments  
+
+### Financing Flow
+- Quick application form for lead capture  
+- Integration-ready structure for full credit applications  
+
+### Employee Dashboard
+- Manage financing leads  
+- Review and approve marketplace listings  
+- Track funded deals and revenue  
+- View income reports and breakdowns  
+
+### Data & UI
+- Interactive charts and statistics  
+- Responsive layout for desktop and tablet  
+- Persistent state using local storage  
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend**
+- React
+- TypeScript / JavaScript
+- React Router
+
+**UI & Libraries**
+- Material UI (MUI)
+- Day.js
+- React Number Format
+
+**State & Data**
+- Local Storage (for persistence)
+
+---
+
+## 📸 Screenshots
+
+
+
+---
+
+## ⚙️ Getting Started
+
+### Installation
+
+```bash
+git clone https://github.com/tyleranthony11/NLP-Finance-App.git
+cd NLP-Finance-App
+npm install
+npm start
