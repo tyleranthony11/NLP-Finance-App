@@ -4,7 +4,7 @@ import "./MarketplaceDetail.css";
 import { calculateBiWeekly, calculateWeekly, calculateMonthly } from "../utils";
 import dealers from "../data/dealers";
 import { Email, Phone, Share } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 export default function MarketplaceDetail() {
   const navigate = useNavigate();
@@ -116,27 +116,33 @@ export default function MarketplaceDetail() {
 
   if (loading) {
     return (
-      <div className="marketplace-detail">
-        <button className="back-button" onClick={() => navigate(-1)}>
+      <Box className="marketplace-detail">
+        <Button className="back-button" onClick={() => navigate(-1)}>
           &larr; Back to Listings
-        </button>
-        <h2>Loading listing...</h2>
-      </div>
+        </Button>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Loading listing...
+        </Typography>
+      </Box>
     );
   }
 
   if (!listing) {
     return (
-      <div className="marketplace-detail">
-        <button
+      <Box className="marketplace-detail">
+        <Button
           className="back-button"
           onClick={() => navigate("/marketplace")}
         >
           &larr; Back to Listings
-        </button>
-        <h2>Listing not found</h2>
-        <p>{loadError || "This listing may be sold or no longer available."}</p>
-      </div>
+        </Button>
+        <Typography variant="h4" component="h2" gutterBottom>
+          Listing not found
+        </Typography>
+        <Typography variant="body1">
+          {loadError || "This listing may be sold or no longer available."}
+        </Typography>
+      </Box>
     );
   }
   const dealerEmail =
@@ -147,13 +153,16 @@ export default function MarketplaceDetail() {
         : "marketplace@nlpfinance.ca";
   return (
     <div className="marketplace-detail">
-      <button className="back-button" onClick={() => navigate("/marketplace")}>
+      <Button
+        className="back-button"
+        onClick={() => navigate("/marketplace")}
+      >
         &larr; Back to Listings
-      </button>
+      </Button>
 
-      <h2>
+      <Typography variant="h4" component="h2" gutterBottom>
         {listing.title || `${listing.year} ${listing.make} ${listing.model}`}
-      </h2>
+      </Typography>
 
       <div className="detail-layout">
         <div className="image-gallery">
@@ -202,10 +211,10 @@ export default function MarketplaceDetail() {
         </div>
 
         <div className="detail-sidebar">
-          <p className="price">
+          <Typography className="price" component="p">
             ${Number(listing.price || 0).toLocaleString()}
             <span className="plus-hst">+ HST</span>
-          </p>
+          </Typography>
 
           {Number(customRate) > 0 && Number(customTerm) > 0 && (
             <div className="estimated-payment">
@@ -300,11 +309,11 @@ export default function MarketplaceDetail() {
             </label>
           </div>
 
-          <p className="calculator-disclaimer">
+          <Typography className="calculator-disclaimer" component="p">
             *Payment amount is an estimate for illustrative purposes only. HST
             and other fees not included. All clients are subject to credit
             approval.
-          </p>
+          </Typography>
 
           <button
             type="button"
@@ -353,7 +362,9 @@ export default function MarketplaceDetail() {
 
       <div className="info-row">
         <div className="specs">
-          <h3>Specifications</h3>
+          <Typography variant="h6" component="h3">
+            Specifications
+          </Typography>
           <div>
             <strong>Year:</strong> {listing.year}
           </div>
@@ -375,7 +386,9 @@ export default function MarketplaceDetail() {
 
         {dealerInfo && (
           <div className="dealer-info">
-            <p className="dealer-label">Offered by:</p>
+            <Typography className="dealer-label" component="p">
+              Offered by:
+            </Typography>
             <div className="dealer-logo-wrapper">
               <a
                 href={dealerInfo.website}
@@ -389,15 +402,21 @@ export default function MarketplaceDetail() {
                 />
               </a>
             </div>
-            <p className="dealer-name">{dealerInfo.name}</p>
-            <p className="dealer-location">{dealerInfo.location}</p>
+            <Typography className="dealer-name" component="p">
+              {dealerInfo.name}
+            </Typography>
+            <Typography className="dealer-location" component="p">
+              {dealerInfo.location}
+            </Typography>
           </div>
         )}
       </div>
 
       <div className="description">
-        <h4>Description</h4>
-        <p>{listing.description}</p>
+        <Typography variant="h6" component="h4" gutterBottom>
+          Description
+        </Typography>
+        <Typography component="p">{listing.description}</Typography>
       </div>
       {secureOpen && (
         <div className="secure-overlay" onClick={() => setSecureOpen(false)}>
@@ -410,28 +429,32 @@ export default function MarketplaceDetail() {
               ✕
             </button>
 
-            <h2 className="secure-title">Secure This Unit</h2>
-            <p className="secure-subtitle">
+            <Typography className="secure-title" variant="h4" component="h2">
+              Secure This Unit
+            </Typography>
+            <Typography className="secure-subtitle" component="p">
               Select how you'd like to move forward.
-            </p>
+            </Typography>
 
             <div className="secure-unit">
-              <h3 className="secure-unit-title">
+              <Typography className="secure-unit-title" component="h3" variant="h6">
                 {listing.title ||
                   `${listing.year} ${listing.make} ${listing.model}`}
-              </h3>
-              <p className="secure-unit-dealer">
+              </Typography>
+              <Typography className="secure-unit-dealer" component="p">
                 {listing.dealership || "Private Seller"}
-              </p>
+              </Typography>
             </div>
 
             <div className="secure-options">
               <div className="secure-option">
-                <h4>Contact the Selling Dealer</h4>
-                <p>
+                <Typography component="h4" variant="subtitle1">
+                  Contact the Selling Dealer
+                </Typography>
+                <Typography component="p">
                   Confirm availability and purchase details directly with the
                   dealer.
-                </p>
+                </Typography>
 
                 <a
                   className="secure-btn"
@@ -462,8 +485,12 @@ Thanks,`,
               <div className="secure-divider" />
 
               <div className="secure-option">
-                <h4>Request Financing Support</h4>
-                <p>Structured financing support aligned with this purchase.</p>
+                <Typography component="h4" variant="subtitle1">
+                  Request Financing Support
+                </Typography>
+                <Typography component="p">
+                  Structured financing support aligned with this purchase.
+                </Typography>
 
                 <button
                   className="secure-btn"

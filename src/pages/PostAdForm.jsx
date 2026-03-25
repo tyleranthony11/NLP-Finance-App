@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./PostAdForm.css";
+import { Box, Typography, Button } from "@mui/material";
 
 const fileToBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -161,15 +162,19 @@ function PostAdForm() {
   };
 
   return (
-    <div className="post-ad-form-container">
+    <Box className="post-ad-form-container">
       <img
         src="/images/dealers/nlp-finance-marketplace.png"
         alt="Marketplace Logo"
         className="marketplace-logo"
       />
 
-      <h2>List Your Vehicle for Sale</h2>
-      <p>Fill out the form below to submit your unit to our marketplace.</p>
+      <Typography variant="h4" component="h2" gutterBottom>
+        List Your Vehicle for Sale
+      </Typography>
+      <Typography variant="body1" sx={{ mb: 3 }}>
+        Fill out the form below to submit your unit to our marketplace.
+      </Typography>
 
       <form onSubmit={handleSubmit} className="post-ad-form">
         <fieldset>
@@ -304,13 +309,25 @@ function PostAdForm() {
           />
         </fieldset>
 
-        <button type="submit" className="submit-button" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          variant="contained"
+          className="submit-button"
+          disabled={isSubmitting}
+          sx={{
+            backgroundColor: "#d81a20",
+            "&:hover": { backgroundColor: "#b5161b" },
+            textTransform: "none",
+            fontWeight: 700,
+            padding: "0.75rem 2rem",
+          }}
+        >
           {isSubmitting ? "Submitting..." : "Submit Ad"}
-        </button>
+        </Button>
       </form>
 
       <ToastContainer position="top-center" autoClose={3000} />
-    </div>
+    </Box>
   );
 }
 
