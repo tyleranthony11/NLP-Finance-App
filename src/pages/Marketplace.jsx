@@ -172,7 +172,7 @@ function Marketplace() {
   return (
     <div className="marketplace-page">
       <div className="marketplace-container">
-        <h1>Marketplace</h1>
+        <h1>NLP Marketplace</h1>
 
         <div className="marketplace-content">
           <aside className="marketplace-filters">
