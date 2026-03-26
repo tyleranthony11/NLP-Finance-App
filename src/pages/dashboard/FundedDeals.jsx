@@ -14,18 +14,43 @@ import dayjs from "dayjs";
 import { NumericFormat } from "react-number-format";
 
 const styles = {
-  container: { p: 3 },
-  filterRow: { display: "flex", gap: 2, mb: 2, alignItems: "center" },
-  addButton: { ml: "auto" },
+  container: {
+    p: 3,
+    pb: 0,
+    minHeight: "100%",
+    bgcolor: "#18191A",
+    color: "#F5F5F6",
+  },
+  filterRow: {
+    display: "flex",
+    gap: 2,
+    mb: 2,
+    alignItems: "center",
+    p: 2,
+    borderRadius: 3,
+    border: "1px solid #2B2B2F",
+    bgcolor: "#1F2023",
+  },
+  addButton: {
+    ml: "auto",
+    bgcolor: "#EB001B",
+    textTransform: "none",
+    fontWeight: 700,
+    borderRadius: 2,
+    px: 2.5,
+    "&:hover": { bgcolor: "#C40018" },
+  },
   dataGridWrapper: { overflowX: "auto" },
   statCards: {
     display: "flex",
-    justifyContent: "center",
-    gap: 4,
-    mb: 4,
-    flexWrap: "wrap",
+    gap: 2,
+    mb: 2,
+    width: "100%",
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    flexWrap: { xs: "wrap", lg: "nowrap" },
   },
-  icon: { fontSize: 32 },
+  icon: { fontSize: 34, color: "#EB001B" },
 };
 
 const FundedDeals = () => {
@@ -284,36 +309,75 @@ const FundedDeals = () => {
 
   return (
     <Box sx={styles.container}>
-      <Typography variant="h4" mb={2} fontWeight={550}>
-        Funded Deals
-      </Typography>
+      <Box
+        sx={{
+          mb: 2,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #2B2B2F",
+          bgcolor: "#1F2023",
+        }}
+      >
+        <Typography variant="h4" sx={{ mb: 0.25, fontWeight: 700 }}>
+          Funded Deals
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#A5A7AC" }}>
+          Monitor monthly deal performance and update deal-level values.
+        </Typography>
+      </Box>
 
       <Box sx={styles.statCards}>
-        <StatCard
-          icon={<HandshakeIcon sx={styles.icon} />}
-          label="Number of Deals"
-          value={rows.length}
-        />
-        <StatCard
-          icon={<MonetizationOnIcon sx={styles.icon} />}
-          label="Total Income"
-          value={`$${totalMonthlyIncome.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}`}
-        />
-        <StatCard
-          icon={<PriceCheckIcon sx={styles.icon} />}
-          label="Average Income/Deal"
-          value={`$${(totalMonthlyIncome / (rows.length || 1)).toLocaleString(
-            undefined,
-            { minimumFractionDigits: 2, maximumFractionDigits: 2 },
-          )}`}
-        />
+        <Box sx={{ flex: 1, minWidth: 280, "& .MuiCard-root": { maxWidth: "none", width: "100%" } }}>
+          <StatCard
+            icon={<HandshakeIcon sx={styles.icon} />}
+            label="Number of Deals"
+            value={rows.length}
+          />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 280, "& .MuiCard-root": { maxWidth: "none", width: "100%" } }}>
+          <StatCard
+            icon={<MonetizationOnIcon sx={styles.icon} />}
+            label="Total Income"
+            value={`$${totalMonthlyIncome.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}`}
+          />
+        </Box>
+        <Box sx={{ flex: 1, minWidth: 280, "& .MuiCard-root": { maxWidth: "none", width: "100%" } }}>
+          <StatCard
+            icon={<PriceCheckIcon sx={styles.icon} />}
+            label="Average Income/Deal"
+            value={`$${(totalMonthlyIncome / (rows.length || 1)).toLocaleString(
+              undefined,
+              { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+            )}`}
+          />
+        </Box>
       </Box>
 
       <Box sx={styles.filterRow}>
-        <MonthPicker value={selectedDate} onChange={setSelectedDate} />
+        <Box
+          sx={{
+            "& .MuiPickersInputBase-root, & .MuiPickersOutlinedInput-root": {
+              color: "#D1D5DB !important",
+            },
+            "& .MuiPickersSectionList-root, & .MuiPickersSectionList-section, & .MuiPickersSectionList-sectionContent":
+              {
+                color: "#D1D5DB !important",
+                WebkitTextFillColor: "#D1D5DB !important",
+                opacity: "1 !important",
+              },
+            "& .MuiFormLabel-root, & .MuiInputLabel-root": {
+              color: "#EB001B !important",
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#EB001B !important",
+            },
+          }}
+        >
+          <MonthPicker value={selectedDate} onChange={setSelectedDate} />
+        </Box>
         <Button
           variant="contained"
           onClick={() => setModalOpen(true)}
@@ -328,6 +392,9 @@ const FundedDeals = () => {
           showToolbar
           rows={rows}
           columns={columns}
+          localeText={{
+            noRowsLabel: "No deals yet",
+          }}
           pageSize={10}
           rowsPerPageOptions={[10]}
           disableRowSelectionOnClick
@@ -353,6 +420,75 @@ const FundedDeals = () => {
                 nlpReserve: false,
                 otherFI: false,
               },
+            },
+          }}
+          sx={{
+            border: "1px solid #2B2B2F",
+            borderRadius: 3,
+            color: "#E5E7EB",
+            bgcolor: "#18191A",
+            "& .MuiDataGrid-toolbarContainer": {
+              px: 1.5,
+              py: 1,
+              borderBottom: "1px solid #2B2B2F",
+              background: "#1F2023",
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer *": {
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-root, & .MuiDataGrid-toolbarContainer .MuiIconButton-root": {
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiSvgIcon-root": {
+              color: "#EB001B !important",
+              fill: "#EB001B !important",
+              opacity: "1 !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiDataGrid-toolbarQuickFilter .MuiInputBase-root, & .MuiDataGrid-toolbarContainer .MuiDataGrid-toolbarQuickFilter .MuiInputBase-input": {
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              borderBottom: "1px solid #2B2B2F",
+              background: "#212327",
+              color: "#F5F5F5",
+              fontWeight: 700,
+            },
+            "& .MuiDataGrid-columnHeader": {
+              backgroundColor: "#212327",
+              color: "#F5F5F5",
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              color: "#F5F5F5",
+              fontWeight: 700,
+            },
+            "& .MuiDataGrid-sortIcon, & .MuiDataGrid-menuIconButton, & .MuiDataGrid-columnHeader .MuiSvgIcon-root": {
+              color: "#F5F5F5",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "1px solid #25272C",
+              color: "#F5F5F6",
+            },
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "#23262B",
+              cursor: "pointer",
+            },
+            "& .MuiDataGrid-overlay, & .MuiDataGrid-overlayWrapper": {
+              backgroundColor: "#121316",
+              color: "#C7CAD1",
+            },
+            "& .MuiDataGrid-row.Mui-selected": {
+              backgroundColor: "rgba(235,0,27,0.16) !important",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "1px solid #2B2B2F",
+              background: "#1F2023",
+            },
+            "& .MuiTablePagination-root, & .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows, & .MuiTablePagination-select, & .MuiInputBase-root, & .MuiSelect-select": {
+              color: "#F5F5F5",
+            },
+            "& .MuiTablePagination-actions .MuiIconButton-root, & .MuiTablePagination-actions .MuiSvgIcon-root": {
+              color: "#F5F5F5",
             },
           }}
         />

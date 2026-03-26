@@ -8,6 +8,7 @@ import {
   Button,
   TextField,
   MenuItem,
+  Chip,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { NumericFormat } from "react-number-format";
@@ -398,11 +399,16 @@ const Inventory = () => {
   return (
     <Box
       sx={{
-        height: "calc(100vh - 75px)",
+        height: "100%",
+        minHeight: 0,
         width: "100%",
         p: 3,
+        pb: 0,
         display: "flex",
         flexDirection: "column",
+        gap: 2,
+        overflow: "hidden",
+        bgcolor: "#18191A",
       }}
     >
       <Box
@@ -410,18 +416,58 @@ const Inventory = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          mb: 2,
+          mb: 0,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #2B2B2F",
+          bgcolor: "#1F2023",
         }}
       >
-        <Typography variant="h4" sx={{ mb: 0 }}>
-          Inventory
-        </Typography>
+        <Box>
+          <Typography
+            variant="h4"
+            sx={{ mb: 0.25, fontWeight: 700, color: "#F8F8F9" }}
+          >
+            Inventory
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#A5A7AC" }}>
+            Manage active listings, pricing, and status updates.
+          </Typography>
+        </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          {rowSelection.ids.size > 0 && (
+            <Chip
+              label={`${rowSelection.ids.size} selected`}
+              size="small"
+              sx={{
+                bgcolor: "#2B2B2F",
+                color: "#DADCE0",
+                border: "1px solid #3A3B40",
+              }}
+            />
+          )}
           <Button
             variant="contained"
-            color="primary"
             onClick={() => setImportOpen(true)}
+            sx={{
+              bgcolor: "#EB001B",
+              fontWeight: 700,
+              textTransform: "none",
+              borderRadius: 2,
+              px: 2,
+              transition: "all 0.2s ease",
+              boxShadow: "0 8px 18px rgba(235, 0, 27, 0.22)",
+              "&:hover": {
+                bgcolor: "#C40018",
+                transform: "translateY(-1px)",
+                boxShadow: "0 12px 24px rgba(235, 0, 27, 0.28)",
+              },
+              "&:active": {
+                transform: "translateY(0)",
+                boxShadow: "0 4px 12px rgba(235, 0, 27, 0.2)",
+              },
+            }}
           >
             Import CSV
           </Button>
@@ -429,7 +475,30 @@ const Inventory = () => {
           <Tooltip title="Delete Selected">
             <span>
               <IconButton
-                color="error"
+                sx={{
+                  color: rowSelection.ids.size < 1 ? "#9CA3AF" : "#FFFFFF",
+                  border: "1px solid #3A3B40",
+                  bgcolor: rowSelection.ids.size < 1 ? "#24262A" : "#EB001B",
+                  transition: "all 0.2s ease",
+                  boxShadow:
+                    rowSelection.ids.size < 1
+                      ? "none"
+                      : "0 8px 18px rgba(235, 0, 27, 0.24)",
+                  "&:hover": {
+                    bgcolor: rowSelection.ids.size < 1 ? "#2D3136" : "#C40018",
+                    transform: rowSelection.ids.size < 1 ? "none" : "translateY(-1px)",
+                    boxShadow:
+                      rowSelection.ids.size < 1
+                        ? "none"
+                        : "0 12px 24px rgba(235, 0, 27, 0.3)",
+                  },
+                  "&:active": {
+                    transform: "translateY(0)",
+                  },
+                  "& .MuiSvgIcon-root": {
+                    color: rowSelection.ids.size < 1 ? "#9CA3AF" : "#FFFFFF",
+                  },
+                }}
                 onClick={handleDeleteSelected}
                 disabled={rowSelection.ids.size < 1}
               >
@@ -437,48 +506,167 @@ const Inventory = () => {
               </IconButton>
             </span>
           </Tooltip>
-
-          {rowSelection.ids.size > 0 && (
-            <Typography variant="body2">
-              {rowSelection.ids.size} selected
-            </Typography>
-          )}
         </Box>
       </Box>
-      <DataGrid
-        showToolbar
-        rows={rows}
-        columns={columns}
-        pageSize={10}
-        rowsPerPageOptions={[10, 25, 50]}
-        checkboxSelection
-        disableRowSelectionOnClick
-        rowSelectionModel={rowSelection}
-        onRowSelectionModelChange={(newSelection) => {
-          setRowSelection(newSelection);
+
+      <Box
+        sx={{
+          flex: 1,
+          minHeight: 0,
+          borderRadius: 3,
+          border: "1px solid #2B2B2F",
+          bgcolor: "#18191A",
+          overflow: "hidden",
         }}
-        onRowClick={(params, event) => {
-          if (event.target?.closest?.(".MuiDataGrid-cellCheckbox")) return;
-          handleRowClick(params);
-        }}
-        initialState={{
-          columns: {
-            columnVisibilityModel: {
-              photo: true,
-              title: true,
-              year: true,
-              make: true,
-              model: true,
-              price: true,
-              odometer: true,
-              dealership: true,
-              category: false,
-              subcategory: false,
-              condition: false,
+      >
+        <DataGrid
+          showToolbar
+          rows={rows}
+          columns={columns}
+          localeText={{
+            noRowsLabel: "No listings yet",
+          }}
+          pageSize={10}
+          rowsPerPageOptions={[10, 25, 50]}
+          checkboxSelection
+          disableRowSelectionOnClick
+          rowSelectionModel={rowSelection}
+          onRowSelectionModelChange={(newSelection) => {
+            setRowSelection(newSelection);
+          }}
+          onRowClick={(params, event) => {
+            if (event.target?.closest?.(".MuiDataGrid-cellCheckbox")) return;
+            handleRowClick(params);
+          }}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                photo: true,
+                title: true,
+                year: true,
+                make: true,
+                model: true,
+                price: true,
+                odometer: true,
+                dealership: true,
+                category: false,
+                subcategory: false,
+                condition: false,
+              },
             },
-          },
-        }}
-      />
+          }}
+          sx={{
+            border: "none",
+            color: "#E5E7EB",
+            bgcolor: "#18191A",
+            "& .MuiDataGrid-toolbarContainer": {
+              px: 1.5,
+              py: 1,
+              borderBottom: "1px solid #2B2B2F",
+              background: "#1F2023",
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer *": {
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-root": {
+              color: "#EB001B",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-root .MuiSvgIcon-root": {
+              color: "#EB001B !important",
+              fill: "#EB001B !important",
+              opacity: "1 !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiIconButton-root": {
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiIconButton-root .MuiSvgIcon-root": {
+              color: "#EB001B !important",
+              fill: "#EB001B",
+            },
+            "& .MuiDataGrid-toolbarContainer [class*='MuiDataGrid-toolbar'] .MuiSvgIcon-root": {
+              color: "#EB001B !important",
+              fill: "#EB001B",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiDataGrid-toolbarButton, & .MuiDataGrid-toolbarContainer .MuiDataGrid-toolbarButton .MuiButton-startIcon, & .MuiDataGrid-toolbarContainer .MuiDataGrid-toolbarButton .MuiSvgIcon-root": {
+              color: "#EB001B !important",
+              fill: "#EB001B !important",
+              opacity: "1 !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-startIcon > *": {
+              color: "#EB001B !important",
+              fill: "#EB001B !important",
+              opacity: "1 !important",
+            },
+            "& .MuiDataGrid-toolbarContainer button[aria-label*='column'], & .MuiDataGrid-toolbarContainer button[aria-label*='filter'], & .MuiDataGrid-toolbarContainer button[aria-label*='density'], & .MuiDataGrid-toolbarContainer button[aria-label*='export']": {
+              color: "#EB001B !important",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiInputBase-root, & .MuiDataGrid-toolbarContainer .MuiInputBase-input": {
+              color: "#EB001B",
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiDataGrid-toolbarQuickFilter .MuiSvgIcon-root": {
+              color: "#EB001B",
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              borderBottom: "1px solid #2B2B2F",
+              background: "#212327",
+              color: "#F5F5F5",
+              fontWeight: 700,
+            },
+            "& .MuiDataGrid-columnHeader": {
+              backgroundColor: "#212327",
+              color: "#F5F5F5",
+            },
+            "& .MuiDataGrid-columnHeaderTitle": {
+              color: "#F5F5F5",
+              fontWeight: 700,
+            },
+            "& .MuiDataGrid-iconSeparator": {
+              color: "#4B5563",
+            },
+            "& .MuiDataGrid-sortIcon, & .MuiDataGrid-menuIconButton, & .MuiDataGrid-columnHeader .MuiSvgIcon-root": {
+              color: "#F5F5F5",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "1px solid #25272C",
+              color: "#F5F5F6",
+            },
+            "& .MuiDataGrid-cellCheckbox, & .MuiDataGrid-columnHeaderCheckbox": {
+              bgcolor: "#1F2023",
+            },
+            "& .MuiDataGrid-cellCheckbox .MuiSvgIcon-root, & .MuiDataGrid-columnHeaderCheckbox .MuiSvgIcon-root": {
+              color: "#F5F5F6",
+            },
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "#23262B",
+              cursor: "pointer",
+            },
+            "& .MuiDataGrid-overlay, & .MuiDataGrid-overlayWrapper": {
+              backgroundColor: "#121316",
+              color: "#C7CAD1",
+            },
+            "& .MuiDataGrid-row.Mui-selected": {
+              backgroundColor: "rgba(235,0,27,0.16) !important",
+            },
+            "& .MuiCheckbox-root": {
+              color: "#9CA3AF",
+            },
+            "& .MuiCheckbox-root.Mui-checked": {
+              color: "#EB001B",
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "1px solid #2B2B2F",
+              background: "#1F2023",
+            },
+            "& .MuiTablePagination-root, & .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows, & .MuiTablePagination-select, & .MuiInputBase-root, & .MuiSelect-select": {
+              color: "#F5F5F5",
+            },
+            "& .MuiTablePagination-actions .MuiIconButton-root, & .MuiTablePagination-actions .MuiSvgIcon-root": {
+              color: "#F5F5F5",
+            },
+          }}
+        />
+      </Box>
       <Modal open={open} onClose={handleClose}>
         <Box
           sx={{
@@ -487,10 +675,12 @@ const Inventory = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 600,
-            bgcolor: "background.paper",
-            boxShadow: 24,
+            bgcolor: "#1F2023",
+            color: "#F5F5F6",
+            boxShadow: "0 24px 60px rgba(0,0,0,0.45)",
             p: 4,
-            borderRadius: 2,
+            borderRadius: 3,
+            border: "1px solid #33353A",
             maxHeight: "90vh",
             overflowY: "auto",
           }}
@@ -528,6 +718,14 @@ const Inventory = () => {
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+                sx={{
+                  "& .MuiInputLabel-root": { color: "#A5A7AC" },
+                  "& .MuiOutlinedInput-root": {
+                    color: "#F5F5F6",
+                    "& fieldset": { borderColor: "#3A3B40" },
+                    "&:hover fieldset": { borderColor: "#EB001B" },
+                  },
+                }}
               />
 
               <TextField
@@ -538,6 +736,14 @@ const Inventory = () => {
                 onChange={handleInputChange}
                 fullWidth
                 margin="normal"
+                sx={{
+                  "& .MuiInputLabel-root": { color: "#A5A7AC" },
+                  "& .MuiOutlinedInput-root": {
+                    color: "#F5F5F6",
+                    "& fieldset": { borderColor: "#3A3B40" },
+                    "&:hover fieldset": { borderColor: "#EB001B" },
+                  },
+                }}
               >
                 <MenuItem value="new">New</MenuItem>
                 <MenuItem value="used">Used</MenuItem>
@@ -664,21 +870,24 @@ const Inventory = () => {
               />
 
               <Box mt={3} display="flex" justifyContent="space-between">
-                <Button variant="outlined" onClick={handleClose}>
+                <Button
+                  variant="outlined"
+                  onClick={handleClose}
+                  sx={{ borderColor: "#4B5563", color: "#D1D5DB" }}
+                >
                   Cancel
                 </Button>
                 <Box>
                   <Button
                     variant="contained"
-                    color="error"
                     onClick={handleMarkAsSold}
-                    sx={{ mr: 2 }}
+                    sx={{ mr: 2, bgcolor: "#B91C1C", "&:hover": { bgcolor: "#991B1B" } }}
                   >
                     Mark as Sold
                   </Button>
                   <Button
                     variant="contained"
-                    color="primary"
+                    sx={{ bgcolor: "#EB001B", "&:hover": { bgcolor: "#C40018" } }}
                     onClick={handleSaveChanges}
                   >
                     Save Changes

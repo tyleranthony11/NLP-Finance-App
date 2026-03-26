@@ -38,14 +38,101 @@ ChartJS.register(
 );
 
 const styles = {
+  container: {
+    p: 3,
+    pb: 4,
+    minHeight: 0,
+    height: "100%",
+    overflowY: "auto",
+    bgcolor: "#18191A",
+    color: "#F5F5F6",
+  },
+  headerPanel: {
+    mb: 2,
+    p: 2,
+    borderRadius: 3,
+    border: "1px solid #2B2B2F",
+    bgcolor: "#1F2023",
+  },
+  filterRow: {
+    display: "flex",
+    gap: 2,
+    mt: 2,
+    mb: 2,
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+    p: 2,
+    borderRadius: 3,
+    border: "1px solid #2B2B2F",
+    bgcolor: "#1F2023",
+  },
+  filterControl: { minWidth: 220 },
+  selectLabelSx: {
+    color: "#C7CAD1 !important",
+    "&.Mui-focused": { color: "#F5F5F6 !important" },
+  },
+  viewModeLabelSx: {
+    color: "#EB001B !important",
+    "&.Mui-focused": { color: "#EB001B !important" },
+  },
+  selectSx: {
+    "& .MuiInputLabel-root": { color: "#A5A7AC" },
+    "& .MuiInputLabel-root.Mui-focused": { color: "#F5F5F6" },
+    "& .MuiOutlinedInput-root": {
+      color: "#F5F5F6",
+      "& fieldset": { borderColor: "#3A3B40" },
+      "&:hover fieldset": { borderColor: "#EB001B" },
+      "&.Mui-focused fieldset": { borderColor: "#EB001B" },
+    },
+    "& .MuiSelect-select": {
+      color: "#F5F5F6 !important",
+      WebkitTextFillColor: "#F5F5F6 !important",
+    },
+    "& .MuiOutlinedInput-input": {
+      color: "#F5F5F6 !important",
+      WebkitTextFillColor: "#F5F5F6 !important",
+    },
+    "& .MuiInputBase-input": {
+      color: "#F5F5F6 !important",
+      WebkitTextFillColor: "#F5F5F6 !important",
+    },
+    "& .MuiSvgIcon-root": { color: "#C7CAD1" },
+  },
+  viewModeSelectSx: {
+    "& .MuiOutlinedInput-root": {
+      backgroundColor: "#16171A",
+      "& fieldset": { borderColor: "#2F3136" },
+      "&:hover fieldset": { borderColor: "#3A3D43" },
+      "&.Mui-focused fieldset": { borderColor: "#4B5563" },
+    },
+    "& .MuiSelect-select": {
+      color: "#D1D5DB !important",
+      WebkitTextFillColor: "#D1D5DB !important",
+    },
+    "& .MuiSvgIcon-root": { color: "#A5A7AC" },
+  },
   statCards: {
     display: "flex",
-    justifyContent: "center",
-    gap: 4,
-    mb: 4,
+    gap: 2,
+    mb: 2,
     flexWrap: "wrap",
   },
-  icon: { fontSize: 32 },
+  icon: { fontSize: 34, color: "#EB001B" },
+  chartPanel: {
+    borderRadius: 3,
+    border: "1px solid #2B2B2F",
+    bgcolor: "#1F2023",
+    p: 2,
+  },
+  yearPickerWrap: {
+    px: 1,
+    py: 0.5,
+    borderRadius: 2,
+    border: "1px solid #2B2B2F",
+    bgcolor: "#1F2023",
+    "& .MuiTypography-root": { color: "#F5F5F6", fontWeight: 700 },
+    "& .MuiIconButton-root, & .MuiSvgIcon-root": { color: "#F5F5F6" },
+  },
 };
 
 const IncomeReports = () => {
@@ -198,14 +285,23 @@ const IncomeReports = () => {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
+      x: {
+        grid: { color: "#2B2B2F" },
+        ticks: { color: "#C7CAD1" },
+      },
       y: {
         beginAtZero: true,
+        grid: { color: "#2B2B2F" },
         ticks: {
+          color: "#C7CAD1",
           callback: (value) => `$${value.toLocaleString()}`,
         },
       },
     },
     plugins: {
+      legend: {
+        labels: { color: "#F5F5F6" },
+      },
       tooltip: {
         callbacks: {
           label: (ctx) => {
@@ -223,14 +319,14 @@ const IncomeReports = () => {
       {
         label: `Monthly Income - ${selectedYear.year()}`,
         data: allMonths.map((month) => incomeByMonth[month] || 0),
-        backgroundColor: "#1976d2",
+        backgroundColor: "#EB001B",
         order: 2,
       },
       {
         label: `Monthly Average`,
         data: averageIncomeByMonth,
         type: "line",
-        borderColor: "#f57c00",
+        borderColor: "#F59E0B",
         borderWidth: 2,
         fill: false,
         pointRadius: 3,
@@ -247,16 +343,16 @@ const IncomeReports = () => {
         label: `Income Breakdown - ${selectedYear.year()}`,
         data: Object.values(incomeTypeSums),
         backgroundColor: [
-          "#1976d2",
-          "#f57c00",
-          "#4caf50",
-          "#ab47bc",
-          "#ff7043",
-          "#26c6da",
-          "#9ccc65",
-          "#7e57c2",
-          "#ffa726",
-          "#ef5350",
+          "#EB001B",
+          "#F59E0B",
+          "#22C55E",
+          "#A855F7",
+          "#F97316",
+          "#06B6D4",
+          "#84CC16",
+          "#8B5CF6",
+          "#F43F5E",
+          "#14B8A6",
         ],
         borderWidth: 1,
       },
@@ -269,56 +365,45 @@ const IncomeReports = () => {
       {
         label: `New Ads Posted - ${selectedYear.year()}`,
         data: allMonths.map((month) => adsByMonth[month] || 0),
-        backgroundColor: "#1976d2",
+        backgroundColor: "#EB001B",
       },
     ],
   };
 
   return (
-    <>
-      <Typography variant="h4" fontWeight="bold">
-        Income Reports
-      </Typography>
+    <Box sx={styles.container}>
+      <Box sx={styles.headerPanel}>
+        <Typography variant="h4" sx={{ mb: 0.25, fontWeight: 700 }}>
+          Income Reports
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#A5A7AC" }}>
+          Track yearly performance by role and compare income trends.
+        </Typography>
+      </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          gap: 2,
-          mt: 2,
-          mb: 2,
-          flexWrap: "wrap",
-          justifyContent: "flex-start",
-        }}
-      >
-        <FormControl sx={{ minWidth: 200 }}>
-          <InputLabel id="view-select-label">View Mode</InputLabel>
-          <Select
-            labelId="view-select-label"
-            value={viewMode}
-            label="View Mode"
-            onChange={(e) => {
-              setViewMode(e.target.value);
-              setSelectedDealer("");
-              setSelectedLender("");
-              setSelectedEmployee("");
-            }}
-          >
-            <MenuItem value="all">All</MenuItem>
-            <MenuItem value="dealer">By Dealer</MenuItem>
-            <MenuItem value="lender">By Lender</MenuItem>
-            <MenuItem value="employee">By Employee</MenuItem>
-            <MenuItem value="marketplace">Marketplace</MenuItem>
-          </Select>
-        </FormControl>
-
+      {(viewMode === "dealer" || viewMode === "lender" || viewMode === "employee") && (
+        <Box sx={styles.filterRow}>
         {viewMode === "dealer" && (
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="dealer-select-label">Select Dealer</InputLabel>
+          <FormControl sx={styles.filterControl}>
+            <InputLabel id="dealer-select-label" sx={styles.selectLabelSx}>
+              Select Dealer
+            </InputLabel>
             <Select
+              size="small"
               labelId="dealer-select-label"
               value={selectedDealer}
               label="Select Dealer"
+              sx={styles.selectSx}
               onChange={(e) => setSelectedDealer(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    bgcolor: "#1F2023",
+                    color: "#F5F5F6",
+                    border: "1px solid #2B2B2F",
+                  },
+                },
+              }}
             >
               <MenuItem value="">All Dealers</MenuItem>
               {uniqueDealers.map((dealer) => (
@@ -331,13 +416,26 @@ const IncomeReports = () => {
         )}
 
         {viewMode === "lender" && (
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="lender-select-label">Select Lender</InputLabel>
+          <FormControl sx={styles.filterControl}>
+            <InputLabel id="lender-select-label" sx={styles.selectLabelSx}>
+              Select Lender
+            </InputLabel>
             <Select
+              size="small"
               labelId="lender-select-label"
               value={selectedLender}
               label="Select Lender"
+              sx={styles.selectSx}
               onChange={(e) => setSelectedLender(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    bgcolor: "#1F2023",
+                    color: "#F5F5F6",
+                    border: "1px solid #2B2B2F",
+                  },
+                },
+              }}
             >
               <MenuItem value="">All Lenders</MenuItem>
               {uniqueLenders.map((lender) => (
@@ -350,13 +448,26 @@ const IncomeReports = () => {
         )}
 
         {viewMode === "employee" && (
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="employee-select-label">Select Employee</InputLabel>
+          <FormControl sx={styles.filterControl}>
+            <InputLabel id="employee-select-label" sx={styles.selectLabelSx}>
+              Select Employee
+            </InputLabel>
             <Select
+              size="small"
               labelId="employee-select-label"
               value={selectedEmployee}
               label="Select Employee"
+              sx={styles.selectSx}
               onChange={(e) => setSelectedEmployee(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  sx: {
+                    bgcolor: "#1F2023",
+                    color: "#F5F5F6",
+                    border: "1px solid #2B2B2F",
+                  },
+                },
+              }}
             >
               <MenuItem value="">All Employees</MenuItem>
               {uniqueEmployees.map((employee) => (
@@ -367,7 +478,8 @@ const IncomeReports = () => {
             </Select>
           </FormControl>
         )}
-      </Box>
+        </Box>
+      )}
 
       {viewMode === "marketplace" ? (
         <>
@@ -388,17 +500,80 @@ const IncomeReports = () => {
                 0,
               )}
             />
-            <Box sx={{ alignSelf: "flex-start" }}>
-              <YearPicker value={selectedYear} onChange={setSelectedYear} />
+            <Box sx={{ display: "flex", gap: 1.5, alignItems: "center", flexWrap: "wrap" }}>
+              <Box sx={styles.yearPickerWrap}>
+                <YearPicker value={selectedYear} onChange={setSelectedYear} />
+              </Box>
+              <FormControl sx={{ minWidth: 150, maxWidth: 170 }}>
+                <InputLabel
+                  id="view-select-label-marketplace"
+                  shrink
+                  sx={styles.viewModeLabelSx}
+                >
+                  View Mode
+                </InputLabel>
+                <Select
+                  size="small"
+                  labelId="view-select-label-marketplace"
+                  value={viewMode}
+                  label="View Mode"
+                  sx={{
+                    ...styles.selectSx,
+                    ...styles.viewModeSelectSx,
+                    "& .MuiSelect-select": {
+                      pt: "10px",
+                      pb: "8px",
+                      color: "#D1D5DB !important",
+                      WebkitTextFillColor: "#D1D5DB !important",
+                    },
+                  }}
+                  onChange={(e) => {
+                    setViewMode(e.target.value);
+                    setSelectedDealer("");
+                    setSelectedLender("");
+                    setSelectedEmployee("");
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        bgcolor: "#1F2023",
+                        color: "#F5F5F6",
+                        border: "1px solid #2B2B2F",
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="dealer">By Dealer</MenuItem>
+                  <MenuItem value="lender">By Lender</MenuItem>
+                  <MenuItem value="employee">By Employee</MenuItem>
+                  <MenuItem value="marketplace">Marketplace</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
           </Box>
-          <Box sx={{ flex: 1, minWidth: 300, height: 400, maxWidth: 1000 }}>
+          <Box
+            sx={{
+              ...styles.chartPanel,
+              maxWidth: 1100,
+              width: "100%",
+              height: 430,
+            }}
+          >
             <Bar
               data={marketplaceChartData}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true } },
+                plugins: { legend: { labels: { color: "#F5F5F6" } } },
+                scales: {
+                  x: { grid: { color: "#2B2B2F" }, ticks: { color: "#C7CAD1" } },
+                  y: {
+                    beginAtZero: true,
+                    grid: { color: "#2B2B2F" },
+                    ticks: { color: "#C7CAD1" },
+                  },
+                },
               }}
               key={`marketplace-${selectedYear.year()}`}
             />
@@ -430,14 +605,57 @@ const IncomeReports = () => {
             />
           </Box>
 
-          <Box sx={{ maxWidth: 1500, mx: "auto", mt: 4, p: 2 }}>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              mb={3}
-            >
-              <YearPicker value={selectedYear} onChange={setSelectedYear} />
+          <Box sx={{ maxWidth: 1500, mx: "auto", mt: 1 }}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+              <Box sx={styles.yearPickerWrap}>
+                <YearPicker value={selectedYear} onChange={setSelectedYear} />
+              </Box>
+              <FormControl sx={{ minWidth: 150, maxWidth: 170 }}>
+                <InputLabel
+                  id="view-select-label-default"
+                  shrink
+                  sx={styles.viewModeLabelSx}
+                >
+                  View Mode
+                </InputLabel>
+                <Select
+                  size="small"
+                  labelId="view-select-label-default"
+                  value={viewMode}
+                  label="View Mode"
+                  sx={{
+                    ...styles.selectSx,
+                    ...styles.viewModeSelectSx,
+                    "& .MuiSelect-select": {
+                      pt: "10px",
+                      pb: "8px",
+                      color: "#D1D5DB !important",
+                      WebkitTextFillColor: "#D1D5DB !important",
+                    },
+                  }}
+                  onChange={(e) => {
+                    setViewMode(e.target.value);
+                    setSelectedDealer("");
+                    setSelectedLender("");
+                    setSelectedEmployee("");
+                  }}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: {
+                        bgcolor: "#1F2023",
+                        color: "#F5F5F6",
+                        border: "1px solid #2B2B2F",
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value="dealer">By Dealer</MenuItem>
+                  <MenuItem value="lender">By Lender</MenuItem>
+                  <MenuItem value="employee">By Employee</MenuItem>
+                  <MenuItem value="marketplace">Marketplace</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
 
             <Box
@@ -449,7 +667,7 @@ const IncomeReports = () => {
                 alignItems: "flex-start",
               }}
             >
-              <Box sx={{ flex: 1, minWidth: 300, height: 400 }}>
+              <Box sx={{ ...styles.chartPanel, flex: 1, minWidth: 300, height: 430 }}>
                 <Bar
                   data={chartData}
                   options={chartOptions}
@@ -457,27 +675,23 @@ const IncomeReports = () => {
                 />
               </Box>
 
-              <Box
-                sx={{
-                  flex: 1,
-                  minWidth: 300,
-                  height: 400,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
+              <Box sx={{ ...styles.chartPanel, flex: 1, minWidth: 300, height: 430 }}>
                 <Box
                   sx={{
                     flex: 1,
                     minWidth: 300,
-                    height: 400,
+                    height: "100%",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="h6" mb={2} textAlign="center">
+                  <Typography
+                    variant="h6"
+                    mb={2}
+                    textAlign="center"
+                    sx={{ color: "#F5F5F6", fontWeight: 600 }}
+                  >
                     Income Breakdown by Type - {selectedYear.year()}
                   </Typography>
                   <Box sx={{ width: "100%", flex: 1 }}>
@@ -492,7 +706,7 @@ const IncomeReports = () => {
           </Box>
         </>
       )}
-    </>
+    </Box>
   );
 };
 

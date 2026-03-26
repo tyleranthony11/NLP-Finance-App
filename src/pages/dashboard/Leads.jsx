@@ -83,59 +83,108 @@ function Leads() {
   const followedUpLeads = leads.filter((lead) => lead.followedUp);
 
   return (
-    <Box sx={{ p: 4, backgroundColor: "#f5f5f5", minHeight: "100vh" }}>
-      <Typography variant="h4" gutterBottom>
-        Leads
-      </Typography>
+    <Box
+      sx={{
+        p: 3,
+        pb: 0,
+        backgroundColor: "#18191A",
+        minHeight: "100%",
+        color: "#F5F5F6",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #2B2B2F",
+          bgcolor: "#1F2023",
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ mb: 0.25, fontWeight: 700 }}>
+            Leads
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#A5A7AC" }}>
+            Track new lead submissions and follow-up history.
+          </Typography>
+        </Box>
+      </Box>
 
       {newLeads.length > 0 ? (
         <>
           <Typography
             variant="h6"
-            sx={{ mt: 3, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+            sx={{
+              mt: 2,
+              mb: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              color: "#F8F8F9",
+              fontWeight: 700,
+            }}
           >
-            <FiberNewIcon color="primary" /> New Leads
+            <FiberNewIcon sx={{ color: "#EB001B" }} /> New Leads
           </Typography>
 
           {newLeads.map((lead) => (
             <Paper
               key={lead.id}
-              sx={{ p: 3, mb: 2, borderRadius: 2, boxShadow: 2 }}
+              sx={{
+                p: 3,
+                mb: 2,
+                borderRadius: 3,
+                border: "1px solid #2B2B2F",
+                boxShadow: "0 10px 24px rgba(0,0,0,0.3)",
+                bgcolor: "#1F2023",
+                color: "#F5F5F6",
+              }}
             >
-              <Typography variant="h6" gutterBottom>
+              <Typography variant="h6" sx={{ fontWeight: 700 }} gutterBottom>
                 {lead.first_name} {lead.last_name}
               </Typography>
 
-              <Typography>
-                <EmailIcon /> {lead.email}
+              <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <EmailIcon sx={{ color: "#EB001B" }} /> {lead.email}
               </Typography>
-              <Typography>
-                <PhoneIcon /> {lead.phone}
+              <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <PhoneIcon sx={{ color: "#EB001B" }} /> {lead.phone}
               </Typography>
-              <Typography>
-                <LocationOnIcon /> {lead.location}
+              <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <LocationOnIcon sx={{ color: "#EB001B" }} /> {lead.location}
               </Typography>
-              <Typography>
-                <DirectionsCarIcon /> {lead.vehicle}
+              <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <DirectionsCarIcon sx={{ color: "#EB001B" }} /> {lead.vehicle}
               </Typography>
-              <Typography>
-                <StoreIcon /> {lead.seller}
+              <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <StoreIcon sx={{ color: "#EB001B" }} /> {lead.seller}
               </Typography>
 
               {lead.additional_info && (
-                <Typography>
-                  <NotesIcon /> {lead.additional_info}
+                <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <NotesIcon sx={{ color: "#EB001B" }} /> {lead.additional_info}
                 </Typography>
               )}
 
-              <Typography>
-                <CalendarTodayIcon fontSize="small" sx={{ mr: 1 }} />
+              <Typography sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <CalendarTodayIcon fontSize="small" sx={{ color: "#EB001B" }} />
                 Submitted: {formatDate(lead.created_at)}
               </Typography>
 
               <Button
                 variant="contained"
-                sx={{ mt: 2 }}
+                sx={{
+                  mt: 2,
+                  bgcolor: "#EB001B",
+                  textTransform: "none",
+                  fontWeight: 700,
+                  borderRadius: 2,
+                  "&:hover": { bgcolor: "#C40018" },
+                }}
                 onClick={() => handleConfirm(lead)}
               >
                 Mark as Followed Up
@@ -144,36 +193,75 @@ function Leads() {
           ))}
         </>
       ) : (
-        <Typography>No new leads at the moment.</Typography>
+        <Typography sx={{ color: "#A5A7AC" }}>No new leads at the moment.</Typography>
       )}
 
       {followedUpLeads.length > 0 && (
         <>
           <Typography
             variant="h6"
-            sx={{ mt: 5, mb: 2, display: "flex", alignItems: "center", gap: 1 }}
+            sx={{
+              mt: 4,
+              mb: 2,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              color: "#F8F8F9",
+              fontWeight: 700,
+            }}
           >
-            <CheckCircleIcon color="success" /> Followed-Up Leads
+            <CheckCircleIcon sx={{ color: "#22C55E" }} /> Followed-Up Leads
           </Typography>
 
-          <TableContainer component={Paper}>
+          <TableContainer
+            component={Paper}
+            sx={{
+              borderRadius: 3,
+              border: "1px solid #2B2B2F",
+              bgcolor: "#1F2023",
+              color: "#F5F5F6",
+              boxShadow: "0 10px 24px rgba(0,0,0,0.3)",
+            }}
+          >
             <Table>
-              <TableHead sx={{ backgroundColor: "#eee" }}>
+              <TableHead sx={{ backgroundColor: "#212327" }}>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Phone</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Vehicle</TableCell>
-                  <TableCell>Seller</TableCell>
-                  <TableCell>Submitted</TableCell>
-                  <TableCell>Followed Up</TableCell>
+                  {[
+                    "Name",
+                    "Email",
+                    "Phone",
+                    "Location",
+                    "Vehicle",
+                    "Seller",
+                    "Submitted",
+                    "Followed Up",
+                  ].map((header) => (
+                    <TableCell
+                      key={header}
+                      sx={{
+                        color: "#F5F5F5",
+                        fontWeight: 700,
+                        borderBottom: "1px solid #2B2B2F",
+                      }}
+                    >
+                      {header}
+                    </TableCell>
+                  ))}
                 </TableRow>
               </TableHead>
 
               <TableBody>
                 {followedUpLeads.map((lead) => (
-                  <TableRow key={lead.id}>
+                  <TableRow
+                    key={lead.id}
+                    sx={{
+                      "& td": {
+                        color: "#E5E7EB",
+                        borderBottom: "1px solid #2B2B2F",
+                      },
+                      "&:hover": { backgroundColor: "#23262B" },
+                    }}
+                  >
                     <TableCell>
                       {lead.first_name} {lead.last_name}
                     </TableCell>
@@ -185,7 +273,7 @@ function Leads() {
                     <TableCell>{formatDate(lead.created_at)}</TableCell>
                     <TableCell>
                       <CheckCircleIcon
-                        sx={{ verticalAlign: "middle", mr: 1, color: "green" }}
+                        sx={{ verticalAlign: "middle", mr: 1, color: "#22C55E" }}
                       />
                       {formatDate(lead.followedUpAt)}
                     </TableCell>

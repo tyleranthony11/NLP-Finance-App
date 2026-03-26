@@ -4,7 +4,6 @@ import {
   CssBaseline,
   AppBar,
   Toolbar,
-  Typography,
   Drawer,
   List,
   ListItemButton,
@@ -106,11 +105,7 @@ const DashboardLayout = ({ children }) => {
     <Box className="dashboard-root">
       <CssBaseline />
       <AppBar position="fixed" className="dashboard-appbar">
-        <Toolbar>
-          <Typography variant="h6" noWrap component="div">
-            Employee Dashboard
-          </Typography>
-        </Toolbar>
+        <Toolbar />
       </AppBar>
 
       <Drawer variant="permanent" className="dashboard-drawer">

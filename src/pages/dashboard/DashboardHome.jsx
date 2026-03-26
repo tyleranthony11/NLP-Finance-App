@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import PendingIcon from "@mui/icons-material/HourglassEmpty";
 import FiberNewIcon from "@mui/icons-material/FiberNew";
@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import { authFetch } from "../../auth/authFetch.js";
 
 const DashboardHome = () => {
+  const statIconColor = "#EB001B";
   const [activeListings, setActiveListings] = useState(0);
   const [pendingListings, setPendingListings] = useState(0);
   const [newLeads, setNewLeads] = useState(0);
@@ -74,43 +75,73 @@ const DashboardHome = () => {
   return (
     <Box
       sx={{
+        height: "100%",
+        minHeight: 0,
+        width: "100%",
+        p: 3,
         display: "flex",
         gap: 2,
         flexWrap: "wrap",
-        mb: 4,
-        marginLeft: 25,
+        alignContent: "flex-start",
+        overflow: "hidden",
+        bgcolor: "#18191A",
       }}
     >
-      <Link to="/dashboard/pending-listings" style={{ textDecoration: "none" }}>
-        <StatCard
-          icon={<PendingIcon sx={{ fontSize: 40, color: "#ff9800" }} />}
-          label="Pending Listings"
-          value={pendingListings}
-        />
-      </Link>
-      <Link to="/dashboard/leads" style={{ textDecoration: "none" }}>
-        <StatCard
-          icon={<FiberNewIcon sx={{ fontSize: 40, color: "#4caf50" }} />}
-          label="New Leads"
-          value={newLeads}
-        />
-      </Link>
-      <Link to="/dashboard/funded-deals" style={{ textDecoration: "none" }}>
-        <StatCard
-          icon={<HandshakeIcon sx={{ fontSize: 40, color: "#9c27b0" }} />}
-          label={`${currentMonth} Deals`}
-          value={currentMonthDealsCount}
-        />
-      </Link>
-      <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
-        <StatCard
-          icon={<DirectionsCarIcon sx={{ fontSize: 40, color: "#1976d2" }} />}
-          label="Active Listings"
-          value={activeListings}
-        />
-      </Link>
-      <Box sx={{ width: 1200, height: 1500, mt: 5 }}>
-        <TrafficChart />
+      <Box sx={{ width: "100%", mb: 0.5 }}>
+        <Typography variant="h4" sx={{ color: "#F8F8F9", fontWeight: 700 }}>
+          Dashboard
+        </Typography>
+        <Typography variant="body2" sx={{ color: "#A5A7AC" }}>
+          Snapshot of listings, leads, and funded deals.
+        </Typography>
+      </Box>
+
+      <Box sx={{ width: "fit-content", maxWidth: "100%" }}>
+        <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <Link to="/dashboard/pending-listings" style={{ textDecoration: "none" }}>
+            <StatCard
+              icon={<PendingIcon sx={{ fontSize: 40, color: statIconColor }} />}
+              label="Pending Listings"
+              value={pendingListings}
+            />
+          </Link>
+          <Link to="/dashboard/leads" style={{ textDecoration: "none" }}>
+            <StatCard
+              icon={<FiberNewIcon sx={{ fontSize: 40, color: statIconColor }} />}
+              label="New Leads"
+              value={newLeads}
+            />
+          </Link>
+          <Link to="/dashboard/funded-deals" style={{ textDecoration: "none" }}>
+            <StatCard
+              icon={<HandshakeIcon sx={{ fontSize: 40, color: statIconColor }} />}
+              label={`${currentMonth} Deals`}
+              value={currentMonthDealsCount}
+            />
+          </Link>
+          <Link to="/dashboard/inventory" style={{ textDecoration: "none" }}>
+            <StatCard
+              icon={<DirectionsCarIcon sx={{ fontSize: 40, color: statIconColor }} />}
+              label="Active Listings"
+              value={activeListings}
+            />
+          </Link>
+        </Box>
+
+        <Box
+          sx={{
+            width: "100%",
+            height: 1500,
+            mt: 5,
+            p: 2,
+            borderRadius: 3,
+            border: "1px solid #2B2B2F",
+            bgcolor: "#1F2023",
+            overflow: "hidden",
+          }}
+        >
+          <TrafficChart />
+        </Box>
       </Box>
     </Box>
   );

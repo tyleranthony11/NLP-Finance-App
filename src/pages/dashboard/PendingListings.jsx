@@ -209,33 +209,98 @@ const PendingListings = () => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        p: 3,
+        pb: 0,
+        backgroundColor: "#18191A",
+        minHeight: "100%",
+        color: "#F5F5F6",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+          p: 2,
+          borderRadius: 3,
+          border: "1px solid #2B2B2F",
+          bgcolor: "#1F2023",
+        }}
+      >
+        <Box>
+          <Typography variant="h4" sx={{ mb: 0.25, fontWeight: 700 }}>
+            Pending Listings
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#A5A7AC" }}>
+            Review submissions and approve listings to publish in marketplace.
+          </Typography>
+        </Box>
+      </Box>
+
       {postings.length === 0 ? (
-        <Typography variant="h6" align="center" sx={{ mt: 4 }}>
+        <Typography
+          variant="h6"
+          align="center"
+          sx={{ mt: 4, color: "#A5A7AC", fontWeight: 500 }}
+        >
           There are no pending listings to review.
         </Typography>
       ) : (
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 3,
+            border: "1px solid #2B2B2F",
+            bgcolor: "#1F2023",
+            color: "#F5F5F6",
+            boxShadow: "0 10px 24px rgba(0,0,0,0.3)",
+          }}
+        >
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: "#212327" }}>
               <TableRow>
-                <TableCell>Photo</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Title</TableCell>
-                <TableCell>Year</TableCell>
-                <TableCell>Make</TableCell>
-                <TableCell>Model</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Review</TableCell>
+                {[
+                  "Photo",
+                  "Name",
+                  "Email",
+                  "Phone",
+                  "Category",
+                  "Title",
+                  "Year",
+                  "Make",
+                  "Model",
+                  "Status",
+                  "Review",
+                ].map((header) => (
+                  <TableCell
+                    key={header}
+                    sx={{
+                      color: "#F5F5F5",
+                      fontWeight: 700,
+                      borderBottom: "1px solid #2B2B2F",
+                    }}
+                  >
+                    {header}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
 
             <TableBody>
               {postings.map((post) => (
-                <TableRow key={post.id}>
+                <TableRow
+                  key={post.id}
+                  sx={{
+                    "& td": {
+                      color: "#E5E7EB",
+                      borderBottom: "1px solid #2B2B2F",
+                    },
+                    "&:hover": { backgroundColor: "#23262B" },
+                  }}
+                >
                   <TableCell>
                     <Avatar
                       variant="rounded"
@@ -257,6 +322,13 @@ const PendingListings = () => {
                     <Button
                       variant="contained"
                       size="small"
+                      sx={{
+                        bgcolor: "#EB001B",
+                        textTransform: "none",
+                        fontWeight: 700,
+                        borderRadius: 2,
+                        "&:hover": { bgcolor: "#C40018" },
+                      }}
                       onClick={() => handleOpen(post)}
                     >
                       Review
@@ -277,10 +349,12 @@ const PendingListings = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 600,
-            bgcolor: "background.paper",
-            boxShadow: 24,
+            bgcolor: "#1F2023",
+            color: "#F5F5F6",
+            boxShadow: "0 24px 60px rgba(0,0,0,0.45)",
             p: 4,
-            borderRadius: 2,
+            borderRadius: 3,
+            border: "1px solid #33353A",
             maxHeight: "90vh",
             overflowY: "auto",
           }}
@@ -535,12 +609,16 @@ const PendingListings = () => {
               />
 
               <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
-                <Button variant="outlined" onClick={handleClose}>
+                <Button
+                  variant="outlined"
+                  onClick={handleClose}
+                  sx={{ borderColor: "#4B5563", color: "#D1D5DB" }}
+                >
                   Cancel
                 </Button>
                 <Button
                   variant="contained"
-                  color="success"
+                  sx={{ bgcolor: "#EB001B", "&:hover": { bgcolor: "#C40018" } }}
                   onClick={handleApprove}
                 >
                   Approve & Save
@@ -550,7 +628,7 @@ const PendingListings = () => {
           )}
         </Box>
       </Modal>
-    </>
+    </Box>
   );
 };
 
