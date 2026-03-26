@@ -3,6 +3,7 @@ import './Legal.css';
 
 function Terms() {
     return (
+      <div className="legal-shell">
         <div className="legal-page">
             <h1>Terms of Service</h1>
             <p className='last-updated'>Last updated: May, 2025</p>
@@ -65,6 +66,7 @@ function Terms() {
       </section>
 
         </div>
+      </div>
     );
 }
 

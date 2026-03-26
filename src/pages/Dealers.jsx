@@ -5,7 +5,7 @@ import { CheckCircle, Handshake, MapPin, FileText, Globe, Award } from "lucide-r
 
 function Dealers() {
   return (
-    <div>
+    <div className="dealers-page">
       <section className="dealers-header">
         <h1>Partner With NLP Finance</h1>
         <p>

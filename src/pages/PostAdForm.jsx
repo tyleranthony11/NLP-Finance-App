@@ -35,6 +35,11 @@ function PostAdForm() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const selectedPhotoCount = formData.photos?.length || 0;
+  const photoLabel =
+    selectedPhotoCount > 0
+      ? `${selectedPhotoCount} file${selectedPhotoCount > 1 ? "s" : ""} selected`
+      : "No file chosen";
 
   const MAX_PHOTOS = 10;
 
@@ -162,7 +167,8 @@ function PostAdForm() {
   };
 
   return (
-    <Box className="post-ad-form-container">
+    <Box className="post-ad-page">
+      <Box className="post-ad-form-container">
       <img
         src="/images/dealers/nlp-finance-marketplace.png"
         alt="Marketplace Logo"
@@ -300,7 +306,15 @@ function PostAdForm() {
 
         <fieldset>
           <legend>Upload Photos</legend>
+          <div className="custom-file-upload">
+            <label htmlFor="photos-upload" className="file-upload-button">
+              Choose Files
+            </label>
+            <span className="file-upload-text">{photoLabel}</span>
+          </div>
           <input
+            id="photos-upload"
+            className="file-upload-input"
             type="file"
             name="photos"
             accept="image/*"
@@ -314,19 +328,13 @@ function PostAdForm() {
           variant="contained"
           className="submit-button"
           disabled={isSubmitting}
-          sx={{
-            backgroundColor: "#d81a20",
-            "&:hover": { backgroundColor: "#b5161b" },
-            textTransform: "none",
-            fontWeight: 700,
-            padding: "0.75rem 2rem",
-          }}
         >
           {isSubmitting ? "Submitting..." : "Submit Ad"}
         </Button>
       </form>
 
       <ToastContainer position="top-center" autoClose={3000} />
+      </Box>
     </Box>
   );
 }

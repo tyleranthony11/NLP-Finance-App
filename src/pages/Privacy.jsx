@@ -2,9 +2,10 @@ import './Legal.css';
 
 function Privacy() {
   return (
-    <div className="legal-page">
-      <h1>Privacy Policy</h1>
-      <p className="last-updated">Last updated: May, 2025</p>
+    <div className="legal-shell">
+      <div className="legal-page">
+        <h1>Privacy Policy</h1>
+        <p className="last-updated">Last updated: May, 2025</p>
 
       <section>
         <h2>1. Information We Collect</h2>
@@ -61,12 +62,13 @@ function Privacy() {
         </ul>
       </section>
 
-      <section>
-        <h2>7. Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy or how your data is handled, please contact us:</p>
-        <address>Email: <a href="mailto:info@nlpfinance.ca">info@nlpfinance.ca</a><br />
-           Phone: (709) 489-0456</address>
-      </section>
+        <section>
+          <h2>7. Contact Us</h2>
+          <p>If you have any questions about this Privacy Policy or how your data is handled, please contact us:</p>
+          <address>Email: <a href="mailto:info@nlpfinance.ca">info@nlpfinance.ca</a><br />
+             Phone: (709) 489-0456</address>
+        </section>
+      </div>
     </div>
   );
 }

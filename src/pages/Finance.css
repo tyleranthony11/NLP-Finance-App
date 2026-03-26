@@ -1,0 +1,131 @@
+.finance-page {
+  background: #f6f8fb;
+  color: #1f2833;
+}
+
+.finance-hero {
+  min-height: 52vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 1.25rem;
+  background-image: linear-gradient(
+      to bottom,
+      rgba(16, 20, 27, 0.55),
+      rgba(16, 20, 27, 0.7)
+    ),
+    url("/images/traveltrailer.png");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+.finance-hero-content {
+  width: min(100%, 900px);
+}
+
+.finance-hero-content h1 {
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.finance-hero-content p {
+  margin-top: 0.85rem;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+}
+
+.finance-hero-link {
+  color: #d71a20;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.finance-hero-link:hover {
+  color: #b5161b;
+}
+
+.finance-form-section {
+  padding: 3.25rem 1.25rem 4.5rem;
+}
+
+.finance-form {
+  width: min(100%, 700px);
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 14px 30px rgba(16, 24, 40, 0.1);
+}
+
+.finance-form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.finance-form-group label {
+  margin-bottom: 0.45rem;
+  font-weight: 600;
+  color: #273548;
+}
+
+.finance-input {
+  width: 100%;
+  padding: 0.8rem 0.85rem;
+  border: 1px solid #d5dce4;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #1f2833;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.finance-input:focus {
+  outline: none;
+  border-color: #d71a20;
+  box-shadow: 0 0 0 3px rgba(215, 26, 32, 0.13);
+}
+
+.finance-input::placeholder {
+  color: #8b95a2;
+}
+
+.finance-submit-btn {
+  margin-top: 0.25rem;
+  padding: 0.85rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: #d71a20;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.finance-submit-btn:hover {
+  background: #b5161b;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .finance-hero {
+    min-height: 45vh;
+    padding: 4.25rem 1rem;
+  }
+
+  .finance-form-section {
+    padding: 2.2rem 0.9rem 3.5rem;
+  }
+
+  .finance-form {
+    border-radius: 14px;
+    padding: 1.1rem;
+  }
+}

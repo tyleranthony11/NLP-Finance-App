@@ -170,218 +170,221 @@ function Marketplace() {
   });
 
   return (
-    <div className="marketplace-container">
-      <h1>Marketplace</h1>
+    <div className="marketplace-page">
+      <div className="marketplace-container">
+        <h1>Marketplace</h1>
 
-      <div className="marketplace-content">
-        <aside className="marketplace-filters">
-          <h3>Filters</h3>
+        <div className="marketplace-content">
+          <aside className="marketplace-filters">
+            <div className="sort-controls marketplace-sort-panel">
+              <label htmlFor="sort">Sort by:</label>
+              <select
+                id="sort"
+                value={sortKey}
+                onChange={(e) => setSortKey(e.target.value)}
+              >
+                <option value="">None</option>
+                <option value="price-asc">Price (Low to High)</option>
+                <option value="price-desc">Price (High to Low)</option>
+                <option value="year-asc">Year (Low to High)</option>
+                <option value="year-desc">Year (High to Low)</option>
+                <option value="make-asc">Make (A to Z)</option>
+                <option value="make-desc">Make (Z to A)</option>
+              </select>
+            </div>
+            <div className="filters-panel">
+              <h3>Filters</h3>
 
-          <div className="filter-group">
-            <h4>Dealer</h4>
-            {allDealers.map((dealer) => (
-              <label key={dealer}>
-                <input
-                  type="checkbox"
-                  value={dealer}
-                  checked={selectedDealers.includes(dealer)}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (e.target.checked)
-                      setSelectedDealers((prev) => [...prev, value]);
-                    else
-                      setSelectedDealers((prev) =>
-                        prev.filter((d) => d !== value),
-                      );
-                  }}
-                />
-                {dealer}
-              </label>
-            ))}
-          </div>
-
-          <div className="filter-group">
-            <h4>Condition</h4>
-            {allConditions.map((c) => (
-              <label key={c}>
-                <input
-                  type="checkbox"
-                  value={c}
-                  checked={selectedConditions.includes(c)}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (e.target.checked)
-                      setSelectedConditions((prev) => [...prev, value]);
-                    else
-                      setSelectedConditions((prev) =>
-                        prev.filter((x) => x !== value),
-                      );
-                  }}
-                />
-                {c.charAt(0).toUpperCase() + c.slice(1)}
-              </label>
-            ))}
-          </div>
-
-          <div className="filter-group">
-            <h4>Category</h4>
-            {["powersports", "marine", "rv", "automotive"].map((category) => (
-              <label key={category}>
-                <input
-                  type="checkbox"
-                  value={category}
-                  checked={selectedCategories.includes(category)}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (e.target.checked)
-                      setSelectedCategories((prev) => [...prev, value]);
-                    else
-                      setSelectedCategories((prev) =>
-                        prev.filter((c) => c !== value),
-                      );
-                  }}
-                />
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </label>
-            ))}
-          </div>
-
-          {selectedCategories.length > 0 && (
-            <div className="filter-group">
-              <h4>Subcategory</h4>
-
-              {availableSubcategories.length === 0 ? (
-                <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
-                  No subcategories for selected category.
-                </p>
-              ) : (
-                availableSubcategories.map((subcat) => (
-                  <label key={subcat}>
+              <div className="filter-group">
+                <h4>Dealer</h4>
+                {allDealers.map((dealer) => (
+                  <label key={dealer}>
                     <input
                       type="checkbox"
-                      value={subcat}
-                      checked={selectedSubcategories.includes(subcat)}
+                      value={dealer}
+                      checked={selectedDealers.includes(dealer)}
                       onChange={(e) => {
                         const value = e.target.value;
                         if (e.target.checked)
-                          setSelectedSubcategories((prev) => [...prev, value]);
+                          setSelectedDealers((prev) => [...prev, value]);
                         else
-                          setSelectedSubcategories((prev) =>
-                            prev.filter((s) => s !== value),
+                          setSelectedDealers((prev) =>
+                            prev.filter((d) => d !== value),
                           );
                       }}
                     />
-                    {subcat}
+                    {dealer}
                   </label>
-                ))
-              )}
-            </div>
-          )}
+                ))}
+              </div>
 
-          <div className="filter-group">
-            <h4>Price Range</h4>
-            {[
-              ["", "All Prices"],
-              ["under10k", "Under $10,000"],
-              ["10kto25k", "$10,000 - $24,999"],
-              ["25kto50k", "$25,000 - $50,000"],
-              ["over50k", "Over $50,000"],
-            ].map(([value, label]) => (
-              <label key={value}>
-                <input
-                  type="radio"
-                  name="price"
-                  value={value}
-                  checked={priceRange === value}
-                  onChange={() => setPriceRange(value)}
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-        </aside>
+              <div className="filter-group">
+                <h4>Condition</h4>
+                {allConditions.map((c) => (
+                  <label key={c}>
+                    <input
+                      type="checkbox"
+                      value={c}
+                      checked={selectedConditions.includes(c)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (e.target.checked)
+                          setSelectedConditions((prev) => [...prev, value]);
+                        else
+                          setSelectedConditions((prev) =>
+                            prev.filter((x) => x !== value),
+                          );
+                      }}
+                    />
+                    {c.charAt(0).toUpperCase() + c.slice(1)}
+                  </label>
+                ))}
+              </div>
 
-        <div className="marketplace-main">
-          <div className="sort-controls">
-            <label htmlFor="sort">Sort by:</label>
-            <select
-              id="sort"
-              value={sortKey}
-              onChange={(e) => setSortKey(e.target.value)}
-            >
-              <option value="">None</option>
-              <option value="price-asc">Price (Low to High)</option>
-              <option value="price-desc">Price (High to Low)</option>
-              <option value="year-asc">Year (Low to High)</option>
-              <option value="year-desc">Year (High to Low)</option>
-              <option value="make-asc">Make (A to Z)</option>
-              <option value="make-desc">Make (Z to A)</option>
-            </select>
-          </div>
+              <div className="filter-group">
+                <h4>Category</h4>
+                {["powersports", "marine", "rv", "automotive"].map((category) => (
+                  <label key={category}>
+                    <input
+                      type="checkbox"
+                      value={category}
+                      checked={selectedCategories.includes(category)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (e.target.checked)
+                          setSelectedCategories((prev) => [...prev, value]);
+                        else
+                          setSelectedCategories((prev) =>
+                            prev.filter((c) => c !== value),
+                          );
+                      }}
+                    />
+                    {category.charAt(0).toUpperCase() + category.slice(1)}
+                  </label>
+                ))}
+              </div>
 
-          <div className="marketplace-grid">
-            {sortedListings.map((item) => {
-              const dealerName = (item.dealership || "").trim();
-              const dealer = dealers[dealerName];
+              {selectedCategories.length > 0 && (
+                <div className="filter-group">
+                  <h4>Subcategory</h4>
 
-              return (
-                <Link
-                  to={`/marketplace/${item.id}`}
-                  key={item.id}
-                  className="marketplace-card"
-                >
-                  <img
-                    src={item.photos?.[0] || ""}
-                    alt={item.model || "Listing"}
-                  />
-
-                  <div className="marketplace-info">
-                    <h3>
-                      {item.year} {item.make} {item.model}
-                    </h3>
-
-                    <p>
-                      <strong>Price:</strong> $
-                      {Number(item.price || 0).toLocaleString()}
+                  {availableSubcategories.length === 0 ? (
+                    <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
+                      No subcategories for selected category.
                     </p>
+                  ) : (
+                    availableSubcategories.map((subcat) => (
+                      <label key={subcat}>
+                        <input
+                          type="checkbox"
+                          value={subcat}
+                          checked={selectedSubcategories.includes(subcat)}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (e.target.checked)
+                              setSelectedSubcategories((prev) => [...prev, value]);
+                            else
+                              setSelectedSubcategories((prev) =>
+                                prev.filter((s) => s !== value),
+                              );
+                          }}
+                        />
+                        {subcat}
+                      </label>
+                    ))
+                  )}
+                </div>
+              )}
 
-                    {Number(item.interestRate) > 0 && Number(item.term) > 0 && (
-                      <>
-                        <p>
-                          <strong>Payment:</strong> $
-                          {calculateBiWeekly(
-                            Number(item.price || 0),
-                            Number(item.interestRate),
-                            Number(item.term),
-                          )}{" "}
-                          bi-weekly
-                        </p>
+              <div className="filter-group">
+                <h4>Price Range</h4>
+                {[
+                  ["", "All Prices"],
+                  ["under10k", "Under $10,000"],
+                  ["10kto25k", "$10,000 - $24,999"],
+                  ["25kto50k", "$25,000 - $50,000"],
+                  ["over50k", "Over $50,000"],
+                ].map(([value, label]) => (
+                  <label key={value}>
+                    <input
+                      type="radio"
+                      name="price"
+                      value={value}
+                      checked={priceRange === value}
+                      onChange={() => setPriceRange(value)}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </aside>
 
-                        <p id="terms">
-                          Based on {item.term} months at {item.interestRate}%
-                          APR
-                        </p>
-                      </>
-                    )}
-                  </div>
+          <div className="marketplace-main">
+            <div className="marketplace-grid">
+              {sortedListings.map((item) => {
+                const dealerName = (item.dealership || "").trim();
+                const dealer = dealers[dealerName];
 
-                  <div className="marketplace-card-footer">
-                    <span className="offered-by">Offered By:</span>
+                return (
+                  <Link
+                    to={`/marketplace/${item.id}`}
+                    key={item.id}
+                    className="marketplace-card"
+                  >
+                    <img
+                      src={item.photos?.[0] || ""}
+                      alt={item.model || "Listing"}
+                    />
 
-                    <span className="dealer-name">
-                      {item.dealership || "Private Seller"}
-                    </span>
+                    <div className="marketplace-info">
+                      <h3>
+                        {item.year} {item.make} {item.model}
+                      </h3>
 
-                    {dealer && (
-                      <span className="dealer-location">
-                        <LocationOnIcon sx={{ fontSize: 14 }} />
-                        {dealer.location}
+                      <p>
+                        <strong>Price:</strong> $
+                        {Number(item.price || 0).toLocaleString()}
+                      </p>
+
+                      {Number(item.interestRate) > 0 && Number(item.term) > 0 && (
+                        <>
+                          <p>
+                            <strong>Payment:</strong> $
+                            {calculateBiWeekly(
+                              Number(item.price || 0),
+                              Number(item.interestRate),
+                              Number(item.term),
+                            )}{" "}
+                            bi-weekly
+                          </p>
+
+                          <p id="terms">
+                            Based on {item.term} months at {item.interestRate}%
+                            APR
+                          </p>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="marketplace-card-footer">
+                      <span className="offered-by">Offered By:</span>
+
+                      <span className="dealer-name">
+                        {item.dealership || "Private Seller"}
                       </span>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
+
+                      {dealer && (
+                        <span className="dealer-location">
+                          <LocationOnIcon sx={{ fontSize: 14 }} />
+                          {dealer.location}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>

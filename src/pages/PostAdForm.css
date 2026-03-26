@@ -1,10 +1,16 @@
+.post-ad-page {
+  background: #f6f8fb;
+  padding: 2rem 1rem 3rem;
+}
+
 .post-ad-form-container {
   max-width: 700px;
-  margin: 3rem auto 2rem auto;
-  padding: 2rem;
+  margin: 0 auto;
+  padding: 1.6rem;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.08);
 }
 
 .post-ad-form-container h2 {
@@ -13,8 +19,8 @@
 }
 
 .post-ad-form-container p {
-  margin-bottom: 2rem;
-  color: #555;
+  margin-bottom: 1.5rem;
+  color: #55606e;
   text-align: center;
 }
 
@@ -36,11 +42,17 @@
 }
 
 .post-ad-form fieldset {
-  border: none;
+  border: 1px solid #edf0f4;
+  border-radius: 14px;
+  padding: 0.9rem;
   margin-bottom: 1.5rem;
+  background: #fcfdff;
 }
 
 .post-ad-form legend {
+  color: #273548;
+  font-weight: 700;
+  padding: 0 0.3rem;
   margin-bottom: 1rem;
 }
 
@@ -49,8 +61,8 @@
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid #d5dce4;
+  border-radius: 10px;
 }
 .post-ad-form select {
   color: #354350;
@@ -58,33 +70,48 @@
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid #d5dce4;
+  border-radius: 10px;
 }
 .post-ad-form textarea {
   display: block;
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid #d5dce4;
+  border-radius: 10px;
   resize: vertical;
   font-family: inherit;
 }
 
+.post-ad-form input:focus,
+.post-ad-form select:focus,
+.post-ad-form textarea:focus {
+  outline: none;
+  border-color: #d71a20;
+  box-shadow: 0 0 0 3px rgba(215, 26, 32, 0.12);
+}
+
 .submit-button {
-  background-color: #d81a20;
-  color: white;
-  border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 8px;
-  font-weight: bold;
+  background-color: #d81a20 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 0.75rem 2rem !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
   cursor: pointer;
   width: 100%;
+  box-shadow: none !important;
 }
 
 .submit-button:hover {
-  background-color: #b5161b;
+  background-color: #b5161b !important;
+}
+
+.submit-button.Mui-disabled {
+  opacity: 0.65;
+  color: #fff !important;
 }
 
 .odometer-row {
@@ -98,4 +125,63 @@
 
 .odometer-row select {
   flex: 1;
+}
+
+.post-ad-form input[type="file"] {
+  padding: 0.6rem;
+  background: #fff;
+}
+
+.file-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.1rem 0 0.2rem;
+}
+
+.file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: #d81a20;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.86rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.file-upload-button:hover {
+  background: #b5161b;
+}
+
+.file-upload-text {
+  color: #55606e;
+  font-size: 0.86rem;
+}
+
+@media (max-width: 640px) {
+  .post-ad-page {
+    padding: 1.25rem 0.8rem 2.25rem;
+  }
+
+  .post-ad-form-container {
+    padding: 1rem;
+    border-radius: 14px;
+  }
 }

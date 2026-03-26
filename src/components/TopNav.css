@@ -15,8 +15,7 @@
   gap: 16px;
 }
 
-.top-nav-link,
-.login-link {
+.top-nav-link {
   color: white;
   text-decoration: none;
   display: flex;
@@ -31,8 +30,7 @@
   font-size: 14px;
 }
 
-.top-nav-link:hover,
-.login-link:hover {
+.top-nav-link:hover {
   text-decoration: underline;
 }
 
@@ -40,8 +38,3 @@
   font-size: 16px;
 }
 
-.top-nav-separator {
-  width: 1px;
-  height: 20px;
-  background-color: rgba(255, 255, 255, 0.5);
-}

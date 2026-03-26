@@ -1,169 +1,167 @@
-body {
-    color: #354350;
+.dealers-page {
+  background: #f6f8fb;
+  color: #273548;
 }
 
 .dealers-header {
-  background-image: linear-gradient(to bottom, rgba(53, 67, 80, 0.7), rgba(53, 67, 80, 0.9)),
-    url("/images/boat.png");
-  background-size: cover;
-  background-position: center;
+  min-height: 52vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 50vh;
-
-  padding: 6rem 2rem;
+  align-items: center;
   text-align: center;
+  padding: 5rem 1.25rem;
+  background-image: linear-gradient(
+      to bottom,
+      rgba(16, 20, 27, 0.55),
+      rgba(16, 20, 27, 0.72)
+    ),
+    url("/images/boat.png");
+  background-size: cover;
+  background-position: center;
 }
 
-
 .dealers-header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: white;
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.1;
+  color: #fff;
 }
 
 .dealers-header p {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    color: white;
+  margin-top: 0.8rem;
+  color: #fff;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  max-width: 58ch;
 }
 
 .dealer-login-cta a {
-    display: inline-block;
-    background-color: #d71a20;
-    color: #fff;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    font-weight: bold;
-    text-decoration: background-color 0.3s ease;
-    text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.2rem;
+  background: #d71a20;
+  color: #fff;
+  padding: 0.65rem 1.2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.25s ease, transform 0.2s ease;
 }
 
 .dealer-login-cta a:hover {
-  background-color:  #b7161b;
-  text-decoration: underline;
+  background: #b5161b;
+  transform: translateY(-1px);
 }
 
-.icon {
-    color: #d81a20;
-  margin-right: 1rem;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-}
-.dealer-benefits {
-    background-color: #f8f8f8;
-    padding: 4rem 2rem;
-    text-align: center;
-    color: #354350;
-}
-
-.dealer-benefits ul {
-    list-style: none;
-    padding: 0;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.dealer-benefits li {
-    font-size: 1.1rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #ddd;
-}
-
-.dealer-testiomonials {
-    padding: 4rem 2rem;
-    background-color: white;
-    color: #354350;
-    text-align: center;
-}
-
-.dealer-testiomonials h2 {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    color: #354350;
-}
-
-.testiomonial-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-blockquote {
-    background-color: #f4f4f4;
-    padding: 1.5rem;
-    border-left: 4px solid #d71a20;
-    border-radius: 8px;
-    font-style: italic;
-    
-}
-
-blockquote footer {
-  margin-top: 1rem;
-  font-weight: bold;
-  color: #354350;
-}
-
-.dealer-logos {
-    padding: 4rem 2rem;
-    background-color: #f8f8f8;
-    text-align: center;
-}
-
-.dealer-logos h2 {
-    color: #354350;
-    margin-bottom: 2rem;
-}
-
-.logo-carousel {
-    display: flex;
-    gap: 2rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.logo-carousel img {
-    height: 60px;
-    max-width: 150px;
-    object-fit: contain;
-    /*filter: grayscale(100%);*/
-    transition: filter 0.3s ease;
-}
-
-.logo-carousel img:hover {
-  filter: none;
-}
-
+.dealer-benefits,
+.dealer-testiomonials,
+.dealer-logos,
 .lenders {
-  padding: 4rem 2rem;
-  background-color: white;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem;
   text-align: center;
 }
 
-.lenders h2 {
-  color: #354350;
-  margin-bottom: 2rem;
+.dealer-benefits {
+  padding-top: 3.5rem;
 }
 
+.dealer-benefits h2,
+.dealer-testiomonials h2,
+.dealer-logos h2,
+.lenders h2 {
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  color: #273548;
+  margin-bottom: 1.3rem;
+}
+
+.dealer-benefits ul {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  max-width: 920px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.08);
+  overflow: hidden;
+}
+
+.dealer-benefits li {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-size: 1.05rem;
+  padding: 0.95rem 1rem;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.dealer-benefits li:last-child {
+  border-bottom: none;
+}
+
+.icon {
+  color: #d81a20;
+  margin-right: 0.8rem;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.testiomonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+blockquote {
+  margin: 0;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-left: 4px solid #d71a20;
+  border-radius: 14px;
+  padding: 1.2rem;
+  box-shadow: 0 10px 22px rgba(16, 24, 40, 0.07);
+  font-style: italic;
+  text-align: left;
+}
+
+blockquote footer {
+  margin-top: 0.85rem;
+  font-weight: 700;
+  color: #354350;
+  font-style: normal;
+}
+
+.logo-carousel,
 .lender-list {
   display: flex;
+  gap: 1rem;
   justify-content: center;
-  gap: 2rem;
   flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.07);
+  padding: 1rem;
 }
 
+.logo-carousel img,
 .lender-list img {
   height: 60px;
   max-width: 150px;
   object-fit: contain;
-  /*filter: grayscale(100%);*/
-  transition: filter 0.3s ease;
 }
 
-.lender-list img:hover {
-  filter: none;
+@media (max-width: 768px) {
+  .dealers-header {
+    min-height: 44vh;
+    padding: 4.2rem 1rem;
+  }
+
+  .dealer-benefits li {
+    font-size: 1rem;
+    padding: 0.85rem 0.85rem;
+  }
 }
