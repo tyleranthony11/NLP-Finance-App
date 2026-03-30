@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Pagination, Stack } from "@mui/material";
 import { calculateBiWeekly } from "../utils";
 import "./Marketplace.css";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { dealers } from "../data/dealers";
 
+const PAGE_SIZE = 30;
+
 function Marketplace() {
   const [sortKey, setSortKey] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
@@ -98,6 +102,19 @@ function Marketplace() {
     );
   }, [selectedCategories, availableSubcategories]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [
+    searchTerm,
+    sortKey,
+    priceRange,
+    selectedDealers,
+    selectedCategories,
+    selectedConditions,
+    selectedSubcategories,
+    selectedOdoUnits,
+  ]);
+
   const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
     const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -174,6 +191,22 @@ function Marketplace() {
         return (Number(b.id) || 0) - (Number(a.id) || 0);
     }
   });
+
+  const totalPages = Math.max(1, Math.ceil(sortedListings.length / PAGE_SIZE));
+
+  const paginatedListings = sortedListings.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE,
+  );
+
+  useEffect(() => {
+    setPage((p) => Math.min(p, totalPages));
+  }, [totalPages]);
+
+  const handlePageChange = (_, value) => {
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="marketplace-page">
@@ -344,7 +377,7 @@ function Marketplace() {
                   No ads match your current search and filters.
                 </p>
               ) : (
-                sortedListings.map((item) => {
+                paginatedListings.map((item) => {
                   const dealerName = (item.dealership || "").trim();
                   const dealer = dealers[dealerName];
 
@@ -409,6 +442,43 @@ function Marketplace() {
                 })
               )}
             </div>
+
+            {sortedListings.length > 0 && totalPages > 1 && (
+              <Stack
+                className="marketplace-pagination"
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                spacing={2}
+              >
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  onChange={handlePageChange}
+                  color="primary"
+                  size="large"
+                  showFirstButton
+                  showLastButton
+                  siblingCount={1}
+                  boundaryCount={1}
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      borderRadius: "10px",
+                      fontWeight: 600,
+                      color: "#354350",
+                    },
+                    "& .MuiPaginationItem-root.Mui-selected": {
+                      bgcolor: "#d71a20",
+                      color: "#fff",
+                      "&:hover": { bgcolor: "#b80016" },
+                    },
+                    "& .MuiPaginationItem-root:hover": {
+                      bgcolor: "rgba(215, 26, 32, 0.12)",
+                    },
+                  }}
+                />
+              </Stack>
+            )}
           </div>
         </div>
       </div>

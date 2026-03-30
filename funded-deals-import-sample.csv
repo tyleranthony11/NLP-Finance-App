@@ -1,0 +1,3 @@
+customerName,dealDate,dealerName,lenderName,employeeName,brokerageFee,lifeInsurance,ahInsurance,ciInsurance,bankReserve,dealerReserve,nlpReserve,warranty,gapInsurance,otherFI
+Jane Doe,2026-03-01,Sample Dealer Inc,Sample Lender,Alex Rep,450.00,120.00,85.00,0.00,300.00,150.00,75.00,200.00,95.00,50.00
+John Smith,2026-03-05,Sample Dealer Inc,Sample Lender,Morgan Rep,500.00,0.00,0.00,0.00,275.00,125.00,60.00,175.00,0.00,25.00

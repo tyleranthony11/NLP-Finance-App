@@ -225,6 +225,18 @@
   text-align: center;
 }
 
+.marketplace-pagination {
+  margin-top: 1.75rem;
+  padding: 1rem 0 0.25rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .marketplace-pagination .MuiPagination-ul {
+    gap: 2px;
+  }
+}
+
 .marketplace-card {
   background: #fff;
   border-radius: 18px;

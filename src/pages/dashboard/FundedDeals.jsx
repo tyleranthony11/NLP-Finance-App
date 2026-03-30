@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { authFetch } from "../../auth/authFetch.js";
-import { Box, Button, Typography } from "@mui/material";
+import { msalInstance } from "../../auth/msalConfig";
+import { Box, Button, Typography, Modal } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import AddDealModal from "../../components/AddDealModal";
 import StatCard from "../../components/StatCard";
@@ -32,7 +33,6 @@ const styles = {
     bgcolor: "#1F2023",
   },
   addButton: {
-    ml: "auto",
     bgcolor: "#EB001B",
     textTransform: "none",
     fontWeight: 700,
@@ -57,6 +57,46 @@ const FundedDeals = () => {
   const [selectedDate, setSelectedDate] = useState(dayjs());
   const [modalOpen, setModalOpen] = useState(false);
   const [deals, setDeals] = useState([]);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importFile, setImportFile] = useState(null);
+
+  const hasSignedInAccount = () => msalInstance.getAllAccounts().length > 0;
+
+  const splitCsvLine = (line) =>
+    line
+      .split(/,(?=(?:(?:[^\"]*\"){2})*[^\"]*$)/)
+      .map((cell) => cell.trim().replace(/^"|"$/g, ""));
+
+  const parseCsvRows = (text) => {
+    const lines = text
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (lines.length < 2) return [];
+
+    const headers = splitCsvLine(lines[0]);
+    const requiredHeaders = [
+      "customerName",
+      "dealDate",
+      "dealerName",
+      "lenderName",
+      "employeeName",
+    ];
+
+    const missing = requiredHeaders.filter((h) => !headers.includes(h));
+    if (missing.length > 0) {
+      throw new Error(`Missing required column(s): ${missing.join(", ")}`);
+    }
+
+    return lines.slice(1).map((line) => {
+      const values = splitCsvLine(line);
+      return headers.reduce((acc, header, index) => {
+        acc[header] = values[index] ?? "";
+        return acc;
+      }, {});
+    });
+  };
 
   useEffect(() => {
     const fetchDeals = async () => {
@@ -307,6 +347,82 @@ const FundedDeals = () => {
     return savedRow;
   };
 
+  const handleImportDeals = async () => {
+    if (!importFile) return;
+    if (!hasSignedInAccount()) {
+      alert("Please sign in to import funded deals.");
+      return;
+    }
+
+    try {
+      const csvText = await importFile.text();
+      const csvRows = parseCsvRows(csvText);
+      if (csvRows.length === 0) {
+        alert("CSV has no data rows to import.");
+        return;
+      }
+
+      const toNumber = (value) => parseFloat(value || 0) || 0;
+      const created = [];
+
+      for (const row of csvRows) {
+        const payload = {
+          customerName: row.customerName || "",
+          dealDate: row.dealDate || "",
+          dealerName: row.dealerName || "",
+          lenderName: row.lenderName || "",
+          employeeName: row.employeeName || "",
+          brokerageFee: toNumber(row.brokerageFee),
+          lifeInsurance: toNumber(row.lifeInsurance),
+          ahInsurance: toNumber(row.ahInsurance),
+          ciInsurance: toNumber(row.ciInsurance),
+          bankReserve: toNumber(row.bankReserve),
+          dealerReserve: toNumber(row.dealerReserve),
+          nlpReserve: toNumber(row.nlpReserve),
+          warranty: toNumber(row.warranty),
+          gapInsurance: toNumber(row.gapInsurance),
+          otherFI: toNumber(row.otherFI),
+        };
+
+        if (
+          !payload.customerName.trim() ||
+          !payload.dealDate.trim() ||
+          !payload.dealerName.trim() ||
+          !payload.lenderName.trim() ||
+          !payload.employeeName.trim()
+        ) {
+          continue;
+        }
+
+        const res = await authFetch(`${import.meta.env.VITE_API_URL}/api/funded-deals`, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+        if (!res) continue;
+
+        const json = await res.json().catch(() => null);
+        if (!res.ok || !json?.success) {
+          const errMessage = json?.message || "Import failed on one or more rows";
+          throw new Error(errMessage);
+        }
+
+        created.push(json.data);
+      }
+
+      if (created.length === 0) {
+        alert("No valid rows were imported. Please check required fields.");
+        return;
+      }
+
+      setDeals((prev) => [...created, ...prev]);
+      setImportOpen(false);
+      setImportFile(null);
+    } catch (err) {
+      console.error("FUNDED DEALS IMPORT ERROR:", err);
+      alert("Import failed");
+    }
+  };
+
   return (
     <Box sx={styles.container}>
       <Box
@@ -378,13 +494,28 @@ const FundedDeals = () => {
         >
           <MonthPicker value={selectedDate} onChange={setSelectedDate} />
         </Box>
-        <Button
-          variant="contained"
-          onClick={() => setModalOpen(true)}
-          sx={styles.addButton}
-        >
-          Add Deal
-        </Button>
+        <Box sx={{ ml: "auto", display: "flex", gap: 1 }}>
+          <Button
+            variant="contained"
+            onClick={() => setModalOpen(true)}
+            sx={styles.addButton}
+          >
+            Add Deal
+          </Button>
+          <Button
+            variant="contained"
+          onClick={() => {
+            if (!hasSignedInAccount()) {
+              alert("Please sign in to import funded deals.");
+              return;
+            }
+            setImportOpen(true);
+          }}
+            sx={styles.addButton}
+          >
+            Import CSV
+          </Button>
+        </Box>
       </Box>
 
       <Box sx={styles.dataGridWrapper}>
@@ -499,6 +630,100 @@ const FundedDeals = () => {
         onClose={() => setModalOpen(false)}
         onAdd={handleAddDeal}
       />
+
+      <Modal open={importOpen} onClose={() => setImportOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "92vw", sm: 460 },
+            bgcolor: "#1F2023",
+            color: "#F5F5F6",
+            border: "1px solid #33353A",
+            boxShadow: "0 24px 60px rgba(0,0,0,0.45)",
+            p: 4,
+            borderRadius: 3,
+          }}
+        >
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
+            Import Funded Deals CSV
+          </Typography>
+          <Typography variant="body2" sx={{ color: "#A5A7AC", mb: 1 }}>
+            Choose your CSV file to import funded deals.
+          </Typography>
+
+          <Button
+            variant="outlined"
+            component="label"
+            fullWidth
+            sx={{
+              mt: 2,
+              borderColor: "#4B5563",
+              color: "#D1D5DB",
+              textTransform: "none",
+              fontWeight: 600,
+              "&:hover": {
+                borderColor: "#EB001B",
+                color: "#F5F5F6",
+                backgroundColor: "rgba(235,0,27,0.12)",
+              },
+            }}
+          >
+            Select CSV File
+            <input
+              type="file"
+              accept=".csv"
+              hidden
+              onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+            />
+          </Button>
+
+          {importFile && (
+            <Typography sx={{ mt: 1, color: "#C7CAD1" }} variant="body2">
+              Selected: {importFile.name}
+            </Typography>
+          )}
+
+          <Box mt={3} display="flex" justifyContent="flex-end" gap={2}>
+            <Button
+              variant="outlined"
+              onClick={() => setImportOpen(false)}
+              sx={{
+                borderColor: "#4B5563",
+                color: "#D1D5DB",
+                textTransform: "none",
+                fontWeight: 600,
+                "&:hover": {
+                  borderColor: "#EB001B",
+                  color: "#F5F5F6",
+                  backgroundColor: "rgba(235,0,27,0.12)",
+                },
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              disabled={!importFile}
+              onClick={handleImportDeals}
+              sx={{
+                bgcolor: "#EB001B",
+                textTransform: "none",
+                fontWeight: 700,
+                "&:hover": { bgcolor: "#C40018" },
+                "&.Mui-disabled": {
+                  bgcolor: "#3A3B40",
+                  color: "#8F939C",
+                },
+              }}
+            >
+              Import
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
     </Box>
   );
 };
