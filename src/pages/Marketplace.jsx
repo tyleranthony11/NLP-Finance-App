@@ -7,13 +7,14 @@ import { dealers } from "../data/dealers";
 
 function Marketplace() {
   const [sortKey, setSortKey] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
   const [inventoryListings, setInventoryListings] = useState([]);
   const [selectedConditions, setSelectedConditions] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
-  const [selectedOdoUnits, setSelectedOdoUnits] = useState([]);
+  const [selectedOdoUnits] = useState([]);
   const location = useLocation();
 
   useEffect(() => {
@@ -58,10 +59,6 @@ function Marketplace() {
 
   const allConditions = ["new", "used"];
 
-  const allOdoUnits = Array.from(
-    new Set(inventoryListings.map((item) => item.odometerUnit).filter(Boolean)),
-  ).sort();
-
   const subcategoriesByCategory = useMemo(() => {
     const map = new Map();
 
@@ -103,6 +100,15 @@ function Marketplace() {
 
   const filteredListings = inventoryListings.filter((item) => {
     const dealerName = item.dealership || "Private Seller";
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const listingName = [item.name, item.title, item.make, item.model]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    if (normalizedSearch && !listingName.includes(normalizedSearch)) {
+      return false;
+    }
 
     if (selectedDealers.length > 0 && !selectedDealers.includes(dealerName))
       return false;
@@ -176,6 +182,17 @@ function Marketplace() {
 
         <div className="marketplace-content">
           <aside className="marketplace-filters">
+            <div className="sort-controls marketplace-sort-panel">
+              <label htmlFor="listing-search">Search:</label>
+              <input
+                id="listing-search"
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Enter a make, model, or year..."
+              />
+            </div>
+
             <div className="sort-controls marketplace-sort-panel">
               <label htmlFor="sort">Sort by:</label>
               <select
@@ -322,68 +339,75 @@ function Marketplace() {
 
           <div className="marketplace-main">
             <div className="marketplace-grid">
-              {sortedListings.map((item) => {
-                const dealerName = (item.dealership || "").trim();
-                const dealer = dealers[dealerName];
+              {sortedListings.length === 0 ? (
+                <p className="marketplace-empty-state">
+                  No ads match your current search and filters.
+                </p>
+              ) : (
+                sortedListings.map((item) => {
+                  const dealerName = (item.dealership || "").trim();
+                  const dealer = dealers[dealerName];
 
-                return (
-                  <Link
-                    to={`/marketplace/${item.id}`}
-                    key={item.id}
-                    className="marketplace-card"
-                  >
-                    <img
-                      src={item.photos?.[0] || ""}
-                      alt={item.model || "Listing"}
-                    />
+                  return (
+                    <Link
+                      to={`/marketplace/${item.id}`}
+                      key={item.id}
+                      className="marketplace-card"
+                    >
+                      <img
+                        src={item.photos?.[0] || ""}
+                        alt={item.model || "Listing"}
+                      />
 
-                    <div className="marketplace-info">
-                      <h3>
-                        {item.year} {item.make} {item.model}
-                      </h3>
+                      <div className="marketplace-info">
+                        <h3>
+                          {item.year} {item.make} {item.model}
+                        </h3>
 
-                      <p>
-                        <strong>Price:</strong> $
-                        {Number(item.price || 0).toLocaleString()}
-                      </p>
+                        <p>
+                          <strong>Price:</strong> $
+                          {Number(item.price || 0).toLocaleString()}
+                        </p>
 
-                      {Number(item.interestRate) > 0 && Number(item.term) > 0 && (
-                        <>
-                          <p>
-                            <strong>Payment:</strong> $
-                            {calculateBiWeekly(
-                              Number(item.price || 0),
-                              Number(item.interestRate),
-                              Number(item.term),
-                            )}{" "}
-                            bi-weekly
-                          </p>
+                        {Number(item.interestRate) > 0 &&
+                          Number(item.term) > 0 && (
+                            <>
+                              <p>
+                                <strong>Payment:</strong> $
+                                {calculateBiWeekly(
+                                  Number(item.price || 0),
+                                  Number(item.interestRate),
+                                  Number(item.term),
+                                )}{" "}
+                                bi-weekly
+                              </p>
 
-                          <p id="terms">
-                            Based on {item.term} months at {item.interestRate}%
-                            APR
-                          </p>
-                        </>
-                      )}
-                    </div>
+                              <p id="terms">
+                                Based on {item.term} months at {item.interestRate}%
+                                APR
+                              </p>
+                            </>
+                          )}
+                      </div>
 
-                    <div className="marketplace-card-footer">
-                      <span className="offered-by">Offered By:</span>
+                      <div className="marketplace-card-footer">
+                        <span className="offered-by">Offered By:</span>
 
-                      <span className="dealer-name">
-                        {item.dealership || "Private Seller"}
-                      </span>
-
-                      {dealer && (
-                        <span className="dealer-location">
-                          <LocationOnIcon sx={{ fontSize: 14 }} />
-                          {dealer.location}
+                        <span className="dealer-name">
+                          {item.dealership || "Private Seller"}
                         </span>
-                      )}
-                    </div>
-                  </Link>
-                );
-              })}
+
+                        {dealer && (
+                          <span className="dealer-location">
+                            <LocationOnIcon sx={{ fontSize: 14 }} />
+                            {dealer.location}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
