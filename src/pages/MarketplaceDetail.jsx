@@ -10,6 +10,18 @@ export default function MarketplaceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [secureOpen, setSecureOpen] = useState(false);
+  const [secureMode, setSecureMode] = useState("options");
+  const [financeForm, setFinanceForm] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    location: "",
+    additionalInfo: "",
+  });
+  const [financeSubmitting, setFinanceSubmitting] = useState(false);
+  const [financeFeedback, setFinanceFeedback] = useState({ type: "", message: "" });
+  const [financeSubmitted, setFinanceSubmitted] = useState(false);
 
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +36,9 @@ export default function MarketplaceDetail() {
   const maxRate = 24.99;
 
   const [mainImageIndex, setMainImageIndex] = useState(0);
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5001";
+  const dealertrackUrl =
+    "https://v2.digital.dealertrack.ca/creditapp/standalone?token=51e9767a-c539-4874-a757-41df6d590bc2&flow=Full&lang=en";
 
   const formatOdometer = (odoValue, odoUnit) => {
     if (odoValue === null || odoValue === undefined || odoValue === "")
@@ -111,6 +126,99 @@ export default function MarketplaceDetail() {
       navigator.clipboard.writeText(window.location.href).then(() => {
         alert("Link copied to clipboard!");
       });
+    }
+  };
+
+  const listingTitle =
+    listing?.title || `${listing?.year} ${listing?.make} ${listing?.model}`;
+
+  const normalizedVehicle = (listing?.category || "")
+    .toString()
+    .trim()
+    .toLowerCase();
+
+  const leadVehicle = ["powersports", "rv", "marine", "automotive"].includes(
+    normalizedVehicle,
+  )
+    ? normalizedVehicle
+    : "other";
+
+  const leadSeller = (listing?.dealership || "Private Seller").trim();
+
+  const resetSecureModal = () => {
+    setSecureOpen(false);
+    setSecureMode("options");
+    setFinanceSubmitting(false);
+    setFinanceSubmitted(false);
+    setFinanceFeedback({ type: "", message: "" });
+    setFinanceForm({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      location: "",
+      additionalInfo: "",
+    });
+  };
+
+  const handleFinanceFieldChange = (event) => {
+    const { name, value } = event.target;
+    setFinanceForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFinanceSubmit = async (event) => {
+    event.preventDefault();
+    if (financeSubmitting) return;
+
+    setFinanceSubmitting(true);
+    setFinanceFeedback({ type: "", message: "" });
+    setFinanceSubmitted(false);
+
+    try {
+      const response = await fetch(`${apiUrl}/api/leads`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          firstName: financeForm.firstName.trim(),
+          lastName: financeForm.lastName.trim(),
+          phone: financeForm.phone.trim(),
+          email: financeForm.email.trim(),
+          location: financeForm.location.trim(),
+          vehicle: leadVehicle,
+          seller: leadSeller,
+          additionalInfo: `Marketplace unit: ${listingTitle}${
+            financeForm.additionalInfo.trim()
+              ? `\n${financeForm.additionalInfo.trim()}`
+              : ""
+          }`,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setFinanceSubmitted(true);
+        setFinanceFeedback({
+          type: "success",
+          message:
+            "Submitted successfully. You can proceed to the full application or close and have us reach out.",
+        });
+      } else {
+        setFinanceFeedback({
+          type: "error",
+          message: result.message || "Failed to submit application.",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      setFinanceFeedback({
+        type: "error",
+        message: "An unexpected error occurred. Please try again.",
+      });
+    } finally {
+      setFinanceSubmitting(false);
     }
   };
 
@@ -318,7 +426,11 @@ export default function MarketplaceDetail() {
           <button
             type="button"
             className="apply-now-btn"
-            onClick={() => setSecureOpen(true)}
+            onClick={() => {
+              setSecureMode("options");
+              setFinanceFeedback({ type: "", message: "" });
+              setSecureOpen(true);
+            }}
           >
             Secure This Unit
           </button>
@@ -419,11 +531,11 @@ export default function MarketplaceDetail() {
         <Typography component="p">{listing.description}</Typography>
       </div>
       {secureOpen && (
-        <div className="secure-overlay" onClick={() => setSecureOpen(false)}>
+        <div className="secure-overlay" onClick={resetSecureModal}>
           <div className="secure-modal" onClick={(e) => e.stopPropagation()}>
             <button
               className="secure-close"
-              onClick={() => setSecureOpen(false)}
+              onClick={resetSecureModal}
               aria-label="Close"
             >
               ✕
@@ -438,34 +550,34 @@ export default function MarketplaceDetail() {
 
             <div className="secure-unit">
               <Typography className="secure-unit-title" component="h3" variant="h6">
-                {listing.title ||
-                  `${listing.year} ${listing.make} ${listing.model}`}
+                {listingTitle}
               </Typography>
               <Typography className="secure-unit-dealer" component="p">
                 {listing.dealership || "Private Seller"}
               </Typography>
             </div>
 
-            <div className="secure-options">
-              <div className="secure-option">
-                <Typography component="h4" variant="subtitle1">
-                  Contact the Selling Dealer
-                </Typography>
-                <Typography component="p">
-                  Confirm availability and purchase details directly with the
-                  dealer.
-                </Typography>
+            {secureMode === "options" ? (
+              <div className="secure-options">
+                <div className="secure-option">
+                  <Typography component="h4" variant="subtitle1">
+                    Contact the Selling Dealer
+                  </Typography>
+                  <Typography component="p">
+                    Confirm availability and purchase details directly with the
+                    dealer.
+                  </Typography>
 
-                <a
-                  className="secure-btn"
-                  href={`mailto:${dealerEmail}?cc=marketplace@nlpfinance.ca&subject=${encodeURIComponent(
-                    `Marketplace Inquiry: ${listing.title || `${listing.year} ${listing.make} ${listing.model}`}`,
-                  )}&body=${encodeURIComponent(
-                    `Hi,
+                  <a
+                    className="secure-btn"
+                    href={`mailto:${dealerEmail}?cc=marketplace@nlpfinance.ca&subject=${encodeURIComponent(
+                      `Marketplace Inquiry: ${listingTitle}`,
+                    )}&body=${encodeURIComponent(
+                      `Hi,
 
 I'm interested in this unit:
 
-${listing.title || `${listing.year} ${listing.make} ${listing.model}`}
+${listingTitle}
 Price: $${Number(listing.price || 0).toLocaleString()}
 
 Listing Link:
@@ -475,36 +587,135 @@ Is it still available?
 
 Thanks,`,
                   )}`}
-                >
-                  Contact Dealer
-                </a>
+                  >
+                    Contact Dealer
+                  </a>
 
-                <small>Your message goes directly to the selling dealer.</small>
+                  <small>Your message goes directly to the selling dealer.</small>
+                </div>
+
+                <div className="secure-divider" />
+
+                <div className="secure-option">
+                  <Typography component="h4" variant="subtitle1">
+                    Request Financing Support
+                  </Typography>
+                  <Typography component="p">
+                    Structured financing support aligned with this purchase.
+                  </Typography>
+
+                  <button
+                    className="secure-btn"
+                    type="button"
+                    onClick={() => {
+                      setSecureMode("finance");
+                    }}
+                  >
+                    Request Financing
+                  </button>
+
+                  <small>Your message goes directly to NLP Finance.</small>
+                </div>
               </div>
-
-              <div className="secure-divider" />
-
-              <div className="secure-option">
+            ) : (
+              <div className="secure-finance-form-wrap">
                 <Typography component="h4" variant="subtitle1">
-                  Request Financing Support
-                </Typography>
-                <Typography component="p">
-                  Structured financing support aligned with this purchase.
+                  Financing Request
                 </Typography>
 
-                <button
-                  className="secure-btn"
-                  type="button"
-                  onClick={() => {
-                    navigate("/finance");
-                  }}
-                >
-                  Request Financing
-                </button>
+                <form className="secure-finance-form" onSubmit={handleFinanceSubmit}>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="First Name"
+                    value={financeForm.firstName}
+                    onChange={handleFinanceFieldChange}
+                    required
+                  />
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={financeForm.lastName}
+                    onChange={handleFinanceFieldChange}
+                    required
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={financeForm.email}
+                    onChange={handleFinanceFieldChange}
+                    required
+                  />
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone Number"
+                    value={financeForm.phone}
+                    onChange={handleFinanceFieldChange}
+                    required
+                  />
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="Location (Town/City)"
+                    value={financeForm.location}
+                    onChange={handleFinanceFieldChange}
+                    required
+                  />
+                  <textarea
+                    name="additionalInfo"
+                    rows="4"
+                    placeholder="Additional Info (Optional)"
+                    value={financeForm.additionalInfo}
+                    onChange={handleFinanceFieldChange}
+                  />
 
-                <small>Your message goes directly to NLP Finance.</small>
+                  {financeFeedback.message ? (
+                    <p className={`secure-finance-feedback ${financeFeedback.type}`}>
+                      {financeFeedback.message}
+                    </p>
+                  ) : null}
+
+                  {financeSubmitted ? (
+                    <div className="secure-finance-actions">
+                      <button
+                        className="secure-btn secure-btn-secondary"
+                        type="button"
+                        onClick={resetSecureModal}
+                      >
+                        Have Us Reach Out
+                      </button>
+                      <a
+                        className="secure-btn"
+                        href={dealertrackUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Proceed to Full Application
+                      </a>
+                    </div>
+                  ) : (
+                    <div className="secure-finance-actions">
+                      <button
+                        className="secure-btn secure-btn-secondary"
+                        type="button"
+                        onClick={() => {
+                          setSecureMode("options");
+                          setFinanceFeedback({ type: "", message: "" });
+                        }}
+                      >
+                        Back
+                      </button>
+                      <button className="secure-btn" type="submit" disabled={financeSubmitting}>
+                        {financeSubmitting ? "Submitting..." : "Next"}
+                      </button>
+                    </div>
+                  )}
+                </form>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

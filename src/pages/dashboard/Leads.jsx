@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { authFetch } from "../../auth/authFetch.js";
+import "./Leads.css";
 import {
   Box,
   Button,
@@ -84,6 +85,7 @@ function Leads() {
 
   return (
     <Box
+      className="leads-page"
       sx={{
         p: 3,
         pb: 0,
