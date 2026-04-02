@@ -36,16 +36,31 @@
   font-size: clamp(1rem, 1.7vw, 1.2rem);
 }
 
-.finance-hero-link {
-  color: #d71a20;
+.finance-full-app-btn {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1.5rem;
+  background-color: #d71a20;
+  color: #fff;
   font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px rgba(215, 26, 32, 0.35);
 }
 
-.finance-hero-link:hover {
-  color: #b5161b;
+.finance-full-app-btn:hover {
+  background-color: #b5151a;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(215, 26, 32, 0.45);
 }
+
+.finance-full-app-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 
 .finance-form-section {
   padding: 3.25rem 1.25rem 4.5rem;

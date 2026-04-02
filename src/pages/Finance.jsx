@@ -47,18 +47,17 @@ function Finance() {
           <h1>Apply for Financing</h1>
           <p>
             Start with our quick application below. It only takes a minute, and
-            we’ll follow up with the next steps. Prefer to complete a full
-            application now?{" "}
-            <a
-              href="https://v2.digital.dealertrack.ca/creditapp/standalone?token=51e9767a-c539-4874-a757-41df6d590bc2&flow=Full&lang=en"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="finance-hero-link"
-            >
-              Click here
-            </a>
-            .
+            we’ll follow up with the next steps. Ready to move faster? Complete
+            the full application for a quicker response.
           </p>
+          <a
+            href="https://v2.digital.dealertrack.ca/creditapp/standalone?token=51e9767a-c539-4874-a757-41df6d590bc2&flow=Full&lang=en"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="finance-full-app-btn"
+          >
+            Complete Full Application
+          </a>
         </div>
       </section>
 
@@ -116,9 +115,7 @@ function Finance() {
           </div>
 
           <div className="finance-form-group">
-            <label>
-              What type of vehicle are you interested in?
-            </label>
+            <label>What type of vehicle are you interested in?</label>
             <select
               name="vehicle"
               {...register("vehicle")}

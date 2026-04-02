@@ -1,7 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
-import { FaPencilAlt, FaThLarge } from "react-icons/fa";
+import {
+  FaPencilAlt,
+  FaThLarge,
+  FaMapMarkerAlt,
+  FaCreditCard,
+  FaHandshake,
+} from "react-icons/fa";
 import "./Home.css";
 
 function Home() {
@@ -9,15 +15,31 @@ function Home() {
     <Box className="home-container">
       <Box component="section" className="home-section">
         <Box className="home-content">
-          <Typography component="h1">Financing Made Simple</Typography>
-          <Typography component="p">
-            Get approved in minutes and drive away today.
+          <Typography component="p" className="hero-eyebrow">
+            NLP Marketplace™
           </Typography>
-          <Link to="/finance" className="apply-button">
-            Apply Now
-          </Link>
+          <Typography component="h1">
+            One Province.
+            <br />
+            One Marketplace.
+          </Typography>
+          <Typography component="p">
+            All verified NL inventory. One trusted destination.
+          </Typography>
+          <Box className="hero-buttons">
+            <Link to="/marketplace" className="hero-primary-btn">
+              <FaThLarge className="button-icon" />
+              Browse Marketplace
+            </Link>
+            <Link to="/PostAdForm" className="hero-secondary-btn">
+              <FaPencilAlt className="button-icon" />
+              Post an Ad
+            </Link>
+          </Box>
         </Box>
       </Box>
+
+      {/* Category strip */}
       <Box component="section" className="vehicle-banner">
         <Box className="vehicle-section text-banner">
           <Typography component="p">WHAT ARE YOU LOOKING FOR?</Typography>
@@ -47,15 +69,16 @@ function Home() {
           </Link>
         </Box>
       </Box>
+
+      {/* Marketplace promo */}
       <Box component="section" className="marketplace-promo">
         <Box className="marketplace-text" data-aos="fade-up">
           <Typography component="h2">
             Introducing the NLP Finance Marketplace
           </Typography>
-
           <Typography component="p">
             Looking to sell your vehicle? Whether it's a powersports unit, RV,
-            boat or autombile - list it for free on our Marketplace and we can
+            boat or automobile — list it for free on our Marketplace and we can
             offer financing to your buyer at no cost to you.
           </Typography>
           <Typography component="p">
@@ -75,50 +98,47 @@ function Home() {
         </Box>
       </Box>
 
+      {/* Why Choose Us */}
       <Box component="section" className="why-choose-us">
         <Typography component="h2">Why Choose Us?</Typography>
-        <Box className="why-point" data-aos="fade-left">
-          <Box className="why-text">
+        <Typography component="p" className="why-subtitle">
+          Built for Newfoundlanders, by Newfoundlanders.
+        </Typography>
+        <Box className="why-cards">
+          <Box className="why-card" data-aos="fade-up">
+            <Box className="why-card-icon">
+              <FaMapMarkerAlt />
+            </Box>
             <Typography component="h3">
-              Proudly Newfoundland & Labrador Owned and Operated
+              Proudly NL Owned &amp; Operated
             </Typography>
             <Typography component="p">
-              We're proud to be the only dedicated powersports finance broker
-              based in Newfoundland & Labrador, trusted since 2017 with deep
-              roots in our local dealers.
+              The only dedicated powersports finance broker based in
+              Newfoundland &amp; Labrador — trusted since 2017 with deep roots
+              in our local dealers.
             </Typography>
           </Box>
-          <Box className="why-icon">
-            <img src="/images/nl.png" alt="NL Owned" />
-          </Box>
-        </Box>
-        <Box className="why-point-reverse" data-aos="fade-right">
-          <Box className="why-icon">
-            <img src="/images/credit.png" alt="All Credit Types" />
-          </Box>
-          <Box className="why-text">
-            <Typography component="h3">Financing for all Credit Types</Typography>
-            <Typography component="p">
-              Whether you have great credit, bad credit, or are rebuilding, we
-              work with a range of lenders to help get you approved quickly and
-              easily.
-            </Typography>
-          </Box>
-        </Box>
-        <Box className="why-point" data-aos="fade-left">
-          <Box className="why-text">
+          <Box className="why-card" data-aos="fade-up" data-aos-delay="100">
+            <Box className="why-card-icon">
+              <FaCreditCard />
+            </Box>
             <Typography component="h3">
-              New or Used, Dealer or Private Seller - We've Got You Covered
+              Financing for All Credit Types
             </Typography>
             <Typography component="p">
-              Wheather you're purchasing a brand-new ATV or a pre-owned Travel
-              Trailer, from a dealership or a private seller, NLP Finance makes
-              the process simple and stress-free with flexible financing options
-              tailored to your needs.
+              Great credit, bad credit, or rebuilding — we work with a range of
+              lenders to get you approved quickly and easily.
             </Typography>
           </Box>
-          <Box className="why-icon">
-            <img src="/images/utv.png" alt="NL Owned" />
+          <Box className="why-card" data-aos="fade-up" data-aos-delay="200">
+            <Box className="why-card-icon">
+              <FaHandshake />
+            </Box>
+            <Typography component="h3">Dealer or Private Seller</Typography>
+            <Typography component="p">
+              New or used, dealership or private sale — NLP Finance makes the
+              process simple with flexible options tailored to your needs.
+            </Typography>
           </Box>
         </Box>
       </Box>

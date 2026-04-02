@@ -23,6 +23,12 @@ export const dealers = {
     website: "https://www.brucesrecreation.nf.ca/",
     location: "Clarenville, NL",
   },
+  "Bonne Bay Recreation": {
+    name: "Bonne Bay Recreation",
+    logo: "/images/dealers/bonne-bay.png",
+    website: "https://www.bonnebayrecreation.com/en/",
+    location: "Bonne Bay, NL",
+  },
 
   "Coastal Outdoors": {
     name: "Coastal Outdoors",

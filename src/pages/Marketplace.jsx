@@ -397,16 +397,15 @@ function Marketplace() {
                           {item.year} {item.make} {item.model}
                         </h3>
 
-                        <p>
-                          <strong>Price:</strong> $
-                          {Number(item.price || 0).toLocaleString()}
+                        <p className="listing-price">
+                          ${Number(item.price || 0).toLocaleString()}
                         </p>
 
                         {Number(item.interestRate) > 0 &&
                           Number(item.term) > 0 && (
                             <>
-                              <p>
-                                <strong>Payment:</strong> $
+                              <p className="listing-payment">
+                                $
                                 {calculateBiWeekly(
                                   Number(item.price || 0),
                                   Number(item.interestRate),
@@ -415,24 +414,24 @@ function Marketplace() {
                                 bi-weekly
                               </p>
 
-                              <p id="terms">
-                                Based on {item.term} months at {item.interestRate}%
-                                APR
+                              <p className="listing-terms">
+                                {item.term} months @ {item.interestRate}% APR
+                              </p>
+                              <p className="listing-disclaimer">
+                                *Estimated payment. OAC, rate and terms may vary.
                               </p>
                             </>
                           )}
                       </div>
 
                       <div className="marketplace-card-footer">
-                        <span className="offered-by">Offered By:</span>
-
                         <span className="dealer-name">
                           {item.dealership || "Private Seller"}
                         </span>
 
                         {dealer && (
                           <span className="dealer-location">
-                            <LocationOnIcon sx={{ fontSize: 14 }} />
+                            <LocationOnIcon sx={{ fontSize: 13 }} />
                             {dealer.location}
                           </span>
                         )}
