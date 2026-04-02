@@ -37,6 +37,12 @@ export const dealers = {
     location: "Clarenville, NL",
     email: "test@coastaloutdoors.ca",
   },
+  "Fun 'N' Fast": {
+    name: "Fun 'N' Fast",
+    logo: "/images/dealers/fun-n-fast.png",
+    website: "https://www.funnfast.com/",
+    location: "Mount Pearl, NL",
+  },
   "Honda One": {
     name: "Honda One",
     logo: "/images/dealers/nlp-finance-marketplace.png",
@@ -75,9 +81,16 @@ export const dealers = {
   },
   "NLP Finance Marketplace": {
     name: "NLP Finance Marketplace",
-    logo: "/images/dealers/nlp-finance-marketplace.png",
+    logo: "/images/dealers/pa-sports.jpg",
     website: "https://nlpfinance.ca/",
     location: "Grand Falls-Windsor, NL",
+  },
+
+  "P & A Sports": {
+    name: "NLP Finance Marketplace",
+    logo: "/images/dealers/nlp-finance-marketplace.png",
+    website: "https://pasports.ca/index.htm",
+    location: "Savage Cove, NL",
   },
   "Pardys Recreation & Marine": {
     name: "Pardys Recreation & Marine",
