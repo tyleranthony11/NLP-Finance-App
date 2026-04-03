@@ -86,6 +86,12 @@ const dealerLogos = [
     name: "Bonne Bay Recreation",
     location: "Bonne Bay",
   },
+  {
+    src: "/images/dealers/honda-one.png",
+    alt: "Honda One",
+    name: "Honda One",
+    location: "Mount Pearl",
+  },
 ];
 
 function Dealers() {
