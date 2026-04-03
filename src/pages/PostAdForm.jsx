@@ -54,10 +54,24 @@ function PostAdForm() {
 
   // ── Keyboard guard: block negatives, e/E, and cap digit count ──
   const blockNegativeAndLimit = (maxDigits) => (e) => {
-    const control = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+    const control = [
+      "Backspace",
+      "Delete",
+      "Tab",
+      "ArrowLeft",
+      "ArrowRight",
+      "ArrowUp",
+      "ArrowDown",
+    ];
     if (control.includes(e.key)) return;
-    if (["-", "e", "E", "+"].includes(e.key)) { e.preventDefault(); return; }
-    if (!/^\d$/.test(e.key)) { e.preventDefault(); return; }
+    if (["-", "e", "E", "+"].includes(e.key)) {
+      e.preventDefault();
+      return;
+    }
+    if (!/^\d$/.test(e.key)) {
+      e.preventDefault();
+      return;
+    }
     const digits = e.target.value.replace(/\D/g, "");
     if (digits.length >= maxDigits) e.preventDefault();
   };
@@ -65,7 +79,10 @@ function PostAdForm() {
   // ── Paste guard for numeric fields ──
   const handleNumericPaste = (maxDigits) => (e) => {
     e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/[^\d]/g, "").slice(0, maxDigits);
+    const pasted = e.clipboardData
+      .getData("text")
+      .replace(/[^\d]/g, "")
+      .slice(0, maxDigits);
     const field = e.target.name;
     setFormData((prev) => ({ ...prev, [field]: pasted }));
     clearError(field);
@@ -113,20 +130,26 @@ function PostAdForm() {
       setError("name", "Please enter your full name.");
     } else if (name === "email") {
       const emailRe = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRe.test(v)) setError("email", "Please enter a valid email address.");
+      if (!emailRe.test(v))
+        setError("email", "Please enter a valid email address.");
     } else if (name === "phone") {
       const digits = value.replace(/\D/g, "");
-      if (digits.length < 7) setError("phone", "Please enter a valid phone number.");
+      if (digits.length < 7)
+        setError("phone", "Please enter a valid phone number.");
     } else if (name === "year" && v) {
       const y = Number(v);
       if (y < 1900 || y > CURRENT_YEAR + 1)
-        setError("year", `Please enter a valid year (1900–${CURRENT_YEAR + 1}).`);
+        setError(
+          "year",
+          `Please enter a valid year (1900–${CURRENT_YEAR + 1}).`,
+        );
     } else if (name === "make" && !v) {
       setError("make", "Please enter the vehicle make.");
     } else if (name === "model" && !v) {
       setError("model", "Please enter the vehicle model.");
     } else if (name === "price") {
-      if (!v || Number(v) <= 0) setError("price", "Please enter a valid selling price.");
+      if (!v || Number(v) <= 0)
+        setError("price", "Please enter a valid selling price.");
     } else if (name === "description" && !v) {
       setError("description", "Please provide a description.");
     }
@@ -141,22 +164,27 @@ function PostAdForm() {
     if (!formData.name.trim()) newErrors.name = "Please enter your full name.";
 
     const emailRe = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRe.test(formData.email.trim())) newErrors.email = "Please enter a valid email address.";
+    if (!emailRe.test(formData.email.trim()))
+      newErrors.email = "Please enter a valid email address.";
 
     const phoneDigits = formData.phone.replace(/\D/g, "");
-    if (phoneDigits.length < 7) newErrors.phone = "Please enter a valid phone number.";
+    if (phoneDigits.length < 7)
+      newErrors.phone = "Please enter a valid phone number.";
 
     const year = Number(formData.year);
     if (!formData.year || year < 1900 || year > CURRENT_YEAR + 1)
       newErrors.year = `Please enter a valid year (1900–${CURRENT_YEAR + 1}).`;
 
-    if (!formData.make.trim()) newErrors.make = "Please enter the vehicle make.";
-    if (!formData.model.trim()) newErrors.model = "Please enter the vehicle model.";
+    if (!formData.make.trim())
+      newErrors.make = "Please enter the vehicle make.";
+    if (!formData.model.trim())
+      newErrors.model = "Please enter the vehicle model.";
 
     if (!formData.price || Number(formData.price) <= 0)
       newErrors.price = "Please enter a valid selling price.";
 
-    if (!formData.description.trim()) newErrors.description = "Please provide a description.";
+    if (!formData.description.trim())
+      newErrors.description = "Please provide a description.";
 
     if (!formData.photos || formData.photos.length === 0)
       newErrors.photos = "Please upload at least one photo.";
@@ -185,7 +213,9 @@ function PostAdForm() {
         model: formData.model.trim(),
         title: formData.title.trim(),
         condition: formData.condition,
-        odometerValue: formData.odometerValue ? Number(formData.odometerValue) : null,
+        odometerValue: formData.odometerValue
+          ? Number(formData.odometerValue)
+          : null,
         odometerUnit: formData.odometerValue ? formData.odometerUnit : null,
         price: formData.price ? Number(formData.price) : null,
         description: formData.description.trim(),
@@ -204,7 +234,11 @@ function PostAdForm() {
 
       let json = null;
       if (contentType.includes("application/json")) {
-        try { json = JSON.parse(raw); } catch { /* invalid json */ }
+        try {
+          json = JSON.parse(raw);
+        } catch {
+          /* invalid json */
+        }
       }
 
       if (!res.ok) {
@@ -218,9 +252,20 @@ function PostAdForm() {
 
       toast.success("Your listing has been submitted for review!");
       setFormData({
-        name: "", email: "", phone: "", category: "",
-        condition: "", title: "", year: "", make: "", model: "",
-        odometerValue: "", odometerUnit: "km", price: "", description: "", photos: [],
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        condition: "",
+        title: "",
+        year: "",
+        make: "",
+        model: "",
+        odometerValue: "",
+        odometerUnit: "km",
+        price: "",
+        description: "",
+        photos: [],
       });
       setErrors({});
     } catch {
@@ -246,42 +291,87 @@ function PostAdForm() {
 
       <section className="post-ad-form-section">
         <form className="post-ad-form" onSubmit={handleSubmit}>
-
           <p className="post-ad-section-label">Seller Information</p>
 
           <div className="post-ad-form-group">
             <label>Your Name</label>
-            <input type="text" name="name" className={`post-ad-input${errors.name ? " input-error" : ""}`} required maxLength={100} value={formData.name} onChange={handleChange} onBlur={handleBlur} />
+            <input
+              type="text"
+              name="name"
+              className={`post-ad-input${errors.name ? " input-error" : ""}`}
+              required
+              maxLength={100}
+              value={formData.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
             {errors.name && <span className="field-error">{errors.name}</span>}
           </div>
 
           <div className="post-ad-form-group">
             <label>Email Address</label>
-            <input type="email" name="email" className={`post-ad-input${errors.email ? " input-error" : ""}`} required value={formData.email} onChange={handleChange} onBlur={handleBlur} pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" />
-            {errors.email && <span className="field-error">{errors.email}</span>}
+            <input
+              type="email"
+              name="email"
+              className={`post-ad-input${errors.email ? " input-error" : ""}`}
+              required
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+
+            />
+            {errors.email && (
+              <span className="field-error">{errors.email}</span>
+            )}
           </div>
 
           <div className="post-ad-form-group">
             <label>Phone Number</label>
-            <input type="tel" name="phone" className={`post-ad-input${errors.phone ? " input-error" : ""}`} required value={formData.phone} onChange={handleChange} onBlur={handleBlur} inputMode="numeric" pattern="[0-9+\-\s()]*"
+            <input
+              type="tel"
+              name="phone"
+              className={`post-ad-input${errors.phone ? " input-error" : ""}`}
+              required
+              value={formData.phone}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              inputMode="numeric"
+
               onKeyDown={(e) => {
-                const isControl = ["Backspace","Delete","Tab","ArrowLeft","ArrowRight"].includes(e.key);
+                const isControl = [
+                  "Backspace",
+                  "Delete",
+                  "Tab",
+                  "ArrowLeft",
+                  "ArrowRight",
+                ].includes(e.key);
                 const isDigit = /[0-9]/.test(e.key);
                 const isAllowed = /[+\-\s()\\]/.test(e.key);
                 const digitCount = (formData.phone.match(/\d/g) || []).length;
-                if (!isControl && !isAllowed && !isDigit) { e.preventDefault(); return; }
+                if (!isControl && !isAllowed && !isDigit) {
+                  e.preventDefault();
+                  return;
+                }
                 if (isDigit && digitCount >= 11) e.preventDefault();
               }}
               onPaste={handlePhonePaste}
             />
-            {errors.phone && <span className="field-error">{errors.phone}</span>}
+            {errors.phone && (
+              <span className="field-error">{errors.phone}</span>
+            )}
           </div>
 
           <p className="post-ad-section-label">Vehicle Information</p>
 
           <div className="post-ad-form-group">
             <label>Category</label>
-            <select name="category" className="post-ad-input" required value={formData.category} onChange={handleChange}>
+            <select
+              name="category"
+              className="post-ad-input"
+              required
+              value={formData.category}
+              onChange={handleChange}
+            >
               <option value="">Select a Category</option>
               <option value="powersports">Powersports</option>
               <option value="marine">Marine</option>
@@ -292,7 +382,13 @@ function PostAdForm() {
 
           <div className="post-ad-form-group">
             <label>Condition</label>
-            <select name="condition" className="post-ad-input" required value={formData.condition} onChange={handleChange}>
+            <select
+              name="condition"
+              className="post-ad-input"
+              required
+              value={formData.condition}
+              onChange={handleChange}
+            >
               <option value="">Select Condition</option>
               <option value="new">New</option>
               <option value="used">Used</option>
@@ -301,32 +397,84 @@ function PostAdForm() {
 
           <div className="post-ad-form-group">
             <label>Title</label>
-            <input type="text" name="title" className="post-ad-input" maxLength={150} value={formData.title} onChange={handleChange} />
+            <input
+              type="text"
+              name="title"
+              className="post-ad-input"
+              maxLength={150}
+              value={formData.title}
+              onChange={handleChange}
+            />
           </div>
 
           <div className="post-ad-form-group">
             <label>Year</label>
-            <input type="number" name="year" className={`post-ad-input${errors.year ? " input-error" : ""}`} required value={formData.year} onChange={handleChange} onBlur={handleBlur} onKeyDown={blockNegativeAndLimit(4)} onPaste={handleNumericPaste(4)} />
+            <input
+              type="number"
+              name="year"
+              className={`post-ad-input${errors.year ? " input-error" : ""}`}
+              required
+              value={formData.year}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onKeyDown={blockNegativeAndLimit(4)}
+              onPaste={handleNumericPaste(4)}
+            />
             {errors.year && <span className="field-error">{errors.year}</span>}
           </div>
 
           <div className="post-ad-form-group">
             <label>Make</label>
-            <input type="text" name="make" className={`post-ad-input${errors.make ? " input-error" : ""}`} required maxLength={100} value={formData.make} onChange={handleChange} onBlur={handleBlur} />
+            <input
+              type="text"
+              name="make"
+              className={`post-ad-input${errors.make ? " input-error" : ""}`}
+              required
+              maxLength={100}
+              value={formData.make}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
             {errors.make && <span className="field-error">{errors.make}</span>}
           </div>
 
           <div className="post-ad-form-group">
             <label>Model</label>
-            <input type="text" name="model" className={`post-ad-input${errors.model ? " input-error" : ""}`} required maxLength={100} value={formData.model} onChange={handleChange} onBlur={handleBlur} />
-            {errors.model && <span className="field-error">{errors.model}</span>}
+            <input
+              type="text"
+              name="model"
+              className={`post-ad-input${errors.model ? " input-error" : ""}`}
+              required
+              maxLength={100}
+              value={formData.model}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+            {errors.model && (
+              <span className="field-error">{errors.model}</span>
+            )}
           </div>
 
           <div className="post-ad-form-group">
             <label>Odometer</label>
             <div className="odometer-row">
-              <input type="number" name="odometerValue" className="post-ad-input" step="1" value={formData.odometerValue} onChange={handleChange} onKeyDown={blockNegativeAndLimit(7)} onPaste={handleNumericPaste(7)} />
-              <select name="odometerUnit" className="post-ad-input" value={formData.odometerUnit} onChange={handleChange} disabled={!formData.odometerValue}>
+              <input
+                type="number"
+                name="odometerValue"
+                className="post-ad-input"
+                step="1"
+                value={formData.odometerValue}
+                onChange={handleChange}
+                onKeyDown={blockNegativeAndLimit(7)}
+                onPaste={handleNumericPaste(7)}
+              />
+              <select
+                name="odometerUnit"
+                className="post-ad-input"
+                value={formData.odometerUnit}
+                onChange={handleChange}
+
+              >
                 <option value="km">Kilometers (km)</option>
                 <option value="mi">Miles (mi)</option>
                 <option value="hrs">Hours (hrs)</option>
@@ -336,15 +484,42 @@ function PostAdForm() {
 
           <div className="post-ad-form-group">
             <label>Selling Price</label>
-            <input type="number" name="price" className={`post-ad-input${errors.price ? " input-error" : ""}`} step="1" required value={formData.price} onChange={handleChange} onBlur={handleBlur} onKeyDown={blockNegativeAndLimit(7)} onPaste={handleNumericPaste(7)} />
-            {errors.price && <span className="field-error">{errors.price}</span>}
+            <input
+              type="number"
+              name="price"
+              className={`post-ad-input${errors.price ? " input-error" : ""}`}
+              step="1"
+              required
+              value={formData.price}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              onKeyDown={blockNegativeAndLimit(7)}
+              onPaste={handleNumericPaste(7)}
+            />
+            {errors.price && (
+              <span className="field-error">{errors.price}</span>
+            )}
           </div>
 
           <div className="post-ad-form-group">
             <label>Description</label>
-            <textarea name="description" className={`post-ad-input${errors.description ? " input-error" : ""}`} rows="5" required maxLength={2000} value={formData.description} onChange={handleChange} onBlur={handleBlur} placeholder="Describe the condition, features, or any extra details..." />
-            <span className="char-count">{formData.description.length} / 2000</span>
-            {errors.description && <span className="field-error">{errors.description}</span>}
+            <textarea
+              name="description"
+              className={`post-ad-input${errors.description ? " input-error" : ""}`}
+              rows="5"
+              required
+              maxLength={2000}
+              value={formData.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="Describe the condition, features, or any extra details..."
+            />
+            <span className="char-count">
+              {formData.description.length} / 2000
+            </span>
+            {errors.description && (
+              <span className="field-error">{errors.description}</span>
+            )}
           </div>
 
           <p className="post-ad-section-label">Photos</p>
@@ -352,14 +527,30 @@ function PostAdForm() {
           <div className="post-ad-form-group">
             <label>Upload Photos</label>
             <div className="custom-file-upload">
-              <label htmlFor="photos-upload" className="file-upload-button">Choose Files</label>
+              <label htmlFor="photos-upload" className="file-upload-button">
+                Choose Files
+              </label>
               <span className="file-upload-text">{photoLabel}</span>
             </div>
-            <input id="photos-upload" className="file-upload-input" type="file" name="photos" accept="image/*" multiple onChange={handleChange} />
-            {errors.photos && <span className="field-error">{errors.photos}</span>}
+            <input
+              id="photos-upload"
+              className="file-upload-input"
+              type="file"
+              name="photos"
+              accept="image/*"
+              multiple
+              onChange={handleChange}
+            />
+            {errors.photos && (
+              <span className="field-error">{errors.photos}</span>
+            )}
           </div>
 
-          <button type="submit" className="post-ad-submit-btn" disabled={isSubmitting}>
+          <button
+            type="submit"
+            className="post-ad-submit-btn"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? "Submitting..." : "Submit Listing"}
           </button>
         </form>
