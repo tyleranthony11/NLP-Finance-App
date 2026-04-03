@@ -1,137 +1,152 @@
 .post-ad-page {
   background: #f6f8fb;
-  padding: 2rem 1rem 3rem;
+  color: #1f2833;
 }
 
-.post-ad-form-container {
-  max-width: 700px;
+/* ── Hero ── */
+.post-ad-hero {
+  min-height: 46vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 1.25rem;
+  background-image:
+    linear-gradient(to bottom, rgba(16, 20, 27, 0.55), rgba(16, 20, 27, 0.7)),
+    url("/images/atv.png");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+}
+
+.post-ad-hero-content {
+  width: min(100%, 700px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.post-ad-hero-logo {
+  max-width: 280px;
+  margin-bottom: 0.75rem;
+  filter: brightness(0) invert(1);
+}
+
+.post-ad-hero-content h1 {
+  font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.post-ad-hero-content p {
+  margin-top: 0.5rem;
+  font-size: clamp(1rem, 1.7vw, 1.15rem);
+  opacity: 0.85;
+}
+
+/* ── Form section ── */
+.post-ad-form-section {
+  padding: 3.25rem 1.25rem 4.5rem;
+}
+
+.post-ad-form {
+  width: min(100%, 700px);
   margin: 0 auto;
-  padding: 1.6rem;
+  display: grid;
+  gap: 1rem;
   background: #fff;
   border-radius: 18px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 12px 28px rgba(16, 24, 40, 0.08);
+  padding: 1.75rem;
+  box-shadow: 0 14px 30px rgba(16, 24, 40, 0.1);
 }
 
-.post-ad-form-container h2 {
-  text-align: center;
-  margin-bottom: 0.5rem;
-}
-
-.post-ad-form-container p {
-  margin-bottom: 1.5rem;
-  color: #55606e;
-  text-align: center;
-}
-
-.marketplace-logo {
-  display: block;
-  margin: 0 auto 1.5rem auto;
-  max-width: 200px;
-}
-
-.post-ad-form h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #354350;
-}
-
-.post-ad-form p {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.post-ad-form fieldset {
-  border: 1px solid #edf0f4;
-  border-radius: 14px;
-  padding: 0.9rem;
-  margin-bottom: 1.5rem;
-  background: #fcfdff;
-}
-
-.post-ad-form legend {
-  color: #273548;
+.post-ad-section-label {
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0 0.3rem;
-  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d71a20;
+  margin: 0.5rem 0 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #edf0f4;
 }
 
-.post-ad-form input {
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  border: 1px solid #d5dce4;
-  border-radius: 10px;
+.post-ad-form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
-.post-ad-form select {
-  color: #354350;
-  display: block;
-  width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  border: 1px solid #d5dce4;
-  border-radius: 10px;
+
+.post-ad-form-group label {
+  margin-bottom: 0.45rem;
+  font-weight: 600;
+  color: #273548;
 }
-.post-ad-form textarea {
-  display: block;
+
+.post-ad-input {
   width: 100%;
-  margin-bottom: 1rem;
-  padding: 0.75rem;
+  padding: 0.8rem 0.85rem;
   border: 1px solid #d5dce4;
   border-radius: 10px;
-  resize: vertical;
+  font-size: 1rem;
   font-family: inherit;
+  color: #1f2833;
+  background: #fff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+  box-sizing: border-box;
 }
 
-.post-ad-form input:focus,
-.post-ad-form select:focus,
-.post-ad-form textarea:focus {
+.post-ad-input:focus {
   outline: none;
   border-color: #d71a20;
-  box-shadow: 0 0 0 3px rgba(215, 26, 32, 0.12);
+  box-shadow: 0 0 0 3px rgba(215, 26, 32, 0.13);
 }
 
-.submit-button {
-  background-color: #d81a20 !important;
-  color: #fff !important;
-  border: none !important;
-  padding: 0.75rem 2rem !important;
-  border-radius: 999px !important;
-  font-weight: 700 !important;
-  text-transform: none !important;
-  cursor: pointer;
-  width: 100%;
-  box-shadow: none !important;
+.post-ad-input::placeholder {
+  color: #8b95a2;
 }
 
-.submit-button:hover {
-  background-color: #b5161b !important;
+.post-ad-input.input-error {
+  border-color: #d71a20;
+  box-shadow: 0 0 0 3px rgba(215, 26, 32, 0.13);
 }
 
-.submit-button.Mui-disabled {
-  opacity: 0.65;
-  color: #fff !important;
+.field-error {
+  font-size: 0.8rem;
+  color: #d71a20;
+  margin-top: 0.3rem;
 }
 
+.char-count {
+  font-size: 0.78rem;
+  color: #8b95a2;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+textarea.post-ad-input {
+  resize: vertical;
+}
+
+/* ── Odometer ── */
 .odometer-row {
   display: flex;
-  gap: 10px;
+  gap: 0.6rem;
 }
 
-.odometer-row input {
+.odometer-row .post-ad-input:first-child {
   flex: 2;
 }
 
-.odometer-row select {
+.odometer-row .post-ad-input:last-child {
   flex: 1;
 }
 
-.post-ad-form input[type="file"] {
-  padding: 0.6rem;
-  background: #fff;
-}
-
+/* ── File upload ── */
 .file-upload-input {
   position: absolute;
   width: 1px;
@@ -156,14 +171,16 @@
   align-items: center;
   justify-content: center;
   border: none;
-  background: #d81a20;
-  color: #fff;
+  background: #d71a20;
+  color: #fff !important;
   font-weight: 700;
+  font-family: inherit;
   border-radius: 999px;
-  padding: 0.35rem 0.7rem;
+  padding: 0.4rem 0.9rem;
   font-size: 0.86rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  text-decoration: none;
 }
 
 .file-upload-button:hover {
@@ -171,17 +188,50 @@
 }
 
 .file-upload-text {
-  color: #55606e;
+  color: #8b95a2;
   font-size: 0.86rem;
 }
 
-@media (max-width: 640px) {
-  .post-ad-page {
-    padding: 1.25rem 0.8rem 2.25rem;
+/* ── Submit ── */
+.post-ad-submit-btn {
+  margin-top: 0.25rem;
+  padding: 0.85rem 1.1rem;
+  border: none;
+  border-radius: 999px;
+  background: #d71a20;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    transform 0.2s ease;
+}
+
+.post-ad-submit-btn:hover {
+  background: #b5151a;
+  transform: translateY(-1px);
+}
+
+.post-ad-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .post-ad-hero {
+    min-height: 38vh;
+    padding: 4rem 1rem;
   }
 
-  .post-ad-form-container {
-    padding: 1rem;
+  .post-ad-form-section {
+    padding: 2.2rem 0.9rem 3.5rem;
+  }
+
+  .post-ad-form {
     border-radius: 14px;
+    padding: 1.25rem;
   }
 }
