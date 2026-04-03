@@ -100,8 +100,8 @@ export const dealers = {
   },
   "Rapid Powersports": {
     name: "Rapid Powersports",
-    logo: "/images/dealers/rapid-powersports.gif",
-    wesbite: "https://www.rapidpowersports.com/en/",
+    logo: "/images/dealers/rapid-powersports2.jpg",
+    website: "https://www.rapidpowersports.com/en/",
     location: "Little Rapids, NL",
     email: "test@rapidpowersports.ca",
   },

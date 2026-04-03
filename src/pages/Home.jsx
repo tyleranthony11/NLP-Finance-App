@@ -19,7 +19,7 @@ function Home() {
       <Box component="section" className="home-section">
         <Box className="home-content reveal reveal-up">
           <Typography component="p" className="hero-eyebrow">
-            NLP Marketplace™
+            NLP Marketplace
           </Typography>
           <Typography component="h1">
             One Province.
@@ -42,7 +42,6 @@ function Home() {
         </Box>
       </Box>
 
-      {/* Category strip */}
       <Box component="section" className="vehicle-banner reveal reveal-up">
         <Box className="vehicle-section text-banner">
           <Typography component="p">WHAT ARE YOU LOOKING FOR?</Typography>
@@ -73,7 +72,6 @@ function Home() {
         </Box>
       </Box>
 
-      {/* Marketplace promo */}
       <Box component="section" className="marketplace-promo">
         <Box className="marketplace-text reveal reveal-up">
           <Typography component="h2">
@@ -101,14 +99,18 @@ function Home() {
         </Box>
       </Box>
 
-      {/* Why Choose Us */}
       <Box component="section" className="why-choose-us">
-        <Typography component="h2" className="reveal reveal-up">Why Choose Us?</Typography>
+        <Typography component="h2" className="reveal reveal-up">
+          Why Choose Us?
+        </Typography>
         <Typography component="p" className="why-subtitle reveal reveal-up">
           Built for Newfoundlanders, by Newfoundlanders.
         </Typography>
         <Box className="why-cards">
-          <Box className="why-card reveal reveal-up" style={{ transitionDelay: "0ms" }}>
+          <Box
+            className="why-card reveal reveal-up"
+            style={{ transitionDelay: "0ms" }}
+          >
             <Box className="why-card-icon">
               <FaMapMarkerAlt />
             </Box>
@@ -121,7 +123,10 @@ function Home() {
               in our local dealers.
             </Typography>
           </Box>
-          <Box className="why-card reveal reveal-up" style={{ transitionDelay: "120ms" }}>
+          <Box
+            className="why-card reveal reveal-up"
+            style={{ transitionDelay: "120ms" }}
+          >
             <Box className="why-card-icon">
               <FaCreditCard />
             </Box>
@@ -133,7 +138,10 @@ function Home() {
               lenders to get you approved quickly and easily.
             </Typography>
           </Box>
-          <Box className="why-card reveal reveal-up" style={{ transitionDelay: "240ms" }}>
+          <Box
+            className="why-card reveal reveal-up"
+            style={{ transitionDelay: "240ms" }}
+          >
             <Box className="why-card-icon">
               <FaHandshake />
             </Box>

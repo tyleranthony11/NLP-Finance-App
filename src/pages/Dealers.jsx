@@ -6,85 +6,85 @@ const dealerLogos = [
     src: "/images/dealers/blue-water-marine.avif",
     alt: "Blue Water Marine",
     name: "Blue Water Marine",
-    location: "Mount Pearl, NL",
+    location: "Mount Pearl",
   },
   {
     src: "/images/dealers/bruces-recreation.png",
     alt: "Bruce's Recreation",
     name: "Bruce's Recreation",
-    location: "Clarenville, NL",
+    location: "Clarenville",
   },
   {
     src: "/images/dealers/mf-motors.png",
     alt: "MF Motors",
     name: "MF Motors",
-    location: "St. John's, NL",
+    location: "St. John's",
   },
   {
     src: "/images/dealers/mid-island-motorsports.png",
     alt: "Mid Island Motorsports",
     name: "Mid Island Motorsports",
-    location: "Springdale, NL",
+    location: "Springdale",
   },
   {
     src: "/images/dealers/rugged-rock.png",
     alt: "Rugged Rock Harley-Davidson",
     name: "Rugged Rock Harley-Davidson",
-    location: "Mount, NL",
+    location: "Mount Pearl",
   },
   {
     src: "/images/dealers/arctic-west.png",
     alt: "Arctic West",
     name: "Arctic West",
-    location: "Birchy Head, NL",
+    location: "Birchy Head",
   },
   {
     src: "/images/dealers/funnfast.png",
     alt: "Fun 'N' Fast",
     name: "Fun 'N' Fast",
-    location: "Mount Pearl, NL",
+    location: "Mount Pearl",
   },
   {
     src: "/images/dealers/merles-recreation.png",
     alt: "Merle's Recreation",
     name: "Merle's Recreation",
-    location: "Clarenville, NL",
+    location: "Clarenville",
   },
   {
     src: "/images/dealers/coastal-outdoors.png",
     alt: "Coastal Outdoors",
     name: "Coastal Outdoors",
-    location: "Carbonear, NL",
+    location: "Mount Pearl",
   },
   {
     src: "/images/dealers/pardys-recreation.png",
     alt: "Pardy's Recreation & Marine",
     name: "Pardy's Recreation & Marine",
-    location: "Marystown, NL",
+    location: "Marystown",
   },
   {
     src: "/images/dealers/pa-sports.jpg",
     alt: "Pardy's Recreation & Marine",
     name: "P & A Sports",
-    location: "Savage Cove, NL",
+    location: "Savage Cove",
   },
   {
     src: "/images/dealers/brp.png",
     alt: "The Outdoor Shoppe",
     name: "The Outdoor Shoppe",
-    location: "St. Anthony  , NL",
+    location: "St. Anthony",
   },
   {
-    src: "/images/dealers/rapid-powersports.gif",
+    src: "/images/dealers/rapid-powersports2.jpg",
     alt: "Rapid Powersports",
     name: "Rapid Powersports",
-    location: "Gander, NL",
+    location: "Gander",
   },
   {
     src: "/images/dealers/bonne-bay.png",
     alt: "Bonne Bay Recreation",
     name: "Bonne Bay Recreation",
-    location: "Bonne Bay, NL",
+    location: "Bonne Bay",
   },
 ];
 
@@ -96,7 +96,9 @@ function Dealers() {
       {/* Hero */}
       <section className="dealers-header">
         <div className="dealers-header-content reveal reveal-up">
-          <p className="dealers-eyebrow">NLP Finance × NL Dealers</p>
+          <p className="dealers-eyebrow">
+            NLP Marketplace built for NL Dealers
+          </p>
           <h1>Helping you Sell More Units - Without Giving Up Control.</h1>
           <p>
             We partner with Newfoundland & Labrador dealers to help you move
@@ -110,10 +112,10 @@ function Dealers() {
       {/* Pitch */}
       <section className="dealers-pitch">
         <div className="dealers-pitch-inner">
-          <h2 className="reveal reveal-up">How It Works</h2>
+          <h2 className="reveal reveal-up">Here's How It Works</h2>
           <p className="dealers-pitch-sub reveal reveal-up">
-            Here's how our dealer partnership works — simple, transparent, and
-            built to help you sell more units.
+            Our dealer partnership is simple, transparent, and built to help you
+            sell more units.
           </p>
           <div className="dealers-how-steps">
             <div
