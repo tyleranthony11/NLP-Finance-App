@@ -112,6 +112,13 @@ function PostAdForm() {
         e.target.value = "";
         return;
       }
+      const MAX_FILE_SIZE_MB = 5;
+      const oversized = selected.filter(f => f.size > MAX_FILE_SIZE_MB * 1024 * 1024);
+      if (oversized.length > 0) {
+        toast.error(`Each photo must be under ${MAX_FILE_SIZE_MB}MB. Please compress or resize your images.`);
+        e.target.value = "";
+        return;
+      }
       setFormData((prev) => ({ ...prev, photos: selected }));
       clearError("photos");
       return;

@@ -225,6 +225,9 @@
   text-align: center;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
   min-height: 130px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .dealer-logo-card-info {

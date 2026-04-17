@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import "./Dealers.css";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
@@ -16,8 +17,8 @@ const dealerLogos = [
   },
   {
     src: "/images/dealers/mf-motors.png",
-    alt: "MF Motors",
-    name: "MF Motors",
+    alt: "MF Motorsports",
+    name: "MF Motorsports",
     location: "St. John's",
   },
   {
@@ -46,8 +47,8 @@ const dealerLogos = [
   },
   {
     src: "/images/dealers/merles-recreation.png",
-    alt: "Merle's Recreation",
-    name: "Merle's Recreation",
+    alt: "Merle's Parts & Recreation",
+    name: "Merle's Parts & Recreation",
     location: "Clarenville",
   },
   {
@@ -58,8 +59,8 @@ const dealerLogos = [
   },
   {
     src: "/images/dealers/pardys-recreation.png",
-    alt: "Pardy's Recreation & Marine",
-    name: "Pardy's Recreation & Marine",
+    alt: "Pardys Recreation & Marine",
+    name: "Pardys Recreation & Marine",
     location: "Marystown",
   },
   {
@@ -95,6 +96,7 @@ const dealerLogos = [
 ];
 
 function Dealers() {
+  const navigate = useNavigate();
   useScrollReveal(".reveal");
 
   return (
@@ -176,6 +178,7 @@ function Dealers() {
               className="dealer-logo-card reveal reveal-up"
               key={dealer.alt}
               style={{ transitionDelay: `${i * 60}ms` }}
+              onClick={() => navigate("/marketplace", { state: { dealer: dealer.name } })}
             >
               <img src={dealer.src} alt={dealer.alt} />
               <div className="dealer-logo-card-info">

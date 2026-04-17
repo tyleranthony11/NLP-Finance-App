@@ -31,6 +31,11 @@ function Marketplace() {
   }, [location.search]);
 
   useEffect(() => {
+    const dealerFromState = location.state?.dealer;
+    if (dealerFromState) setSelectedDealers([dealerFromState]);
+  }, [location.state]);
+
+  useEffect(() => {
     const fetchActiveListings = async () => {
       try {
         const res = await fetch(
