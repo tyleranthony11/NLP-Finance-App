@@ -40,6 +40,13 @@
   gap: 0.85rem;
   position: sticky;
   top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.marketplace-filters::-webkit-scrollbar {
+  display: none;
 }
 
 .marketplace-sort-panel,
