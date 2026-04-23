@@ -105,8 +105,8 @@ export const dealers = {
     location: "Little Rapids, NL",
     email: "test@rapidpowersports.ca",
   },
-  "Route 460": {
-    name: "Route 460",
+  "Route 460 Powersports": {
+    name: "Route 460 Powersports",
     logo: "/images/dealers/four-sixty.png",
     website: "https://www.route460.com/",
     location: "Stephenville, NL",
