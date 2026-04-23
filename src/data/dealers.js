@@ -111,6 +111,12 @@ export const dealers = {
     website: "https://www.route460.com/",
     location: "Stephenville, NL",
   },
+  "Route 460": {
+    name: "Route 460 Powersports",
+    logo: "/images/dealers/four-sixty.png",
+    website: "https://www.route460.com/",
+    location: "Stephenville, NL",
+  },
   "Rugged Rock Harley-Davidson": {
     name: "Rugged Rock Harley-Davidson",
     logo: "/images/dealers/rugged-rock.png",
