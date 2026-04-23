@@ -107,7 +107,7 @@ export const dealers = {
   },
   "Route 460": {
     name: "Route 460",
-    logo: "/images/dealers/nlp-finance-marketplace.png",
+    logo: "/images/dealers/four-sixty.png",
     website: "https://www.route460.com/",
     location: "Stephenville, NL",
   },

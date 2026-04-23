@@ -93,6 +93,12 @@ const dealerLogos = [
     name: "Honda One",
     location: "Mount Pearl",
   },
+  {
+    src: "/images/dealers/four-sixty.png",
+    alt: "Route 460 Powersports",
+    name: "Route 460 Powersports",
+    location: "Stephenville",
+  },
 ];
 
 function Dealers() {
@@ -178,7 +184,9 @@ function Dealers() {
               className="dealer-logo-card reveal reveal-up"
               key={dealer.alt}
               style={{ transitionDelay: `${i * 60}ms` }}
-              onClick={() => navigate("/marketplace", { state: { dealer: dealer.name } })}
+              onClick={() =>
+                navigate("/marketplace", { state: { dealer: dealer.name } })
+              }
             >
               <img src={dealer.src} alt={dealer.alt} />
               <div className="dealer-logo-card-info">
