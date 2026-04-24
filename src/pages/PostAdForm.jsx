@@ -154,9 +154,6 @@ function PostAdForm() {
       setError("make", "Please enter the vehicle make.");
     } else if (name === "model" && !v) {
       setError("model", "Please enter the vehicle model.");
-    } else if (name === "price") {
-      if (!v || Number(v) <= 0)
-        setError("price", "Please enter a valid selling price.");
     } else if (name === "description" && !v) {
       setError("description", "Please provide a description.");
     }
@@ -186,9 +183,6 @@ function PostAdForm() {
       newErrors.make = "Please enter the vehicle make.";
     if (!formData.model.trim())
       newErrors.model = "Please enter the vehicle model.";
-
-    if (!formData.price || Number(formData.price) <= 0)
-      newErrors.price = "Please enter a valid selling price.";
 
     if (!formData.description.trim())
       newErrors.description = "Please provide a description.";
@@ -496,7 +490,6 @@ function PostAdForm() {
               name="price"
               className={`post-ad-input${errors.price ? " input-error" : ""}`}
               step="1"
-              required
               value={formData.price}
               onChange={handleChange}
               onBlur={handleBlur}

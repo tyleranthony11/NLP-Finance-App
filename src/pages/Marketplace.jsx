@@ -403,7 +403,7 @@ function Marketplace() {
                         </h3>
 
                         <p className="listing-price">
-                          ${Number(item.price || 0).toLocaleString()}
+                          {Number(item.price) > 0 ? `$${Number(item.price).toLocaleString()}` : "Contact for Price"}
                         </p>
 
                         {Number(item.interestRate) > 0 &&

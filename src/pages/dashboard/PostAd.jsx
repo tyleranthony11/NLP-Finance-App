@@ -126,7 +126,6 @@ const PostAd = () => {
       !form.year ||
       !form.make ||
       !form.model ||
-      !form.price ||
       !form.description ||
       !form.condition
     ) {

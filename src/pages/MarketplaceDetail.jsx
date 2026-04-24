@@ -320,8 +320,9 @@ export default function MarketplaceDetail() {
 
         <div className="detail-sidebar">
           <Typography className="price" component="p">
-            ${Number(listing.price || 0).toLocaleString()}
-            <span className="plus-hst">+ HST</span>
+            {Number(listing.price) > 0
+              ? <>{`$${Number(listing.price).toLocaleString()}`}<span className="plus-hst">+ HST</span></>
+              : "Contact for Price"}
           </Typography>
 
           {Number(customRate) > 0 && Number(customTerm) > 0 && (
@@ -578,7 +579,7 @@ export default function MarketplaceDetail() {
 I'm interested in this unit:
 
 ${listingTitle}
-Price: $${Number(listing.price || 0).toLocaleString()}
+Price: ${Number(listing.price) > 0 ? `$${Number(listing.price).toLocaleString()}` : "Contact for Price"}
 
 Listing Link:
 ${window.location.href}
