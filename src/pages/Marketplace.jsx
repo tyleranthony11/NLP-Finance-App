@@ -406,7 +406,8 @@ function Marketplace() {
                           {Number(item.price) > 0 ? `$${Number(item.price).toLocaleString()}` : "Contact for Price"}
                         </p>
 
-                        {Number(item.interestRate) > 0 &&
+                        {Number(item.price) > 0 &&
+                          Number(item.interestRate) > 0 &&
                           Number(item.term) > 0 && (
                             <>
                               <p className="listing-payment">

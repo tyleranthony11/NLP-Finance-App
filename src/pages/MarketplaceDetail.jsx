@@ -325,7 +325,7 @@ export default function MarketplaceDetail() {
               : "Contact for Price"}
           </Typography>
 
-          {Number(customRate) > 0 && Number(customTerm) > 0 && (
+          {Number(customPrice) > 0 && Number(customRate) > 0 && Number(customTerm) > 0 && (
             <div className="estimated-payment">
               <div className="label">Estimated Payment:</div>
               <div className="main-payment-amount">
