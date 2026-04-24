@@ -33,28 +33,21 @@ export const dealers = {
   "Coastal Outdoors - Clarenville": {
     name: "Coastal Outdoors - Clarenville",
     logo: "/images/dealers/coastal-outdoors.png",
-    website: "https://www.coastaloutdoors.ca/",
+    website: "https://www.livelifeoutdoors.com/",
     location: "Clarenville, NL",
     email: "test@coastaloutdoors.ca",
   },
   "Coastal Outdoors - Carbonear": {
     name: "Coastal Outdoors - Carbonear",
     logo: "/images/dealers/coastal-outdoors.png",
-    website: "https://www.coastaloutdoors.ca/",
+    website: "https://www.livelifeoutdoorscarbonear.com/",
     location: "Carbonear, NL",
   },
   "Coastal Outdoors - Mount Pearl": {
     name: "Coastal Outdoors - Mount Pearl",
     logo: "/images/dealers/coastal-outdoors.png",
-    website: "https://www.coastaloutdoors.ca/",
+    website: "https://www.livelifeoutdoorsmountpearl.com/",
     location: "Mount Pearl, NL",
-  },
-  "Coastal Outdoors": {
-    name: "Coastal Outdoors - Clarenville",
-    logo: "/images/dealers/coastal-outdoors.png",
-    website: "https://www.coastaloutdoors.ca/",
-    location: "Clarenville, NL",
-    email: "test@coastaloutdoors.ca",
   },
   "Fun 'N' Fast": {
     name: "Fun 'N' Fast",
