@@ -30,8 +30,27 @@ export const dealers = {
     location: "Bonne Bay, NL",
   },
 
+  "Coastal Outdoors - Clarenville": {
+    name: "Coastal Outdoors - Clarenville",
+    logo: "/images/dealers/coastal-outdoors.png",
+    website: "https://www.coastaloutdoors.ca/",
+    location: "Clarenville, NL",
+    email: "test@coastaloutdoors.ca",
+  },
+  "Coastal Outdoors - Carbonear": {
+    name: "Coastal Outdoors - Carbonear",
+    logo: "/images/dealers/coastal-outdoors.png",
+    website: "https://www.coastaloutdoors.ca/",
+    location: "Carbonear, NL",
+  },
+  "Coastal Outdoors - Mount Pearl": {
+    name: "Coastal Outdoors - Mount Pearl",
+    logo: "/images/dealers/coastal-outdoors.png",
+    website: "https://www.coastaloutdoors.ca/",
+    location: "Mount Pearl, NL",
+  },
   "Coastal Outdoors": {
-    name: "Coastal Outdoors",
+    name: "Coastal Outdoors - Clarenville",
     logo: "/images/dealers/coastal-outdoors.png",
     website: "https://www.coastaloutdoors.ca/",
     location: "Clarenville, NL",

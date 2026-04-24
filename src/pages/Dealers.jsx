@@ -53,8 +53,23 @@ const dealerLogos = [
   },
   {
     src: "/images/dealers/coastal-outdoors.png",
-    alt: "Coastal Outdoors",
-    name: "Coastal Outdoors",
+    alt: "Coastal Outdoors - Clarenville",
+    name: "Coastal Outdoors - Clarenville",
+    label: "Coastal Outdoors",
+    location: "Clarenville",
+  },
+  {
+    src: "/images/dealers/coastal-outdoors.png",
+    alt: "Coastal Outdoors - Carbonear",
+    name: "Coastal Outdoors - Carbonear",
+    label: "Coastal Outdoors",
+    location: "Carbonear",
+  },
+  {
+    src: "/images/dealers/coastal-outdoors.png",
+    alt: "Coastal Outdoors - Mount Pearl",
+    name: "Coastal Outdoors - Mount Pearl",
+    label: "Coastal Outdoors",
     location: "Mount Pearl",
   },
   {
@@ -190,7 +205,7 @@ function Dealers() {
             >
               <img src={dealer.src} alt={dealer.alt} />
               <div className="dealer-logo-card-info">
-                <strong>{dealer.name}</strong>
+                <strong>{dealer.label || dealer.name}</strong>
                 <span>{dealer.location}</span>
               </div>
             </div>
