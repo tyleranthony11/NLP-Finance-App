@@ -381,19 +381,25 @@ function Marketplace() {
                     <div>
                       <div className="price-range-label">Min ($)</div>
                       <input
-                        type="number"
-                        min="0"
-                        value={minPrice}
-                        onChange={(e) => setMinPrice(e.target.value)}
+                        type="text"
+                        inputMode="numeric"
+                        value={minPrice ? Number(minPrice).toLocaleString() : ""}
+                        onChange={(e) => {
+                          const raw = e.target.value.replace(/,/g, "").replace(/\D/g, "");
+                          setMinPrice(raw);
+                        }}
                       />
                     </div>
                     <div>
                       <div className="price-range-label">Max ($)</div>
                       <input
-                        type="number"
-                        min="0"
-                        value={maxPrice}
-                        onChange={(e) => setMaxPrice(e.target.value)}
+                        type="text"
+                        inputMode="numeric"
+                        value={maxPrice ? Number(maxPrice).toLocaleString() : ""}
+                        onChange={(e) => {
+                          const raw = e.target.value.replace(/,/g, "").replace(/\D/g, "");
+                          setMaxPrice(raw);
+                        }}
                       />
                     </div>
                   </div>

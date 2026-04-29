@@ -114,7 +114,7 @@
   opacity: 0.7;
 }
 
-.price-range-inputs input[type="number"] {
+.price-range-inputs input[type="text"] {
   width: 100%;
   padding: 0.6rem 0.75rem;
   border-radius: 10px;
@@ -125,7 +125,7 @@
   box-sizing: border-box;
 }
 
-.price-range-inputs input[type="number"]:focus {
+.price-range-inputs input[type="text"]:focus {
   outline: none;
   border-color: rgba(53, 67, 80, 0.55);
 }
