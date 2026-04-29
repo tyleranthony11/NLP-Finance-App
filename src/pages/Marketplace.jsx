@@ -15,7 +15,7 @@ function Marketplace() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [minPrice, setMinPrice] = useState("");
+  const [minPrice, setMinPrice] = useState("0");
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
   const [inventoryListings, setInventoryListings] = useState([]);
@@ -59,7 +59,6 @@ function Marketplace() {
         setInventoryListings(active);
         const prices = active.map((i) => Number(i.price)).filter((p) => p > 0);
         if (prices.length) {
-          setMinPrice(String(Math.min(...prices)));
           setMaxPrice(String(Math.max(...prices)));
         }
       } catch (err) {
