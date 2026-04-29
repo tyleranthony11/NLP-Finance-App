@@ -96,6 +96,40 @@
   border-color: rgba(53, 67, 80, 0.55);
 }
 
+/* ── Price range inputs ── */
+.price-range-inputs {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.price-range-inputs > div {
+  flex: 1;
+}
+
+.price-range-inputs .price-range-label {
+  font-size: 0.75rem;
+  margin-bottom: 3px;
+  color: #354350;
+  opacity: 0.7;
+}
+
+.price-range-inputs input[type="number"] {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: #fff;
+  font-size: 0.9rem;
+  color: #354350;
+  box-sizing: border-box;
+}
+
+.price-range-inputs input[type="number"]:focus {
+  outline: none;
+  border-color: rgba(53, 67, 80, 0.55);
+}
+
 /* ── Filter groups ── */
 .filter-group {
   padding: 0.9rem 0;

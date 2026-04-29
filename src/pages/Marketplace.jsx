@@ -4,6 +4,8 @@ import { Pagination, Stack } from "@mui/material";
 import { calculateBiWeekly } from "../utils";
 import "./Marketplace.css";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 import { dealers } from "../data/dealers";
 
 const PAGE_SIZE = 30;
@@ -13,12 +15,15 @@ function Marketplace() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [selectedDealers, setSelectedDealers] = useState([]);
   const [inventoryListings, setInventoryListings] = useState([]);
   const [selectedConditions, setSelectedConditions] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
   const [selectedOdoUnits] = useState([]);
+  const [collapsedFilters, setCollapsedFilters] = useState({});
+  const toggleFilter = (key) => setCollapsedFilters((prev) => ({ ...prev, [key]: !prev[key] }));
   const location = useLocation();
 
   useEffect(() => {
@@ -52,6 +57,11 @@ function Marketplace() {
           (item) => item.status === "active",
         );
         setInventoryListings(active);
+        const prices = active.map((i) => Number(i.price)).filter((p) => p > 0);
+        if (prices.length) {
+          setMinPrice(String(Math.min(...prices)));
+          setMaxPrice(String(Math.max(...prices)));
+        }
       } catch (err) {
         console.error("Failed to load marketplace listings", err);
       }
@@ -112,7 +122,8 @@ function Marketplace() {
   }, [
     searchTerm,
     sortKey,
-    priceRange,
+    minPrice,
+    maxPrice,
     selectedDealers,
     selectedCategories,
     selectedConditions,
@@ -161,12 +172,8 @@ function Marketplace() {
 
     const price = Number(item.price || 0);
 
-    if (priceRange === "under10k" && price >= 10000) return false;
-    if (priceRange === "10kto25k" && (price < 10000 || price > 25000))
-      return false;
-    if (priceRange === "25kto50k" && (price <= 25000 || price >= 50000))
-      return false;
-    if (priceRange === "over50k" && price < 50000) return false;
+    if (minPrice !== "" && price < Number(minPrice)) return false;
+    if (maxPrice !== "" && price > Number(maxPrice)) return false;
 
     return true;
   });
@@ -251,8 +258,11 @@ function Marketplace() {
               <h3>Filters</h3>
 
               <div className="filter-group">
-                <h4>Dealer</h4>
-                {allDealers.map((dealer) => (
+                <h4 onClick={() => toggleFilter("dealer")} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+                  Dealer
+                  {collapsedFilters.dealer ? <AddIcon fontSize="small" /> : <RemoveIcon fontSize="small" />}
+                </h4>
+                {!collapsedFilters.dealer && allDealers.map((dealer) => (
                   <label key={dealer}>
                     <input
                       type="checkbox"
@@ -274,8 +284,11 @@ function Marketplace() {
               </div>
 
               <div className="filter-group">
-                <h4>Condition</h4>
-                {allConditions.map((c) => (
+                <h4 onClick={() => toggleFilter("condition")} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+                  Condition
+                  {collapsedFilters.condition ? <AddIcon fontSize="small" /> : <RemoveIcon fontSize="small" />}
+                </h4>
+                {!collapsedFilters.condition && allConditions.map((c) => (
                   <label key={c}>
                     <input
                       type="checkbox"
@@ -297,8 +310,11 @@ function Marketplace() {
               </div>
 
               <div className="filter-group">
-                <h4>Category</h4>
-                {["powersports", "marine", "rv", "automotive"].map((category) => (
+                <h4 onClick={() => toggleFilter("category")} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+                  Category
+                  {collapsedFilters.category ? <AddIcon fontSize="small" /> : <RemoveIcon fontSize="small" />}
+                </h4>
+                {!collapsedFilters.category && ["powersports", "marine", "rv", "automotive"].map((category) => (
                   <label key={category}>
                     <input
                       type="checkbox"
@@ -321,56 +337,67 @@ function Marketplace() {
 
               {selectedCategories.length > 0 && (
                 <div className="filter-group">
-                  <h4>Subcategory</h4>
-
-                  {availableSubcategories.length === 0 ? (
-                    <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
-                      No subcategories for selected category.
-                    </p>
-                  ) : (
-                    availableSubcategories.map((subcat) => (
-                      <label key={subcat}>
-                        <input
-                          type="checkbox"
-                          value={subcat}
-                          checked={selectedSubcategories.includes(subcat)}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (e.target.checked)
-                              setSelectedSubcategories((prev) => [...prev, value]);
-                            else
-                              setSelectedSubcategories((prev) =>
-                                prev.filter((s) => s !== value),
-                              );
-                          }}
-                        />
-                        {subcat}
-                      </label>
-                    ))
+                  <h4 onClick={() => toggleFilter("subcategory")} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+                    Subcategory
+                    {collapsedFilters.subcategory ? <AddIcon fontSize="small" /> : <RemoveIcon fontSize="small" />}
+                  </h4>
+                  {!collapsedFilters.subcategory && (
+                    availableSubcategories.length === 0 ? (
+                      <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>
+                        No subcategories for selected category.
+                      </p>
+                    ) : (
+                      availableSubcategories.map((subcat) => (
+                        <label key={subcat}>
+                          <input
+                            type="checkbox"
+                            value={subcat}
+                            checked={selectedSubcategories.includes(subcat)}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (e.target.checked)
+                                setSelectedSubcategories((prev) => [...prev, value]);
+                              else
+                                setSelectedSubcategories((prev) =>
+                                  prev.filter((s) => s !== value),
+                                );
+                            }}
+                          />
+                          {subcat}
+                        </label>
+                      ))
+                    )
                   )}
                 </div>
               )}
 
               <div className="filter-group">
-                <h4>Price Range</h4>
-                {[
-                  ["", "All Prices"],
-                  ["under10k", "Under $10,000"],
-                  ["10kto25k", "$10,000 - $24,999"],
-                  ["25kto50k", "$25,000 - $50,000"],
-                  ["over50k", "Over $50,000"],
-                ].map(([value, label]) => (
-                  <label key={value}>
-                    <input
-                      type="radio"
-                      name="price"
-                      value={value}
-                      checked={priceRange === value}
-                      onChange={() => setPriceRange(value)}
-                    />
-                    {label}
-                  </label>
-                ))}
+                <h4 onClick={() => toggleFilter("price")} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
+                  Price Range
+                  {collapsedFilters.price ? <AddIcon fontSize="small" /> : <RemoveIcon fontSize="small" />}
+                </h4>
+                {!collapsedFilters.price && (
+                  <div className="price-range-inputs">
+                    <div>
+                      <div className="price-range-label">Min ($)</div>
+                      <input
+                        type="number"
+                        min="0"
+                        value={minPrice}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <div className="price-range-label">Max ($)</div>
+                      <input
+                        type="number"
+                        min="0"
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </aside>
