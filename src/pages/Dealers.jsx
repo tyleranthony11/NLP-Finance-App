@@ -4,15 +4,66 @@ import { useScrollReveal } from "../hooks/useScrollReveal";
 
 const dealerLogos = [
   {
+    src: "/images/dealers/arctic-west.png",
+    alt: "Arctic West",
+    name: "Arctic West",
+    location: "Birchy Head",
+  },
+  {
     src: "/images/dealers/blue-water-marine.avif",
     alt: "Blue Water Marine",
     name: "Blue Water Marine",
     location: "Mount Pearl",
   },
   {
+    src: "/images/dealers/bonne-bay.png",
+    alt: "Bonne Bay Recreation",
+    name: "Bonne Bay Recreation",
+    location: "Bonne Bay",
+  },
+  {
     src: "/images/dealers/bruces-recreation.png",
     alt: "Bruce's Recreation",
     name: "Bruce's Recreation",
+    location: "Clarenville",
+  },
+  {
+    src: "/images/dealers/coastal-outdoors.png",
+    alt: "Coastal Outdoors - Carbonear",
+    name: "Coastal Outdoors - Carbonear",
+    label: "Coastal Outdoors",
+    location: "Carbonear",
+  },
+  {
+    src: "/images/dealers/coastal-outdoors.png",
+    alt: "Coastal Outdoors - Clarenville",
+    name: "Coastal Outdoors - Clarenville",
+    label: "Coastal Outdoors",
+    location: "Clarenville",
+  },
+  {
+    src: "/images/dealers/coastal-outdoors.png",
+    alt: "Coastal Outdoors - Mount Pearl",
+    name: "Coastal Outdoors - Mount Pearl",
+    label: "Coastal Outdoors",
+    location: "Mount Pearl",
+  },
+  {
+    src: "/images/dealers/funnfast.png",
+    alt: "Fun 'N' Fast",
+    name: "Fun 'N' Fast",
+    location: "Mount Pearl",
+  },
+  {
+    src: "/images/dealers/honda-one.png",
+    alt: "Honda One",
+    name: "Honda One",
+    location: "Mount Pearl",
+  },
+  {
+    src: "/images/dealers/merles-recreation.png",
+    alt: "Merle's Parts & Recreation",
+    name: "Merle's Parts & Recreation",
     location: "Clarenville",
   },
   {
@@ -28,49 +79,10 @@ const dealerLogos = [
     location: "Springdale",
   },
   {
-    src: "/images/dealers/rugged-rock.png",
-    alt: "Rugged Rock Harley-Davidson",
-    name: "Rugged Rock Harley-Davidson",
-    location: "Mount Pearl",
-  },
-  {
-    src: "/images/dealers/arctic-west.png",
-    alt: "Arctic West",
-    name: "Arctic West",
-    location: "Birchy Head",
-  },
-  {
-    src: "/images/dealers/funnfast.png",
-    alt: "Fun 'N' Fast",
-    name: "Fun 'N' Fast",
-    location: "Mount Pearl",
-  },
-  {
-    src: "/images/dealers/merles-recreation.png",
-    alt: "Merle's Parts & Recreation",
-    name: "Merle's Parts & Recreation",
-    location: "Clarenville",
-  },
-  {
-    src: "/images/dealers/coastal-outdoors.png",
-    alt: "Coastal Outdoors - Clarenville",
-    name: "Coastal Outdoors - Clarenville",
-    label: "Coastal Outdoors",
-    location: "Clarenville",
-  },
-  {
-    src: "/images/dealers/coastal-outdoors.png",
-    alt: "Coastal Outdoors - Carbonear",
-    name: "Coastal Outdoors - Carbonear",
-    label: "Coastal Outdoors",
-    location: "Carbonear",
-  },
-  {
-    src: "/images/dealers/coastal-outdoors.png",
-    alt: "Coastal Outdoors - Mount Pearl",
-    name: "Coastal Outdoors - Mount Pearl",
-    label: "Coastal Outdoors",
-    location: "Mount Pearl",
+    src: "/images/dealers/pa-sports.jpg",
+    alt: "P & A Sports",
+    name: "P & A Sports",
+    location: "Savage Cove",
   },
   {
     src: "/images/dealers/pardys-recreation.png",
@@ -79,40 +91,28 @@ const dealerLogos = [
     location: "Marystown",
   },
   {
-    src: "/images/dealers/pa-sports.jpg",
-    alt: "Pardy's Recreation & Marine",
-    name: "P & A Sports",
-    location: "Savage Cove",
-  },
-  {
-    src: "/images/dealers/brp.png",
-    alt: "The Outdoor Shoppe",
-    name: "The Outdoor Shoppe",
-    location: "St. Anthony",
-  },
-  {
     src: "/images/dealers/rapid-powersports2.jpg",
     alt: "Rapid Powersports",
     name: "Rapid Powersports",
     location: "Gander",
   },
   {
-    src: "/images/dealers/bonne-bay.png",
-    alt: "Bonne Bay Recreation",
-    name: "Bonne Bay Recreation",
-    location: "Bonne Bay",
-  },
-  {
-    src: "/images/dealers/honda-one.png",
-    alt: "Honda One",
-    name: "Honda One",
-    location: "Mount Pearl",
-  },
-  {
     src: "/images/dealers/four-sixty.png",
     alt: "Route 460 Powersports",
     name: "Route 460 Powersports",
     location: "Stephenville",
+  },
+  {
+    src: "/images/dealers/rugged-rock.png",
+    alt: "Rugged Rock Harley-Davidson",
+    name: "Rugged Rock Harley-Davidson",
+    location: "Mount Pearl",
+  },
+  {
+    src: "/images/dealers/brp.png",
+    alt: "The Outdoor Shoppe",
+    name: "The Outdoor Shoppe",
+    location: "St. Anthony",
   },
 ];
 

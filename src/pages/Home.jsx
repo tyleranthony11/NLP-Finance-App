@@ -78,13 +78,13 @@ function Home() {
             Introducing the NLP Finance Marketplace
           </Typography>
           <Typography component="p">
-            Looking to sell your vehicle? Whether it's a powersports unit, RV,
-            boat or automobile — list it for free on our Marketplace and we can
-            offer financing to your buyer at no cost to you.
+            NLP Marketplace has partnered with trusted NL dealers to help them reach more
+            buyers and sell more units. Dealers list their inventory for free and keep full
+            control of every sale — their customers, their conversations, their deals.
           </Typography>
           <Typography component="p">
-            Browse a growing selection of both dealership and private-seller
-            listings and get pre-approved for financing directly through us.
+            NLP Finance will never compete with or take business from dealers. Financing
+            support is only offered when a dealer requests it.
           </Typography>
           <Box className="marketplace-buttons">
             <Link to="/marketplace" className="browse-button">
